@@ -1,210 +1,261 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { FaGithub, FaLinkedin, FaEnvelope } from 'react-icons/fa';
 import Image from 'next/image';
-import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
+import { Parallax, ParallaxLayer, IParallax } from '@react-spring/parallax';
 
 const projects = [
   {
     id: 1,
-    title: 'Project Nebula',
-    description: 'A cosmic web experience',
-    color: '#8A2BE2',
-    image: '/profile-picture.png',
+    title: 'AI-Powered Code Assistant',
+    tech: ['Python', 'TensorFlow', 'NLP'],
+    description:
+      'An intelligent code assistant that helps developers write better code faster.',
   },
   {
     id: 2,
-    title: 'Quantum Leap',
-    description: 'Revolutionary mobile quantum computing',
-    color: '#00CED1',
-    image: '/profile-picture.png',
+    title: 'Blockchain Voting System',
+    tech: ['Solidity', 'Ethereum', 'React'],
+    description:
+      'A secure and transparent voting system built on blockchain technology.',
   },
   {
     id: 3,
-    title: 'AI Odyssey',
-    description: 'Next-gen AI for space exploration',
-    color: '#FF4500',
-    image: '/profile-picture.png',
+    title: 'Quantum Algorithm Simulator',
+    tech: ['Q#', 'Python', 'Linear Algebra'],
+    description: 'A simulator for testing and visualizing quantum algorithms.',
   },
 ];
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.3,
-    },
-  },
-};
+const skills = [
+  'JavaScript',
+  'React',
+  'Node.js',
+  'Python',
+  'Machine Learning',
+  'Blockchain',
+  'Quantum Computing',
+  'Cloud Architecture',
+  'DevOps',
+  'Data Science',
+];
 
-const itemVariants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-  },
-};
-
-const titleVariants = {
-  hidden: { scale: 0.8, opacity: 0 },
-  visible: {
-    scale: 1,
-    opacity: 1,
-    transition: {
-      type: 'spring',
-      stiffness: 200,
-      damping: 10,
-    },
-  },
-};
-
-const imageVariants = {
-  hidden: { scale: 0, rotate: -180 },
-  visible: {
-    scale: 1,
-    rotate: 0,
-    transition: {
-      type: 'spring',
-      stiffness: 260,
-      damping: 20,
-    },
-  },
-};
-
-const socialIconVariants = {
-  hover: { scale: 1.2, rotate: 15 },
-  tap: { scale: 0.8 },
-};
+const companies = [
+  { name: 'Google', role: 'Senior Quantum Engineer', period: '2020-Present' },
+  { name: 'IBM', role: 'Quantum Research Scientist', period: '2018-2020' },
+  { name: 'Microsoft', role: 'Software Engineer', period: '2015-2018' },
+];
 
 export default function Page() {
-  const [hoveredProject, setHoveredProject] = useState<number | null>(null);
+  const [activeSection, setActiveSection] = useState('intro');
+  const parallaxRef = useRef<IParallax>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (parallaxRef.current) {
+        const scrollPosition =
+          parallaxRef.current.current / parallaxRef.current.space;
+        if (scrollPosition < 0.75) setActiveSection('intro');
+        else if (scrollPosition < 1.5) setActiveSection('projects');
+        else if (scrollPosition < 2.25) setActiveSection('companies');
+        else setActiveSection('skills');
+      }
+    };
+
+    const parallaxContainer = parallaxRef.current?.container.current;
+    if (parallaxContainer) {
+      parallaxContainer.addEventListener('scroll', handleScroll);
+      return () =>
+        parallaxContainer.removeEventListener('scroll', handleScroll);
+    }
+  }, []);
 
   return (
-    <motion.div
-      className='min-h-screen container mx-auto px-4 py-8 bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 text-white'
-      initial='hidden'
-      animate='visible'
-      variants={containerVariants}
-    >
-      <motion.h1
-        className='text-6xl font-extrabold mb-8 text-center'
-        variants={titleVariants}
-      >
-        <span className='bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500'>
-          Welcome to My Cosmic Portfolio
-        </span>
-      </motion.h1>
-
-      <motion.div
-        className='flex justify-center items-center mb-12'
-        variants={imageVariants}
-      >
-        <Image
-          alt='Profile Picture'
-          src={'/profile-picture.png'}
-          width={250}
-          height={250}
-          className='rounded-full shadow-lg border-4 border-indigo-500'
-        />
-      </motion.div>
-
-      <motion.p
-        className='text-2xl mb-12 text-center text-indigo-200'
-        variants={itemVariants}
-        whileHover={{ scale: 1.05, color: '#ffffff' }}
-      >
-        Greetings, cosmic traveler! I am a web developer crafting digital
-        wonders across the universe.
-      </motion.p>
-
-      <motion.div className='flex justify-center space-x-6 mb-12'>
-        {[FaGithub, FaLinkedin, FaTwitter].map((Icon, index) => (
-          <motion.a
-            key={index}
-            href='#'
-            variants={socialIconVariants}
-            whileHover='hover'
-            whileTap='tap'
-            className='text-3xl text-indigo-300 hover:text-indigo-100'
-          >
-            <Icon />
-          </motion.a>
-        ))}
-      </motion.div>
-
-      <motion.h2
-        className='text-4xl font-bold mb-8 text-center text-indigo-300'
-        variants={titleVariants}
-      >
-        Stellar Projects
-      </motion.h2>
-
-      <motion.div
-        className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'
-        variants={containerVariants}
-      >
-        {projects.map((project) => (
+    <Parallax pages={3.5} ref={parallaxRef}>
+      <ParallaxLayer offset={0} speed={0.5}>
+        <section
+          id='intro'
+          className={`min-h-screen flex flex-col justify-center items-center p-8 ${
+            activeSection === 'intro' ? 'active' : ''
+          }`}
+        >
           <motion.div
-            key={project.id}
-            className='relative overflow-hidden rounded-lg shadow-lg'
-            variants={itemVariants}
-            whileHover={{
-              scale: 1.05,
-              boxShadow: '0px 10px 30px rgba(0, 0, 0, 0.3)',
-            }}
-            whileTap={{ scale: 0.95 }}
-            onHoverStart={() => setHoveredProject(project.id)}
-            onHoverEnd={() => setHoveredProject(null)}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className='text-center'
           >
-            <Image
-              src={project.image}
-              alt={project.title}
-              width={400}
-              height={300}
-              className='w-full h-64 object-cover'
-            />
             <motion.div
-              className='absolute inset-0 flex flex-col justify-end p-6'
-              style={{ backgroundColor: `${project.color}CC` }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: hoveredProject === project.id ? 1 : 0 }}
-              transition={{ duration: 0.3 }}
+              className='w-64 h-64 mx-auto mb-8 relative overflow-hidden rounded-full border-4 border-purple-500 shadow-2xl'
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <motion.h3
-                className='text-2xl font-bold mb-2 text-white'
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.1 }}
+              <Image
+                src='/me.jpeg'
+                alt='Profile Picture'
+                layout='fill'
+                objectFit='cover'
+                className='transition-all duration-300 ease-in-out'
+                priority
+              />
+              <motion.div
+                className='absolute inset-0 bg-gradient-to-br from-purple-600 to-blue-500 opacity-0'
+                whileHover={{ opacity: 0.7 }}
+                transition={{ duration: 0.3 }}
               >
-                {project.title}
-              </motion.h3>
-              <motion.p
-                className='text-white'
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.2 }}
-              >
-                {project.description}
-              </motion.p>
+                <div className='h-full flex flex-col items-center justify-center text-white'>
+                  <span className='text-3xl mb-2'>👋</span>
+                  <span className='text-lg font-semibold'>
+                    Hello, I&apos;m John!
+                  </span>
+                </div>
+              </motion.div>
+            </motion.div>
+            <motion.h1
+              className='text-6xl font-extrabold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600'
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.8 }}
+            >
+              John Doe
+            </motion.h1>
+            <motion.h2
+              className='text-3xl text-white mb-6'
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.8 }}
+            >
+              Quantum Software Engineer
+            </motion.h2>
+            <motion.p
+              className='text-lg mb-8 max-w-2xl mx-auto text-gray-300'
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.8 }}
+            >
+              Pushing the boundaries of computation at the intersection of
+              quantum mechanics and artificial intelligence. Crafting the
+              future, one qubit at a time.
+            </motion.p>
+            <motion.div
+              className='flex justify-center space-x-6'
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8, duration: 0.8 }}
+            >
+              {[FaGithub, FaLinkedin, FaEnvelope].map((Icon, index) => (
+                <motion.a
+                  key={index}
+                  href='#'
+                  whileHover={{
+                    scale: 1.2,
+                    color: '#F3B61F',
+                  }}
+                  whileTap={{ scale: 0.9 }}
+                  className='text-3xl text-white transition-colors duration-300'
+                >
+                  <Icon />
+                </motion.a>
+              ))}
             </motion.div>
           </motion.div>
-        ))}
-      </motion.div>
+        </section>
+      </ParallaxLayer>
 
-      <AnimatePresence>
-        {hoveredProject && (
-          <motion.div
-            className='fixed inset-0 pointer-events-none'
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <div className='absolute inset-0 bg-gradient-to-br from-purple-500 to-indigo-500 opacity-10'></div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
+      <ParallaxLayer offset={1} speed={0.2}>
+        <section id='projects' className='min-h-screen py-16 px-8'>
+          <h2 className='text-4xl font-bold mb-8 text-center text-white'>
+            Innovative Projects
+          </h2>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+            <AnimatePresence>
+              {projects.map((project) => (
+                <motion.div
+                  key={project.id}
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -50 }}
+                  transition={{ duration: 0.5 }}
+                  className='bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg p-6 rounded-lg shadow-xl'
+                  whileHover={{
+                    scale: 1.03,
+                    boxShadow: '0 0 20px rgba(255,255,255,0.3)',
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <h3 className='text-xl font-semibold mb-3 text-white'>
+                    {project.title}
+                  </h3>
+                  <p className='text-white mb-3'>{project.description}</p>
+                  <div className='flex flex-wrap gap-2'>
+                    {project.tech.map((tech, index) => (
+                      <span
+                        key={index}
+                        className='bg-purple-600 text-white px-2 py-1 rounded text-sm'
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+        </section>
+      </ParallaxLayer>
+
+      <ParallaxLayer offset={2} speed={0.3}>
+        <section id='companies' className='min-h-screen py-16 px-8'>
+          <h2 className='text-4xl font-bold mb-8 text-center text-white'>
+            Companies I&apos;ve Worked For
+          </h2>
+          <div className='flex flex-col items-center space-y-6'>
+            {companies.map((company, index) => (
+              <motion.div
+                key={index}
+                className='bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg p-6 rounded-lg shadow-xl w-full max-w-2xl'
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <h3 className='text-2xl font-semibold text-white'>
+                  {company.name}
+                </h3>
+                <p className='text-lg text-gray-300'>{company.role}</p>
+                <p className='text-sm text-gray-400'>{company.period}</p>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+      </ParallaxLayer>
+
+      <ParallaxLayer offset={3} speed={0.5}>
+        <section id='skills' className='min-h-screen py-16 px-8'>
+          <h2 className='text-4xl font-bold mb-8 text-center text-white'>
+            Cutting-Edge Skills
+          </h2>
+          <div className='flex flex-wrap justify-center gap-4'>
+            {skills.map((skill, index) => (
+              <motion.div
+                key={index}
+                className='bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg text-white px-4 py-2 rounded-full text-lg'
+                whileHover={{
+                  scale: 1.1,
+                  boxShadow: '0 0 15px rgba(255,255,255,0.5)',
+                }}
+                whileTap={{ scale: 0.9 }}
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                {skill}
+              </motion.div>
+            ))}
+          </div>
+        </section>
+      </ParallaxLayer>
+    </Parallax>
   );
 }

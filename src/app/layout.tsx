@@ -1,6 +1,14 @@
 import { Syne } from 'next/font/google';
 import dynamic from 'next/dynamic';
 import './globals.css';
+import Footer from './_components/Footer';
+
+const StarryBackground = dynamic(
+  () => import('@/app/_components/StarryBackground'),
+  {
+    ssr: false,
+  }
+);
 
 const NavBar = dynamic(() => import('@/app/_components/NavBar'), {
   ssr: false,
@@ -12,8 +20,12 @@ const syne = Syne({
 });
 
 export const metadata = {
-  title: 'Ahmad Ramzy - Portfolio',
+  title: {
+    default: 'Ahmad Ramzy | Software Engineer',
+    template: '%s | Ahmad Ramzy',
+  },
   description: 'Ahmad Ramzy Portfolio',
+  titleTemplate: '%s | Ahmad Ramzy',
 };
 
 export default function RootLayout({
@@ -23,21 +35,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang='en'>
-      <body
-        className={`${syne.className} min-h-screen`}
-        style={{
-          backgroundImage: `
-            linear-gradient(to right bottom, rgba(30, 144, 255, 0.7), rgba(138, 43, 226, 0.7)),
-            url('https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80')
-          `,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundAttachment: 'fixed',
-        }}
-      >
+      <body className={`${syne.className} flex flex-col min-h-screen`}>
+        <StarryBackground />
         <NavBar />
-
-        <main className='pt-24'>{children}</main>
+        <main className='flex-grow'>{children}</main>
+        <Footer />
       </body>
     </html>
   );

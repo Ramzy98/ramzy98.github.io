@@ -64,13 +64,15 @@ jobs:
       - name: Install dependencies # Install project dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
 
-      - name: Build with Next.js # Build the Next.js application
-        run: ${{ steps.detect-package-manager.outputs.runner }} next build
+      - name: Build with Next.js # Build and export the Next.js application
+        run: |
+          ${{ steps.detect-package-manager.outputs.runner }} next build
+          ${{ steps.detect-package-manager.outputs.runner }} next export
 
       - name: Upload artifact # Upload the built output for deployment
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./.next
+          path: ./out
 
   deploy: # Job to deploy to GitHub Pages
     environment:

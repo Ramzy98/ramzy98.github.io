@@ -61,11 +61,8 @@ export default function Page() {
   }, []);
 
   return (
-    <div className="min-h-screen">
-      <section
-        id="intro"
-        className="min-h-screen flex flex-col justify-center items-center p-4 sm:p-8"
-      >
+    <div>
+      <section id="intro" className="flex flex-col justify-center items-center sm:p-8">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}

@@ -4,8 +4,8 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import AnimatedLogo from '@/app/_components/AnimatedLogo';
-import MobileNavBar from '@/app/_components/NavBar/MobileNavBar';
+import AnimatedLogo from '@/app/_components/animatedLogo';
+import MobileNavBar from '@/app/_components/navBar/mobileNavBar';
 
 export default function NavBar() {
   const pathname = usePathname();

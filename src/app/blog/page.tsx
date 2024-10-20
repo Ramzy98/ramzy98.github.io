@@ -1,5 +1,9 @@
 import React from 'react';
 
-export default function Blog() {
+export const metadata = {
+  title: 'Blog',
+};
+
+export default function Page() {
   return <div>Blog</div>;
 }

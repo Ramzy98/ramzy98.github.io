@@ -1,5 +1,9 @@
 import React from 'react';
 
-export default function yes() {
-  return <div>yes</div>;
+export const metadata = {
+  title: 'Resume',
+};
+
+export default function Page() {
+  return <div>Resume</div>;
 }

@@ -1,13 +1,13 @@
 import { Syne } from 'next/font/google';
 import dynamic from 'next/dynamic';
 import './globals.css';
-import Footer from './_components/Footer';
+import Footer from '@/app/_components/footer';
 
-const StarryBackground = dynamic(() => import('@/app/_components/StarryBackground'), {
+const StarryBackground = dynamic(() => import('@/app/_components/starryBackground'), {
   ssr: false,
 });
 
-const NavBar = dynamic(() => import('@/app/_components/NavBar/NavBar'), {
+const NavBar = dynamic(() => import('@/app/_components/navBar/navBar'), {
   ssr: false,
 });
 
@@ -22,7 +22,9 @@ export const metadata = {
     template: '%s | Ahmad Ramzy',
   },
   description: 'Ahmad Ramzy Portfolio',
-  titleTemplate: '%s | Ahmad Ramzy',
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -31,7 +33,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${syne.className} flex flex-col min-h-screen`}>
         <StarryBackground />
         <NavBar />
-        <main>{children}</main>
+
+        <main className="p-8">{children}</main>
+
         <Footer />
       </body>
     </html>

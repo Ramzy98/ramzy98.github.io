@@ -16,8 +16,13 @@ export default function Page() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    canvas.width = 256;
-    canvas.height = 256;
+    const resizeCanvas = () => {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    };
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
 
     const matrix = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&*()*&^%';
     const fontSize = 10;
@@ -30,7 +35,7 @@ export default function Page() {
 
     function draw() {
       if (!ctx || !canvas) return;
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.1';
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       ctx.fillStyle = 'rgba(0, 255, 0, 0.8)';
@@ -49,20 +54,26 @@ export default function Page() {
 
     const interval = setInterval(draw, 33);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('resize', resizeCanvas);
+    };
   }, []);
 
   return (
     <div className="min-h-screen">
-      <section id="intro" className={`min-h-screen flex flex-col justify-center items-center p-8`}>
+      <section
+        id="intro"
+        className="min-h-screen flex flex-col justify-center items-center p-4 sm:p-8"
+      >
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-center"
+          className="text-center w-full max-w-4xl"
         >
           <motion.div
-            className="w-64 h-64 mx-auto mb-8 relative overflow-hidden rounded-full border-4 border-purple-500 shadow-2xl"
+            className="w-48 h-48 sm:w-64 sm:h-64 mx-auto mb-6 sm:mb-8 relative overflow-hidden rounded-full border-4 border-purple-500 shadow-2xl"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -81,13 +92,13 @@ export default function Page() {
               transition={{ duration: 0.3 }}
             >
               <div className="h-full flex flex-col items-center justify-center text-white">
-                <span className="text-3xl mb-2">👋</span>
-                <span className="text-lg font-semibold">Hello, I&apos;m Ramzy!</span>
+                <span className="text-2xl sm:text-3xl mb-1 sm:mb-2">👋</span>
+                <span className="text-base sm:text-lg font-semibold">Hello, I&apos;m Ramzy!</span>
               </div>
             </motion.div>
           </motion.div>
           <motion.h1
-            className="text-6xl font-extrabold mb-4 text-purple-600 dark:text-purple-400"
+            className="text-4xl sm:text-6xl font-extrabold mb-3 sm:mb-4 text-purple-600 dark:text-purple-400"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.8 }}
@@ -95,7 +106,7 @@ export default function Page() {
             Ahmad Ramzy
           </motion.h1>
           <motion.h2
-            className="text-3xl text-gray-800 dark:text-white mb-6"
+            className="text-2xl sm:text-3xl text-gray-800 dark:text-white mb-4 sm:mb-6"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
@@ -103,7 +114,7 @@ export default function Page() {
             Quantum Software Engineer
           </motion.h2>
           <motion.p
-            className="text-lg mb-8 max-w-2xl mx-auto text-gray-600 dark:text-gray-300"
+            className="text-base sm:text-lg mb-6 sm:mb-8 max-w-2xl mx-auto text-gray-600 dark:text-gray-300"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.8 }}
@@ -112,7 +123,7 @@ export default function Page() {
             artificial intelligence. Crafting the future, one qubit at a time.
           </motion.p>
           <motion.div
-            className="flex justify-center space-x-6"
+            className="flex justify-center space-x-4 sm:space-x-6"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8, duration: 0.8 }}
@@ -132,7 +143,7 @@ export default function Page() {
                   color: color,
                 }}
                 whileTap={{ scale: 0.9 }}
-                className="text-3xl text-gray-800 dark:text-white transition-colors duration-300"
+                className="text-2xl sm:text-3xl text-gray-800 dark:text-white transition-colors duration-300"
               >
                 <Icon />
               </motion.a>

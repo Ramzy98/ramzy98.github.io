@@ -23,7 +23,7 @@ export default function MobileNavBar({
   return (
     <AnimatePresence>
       {isMobile ? (
-        <div className="md:hidden flex-shrink-0 w-[200px] flex justify-end">
+        <div className="md:hidden flex-grow-0 flex justify-end">
           <motion.button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="text-white focus:outline-none"

@@ -4,13 +4,14 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-
+import AnimatedLogo from '@/app/_components/AnimatedLogo';
+import MobileNavBar from '@/app/_components/NavBar/MobileNavBar';
 export default function NavBar() {
   const pathname = usePathname();
   const [activeTab, setActiveTab] = useState('Home');
   const tabs = useMemo(() => ['Home', 'Resume', 'Blog', 'Contact'], []);
-  const [displayText, setDisplayText] = useState('');
-  const fullName = 'Ahmad Ramzy';
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const currentPath = pathname.slice(1) || 'home';
@@ -21,32 +22,16 @@ export default function NavBar() {
   }, [pathname, tabs]);
 
   useEffect(() => {
-    let isTyping = true;
-    let i = 0;
-
-    const animateText = () => {
-      if (isTyping) {
-        if (i <= fullName.length) {
-          setDisplayText(fullName.slice(0, i));
-          i++;
-        } else {
-          isTyping = false;
-        }
-      } else {
-        if (i > 0) {
-          setDisplayText(fullName.slice(0, i));
-          i--;
-        } else {
-          isTyping = true;
-        }
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      if (window.innerWidth >= 768) {
+        setIsMenuOpen(false);
       }
-
-      setTimeout(animateText, isTyping ? 180 : 100);
     };
 
-    animateText();
-
-    return () => {};
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const itemVariants = {
@@ -95,35 +80,27 @@ export default function NavBar() {
 
   const handleTabClick = (item: string) => {
     setActiveTab(item);
+    setIsMenuOpen(false);
   };
 
   return (
-    <motion.header initial='visible' animate='visible' variants={navVariants}>
-      <motion.nav className='flex items-center justify-between p-4 bg-opacity-20 backdrop-filter backdrop-blur-lg'>
-        <div className='text-white font-mono text-lg flex-shrink-0 w-[200px]'>
-          <span className='text-[#f94706]'>&lt;</span>
-          {displayText}
-          <span className='animate-pulse'>|</span>
-          <span className='text-[#f94706]'>/&gt;</span>
-        </div>
+    <motion.header initial="visible" animate="visible" variants={navVariants} className="relative">
+      <motion.nav className="flex items-center justify-between p-4">
+        <AnimatedLogo />
 
-        <div className='flex-grow flex justify-center'>
+        <div className="flex-grow flex justify-center items-start">
           <motion.ul
-            className='flex space-x-6 list-none m-0 p-2 rounded-full relative shadow-lg bg-white'
+            className="hidden md:flex space-x-6 list-none m-0 p-2 rounded-full relative shadow-lg bg-white"
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.3 }}
           >
             <AnimatePresence>
               {tabs.map((item) => (
-                <motion.li
-                  key={item}
-                  className='relative z-10'
-                  variants={tabVariants}
-                >
+                <motion.li key={item} className="relative z-10" variants={tabVariants}>
                   {activeTab === item && (
                     <motion.div
-                      className='absolute inset-0 bg-[#f94706] rounded-full shadow-md'
-                      layoutId='activeTab'
+                      className="absolute inset-0 bg-[#f94706] rounded-full shadow-md"
+                      layoutId="activeTab"
                       initial={false}
                       animate={{
                         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
@@ -140,24 +117,20 @@ export default function NavBar() {
                   <Link
                     href={`/${item.toLowerCase()}`}
                     className={`px-4 py-2 relative z-20 block transition-colors duration-300 no-underline ${
-                      activeTab === item
-                        ? 'text-white'
-                        : 'text-gray-800 hover:text-gray-600'
+                      activeTab === item ? 'text-white' : 'text-gray-800 hover:text-gray-600'
                     }`}
                   >
                     <motion.span
                       variants={itemVariants}
-                      initial='initial'
+                      initial="initial"
                       whileHover={{
                         ...itemVariants.hover,
                         textShadow: '0 0 8px rgba(255, 255, 255, 0.8)',
                         color: activeTab === item ? '#ffffff' : '#f94706',
                       }}
-                      whileTap='tap'
+                      whileTap="tap"
                       onClick={() => handleTabClick(item)}
-                      animate={
-                        activeTab === item ? { rotate: [0, 5, -5, 0] } : {}
-                      }
+                      animate={activeTab === item ? { rotate: [0, 5, -5, 0] } : {}}
                       transition={{ duration: 0.8 }}
                       style={{
                         color: activeTab === item ? '#ffffff' : 'black',
@@ -172,7 +145,14 @@ export default function NavBar() {
           </motion.ul>
         </div>
 
-        <div className='flex-shrink-0 w-[200px]'></div>
+        <MobileNavBar
+          isMenuOpen={isMenuOpen}
+          isMobile={isMobile}
+          tabs={tabs}
+          activeTab={activeTab}
+          setIsMenuOpen={setIsMenuOpen}
+          handleTabClick={handleTabClick}
+        />
       </motion.nav>
     </motion.header>
   );

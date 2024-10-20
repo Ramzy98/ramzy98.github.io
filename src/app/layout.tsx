@@ -3,14 +3,11 @@ import dynamic from 'next/dynamic';
 import './globals.css';
 import Footer from './_components/Footer';
 
-const StarryBackground = dynamic(
-  () => import('@/app/_components/StarryBackground'),
-  {
-    ssr: false,
-  }
-);
+const StarryBackground = dynamic(() => import('@/app/_components/StarryBackground'), {
+  ssr: false,
+});
 
-const NavBar = dynamic(() => import('@/app/_components/NavBar'), {
+const NavBar = dynamic(() => import('@/app/_components/NavBar/NavBar'), {
   ssr: false,
 });
 
@@ -28,17 +25,13 @@ export const metadata = {
   titleTemplate: '%s | Ahmad Ramzy',
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang='en'>
+    <html lang="en">
       <body className={`${syne.className} flex flex-col min-h-screen`}>
         <StarryBackground />
         <NavBar />
-        <main className='flex-grow'>{children}</main>
+        <main>{children}</main>
         <Footer />
       </body>
     </html>

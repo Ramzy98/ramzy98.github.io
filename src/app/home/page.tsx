@@ -21,8 +21,8 @@ export default function Page() {
       canvas.height = canvas.offsetHeight;
     };
 
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
+    canvas.width = 256;
+    canvas.height = 256;
 
     const matrix = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&*()*&^%';
     const fontSize = 10;

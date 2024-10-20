@@ -94,7 +94,7 @@ export default function NavBar() {
         {!isMobile && (
           <div className="flex-grow flex justify-center items-start">
             <motion.ul
-              className="flex space-x-6 list-none m-0 p-2 rounded-full relative shadow-lg bg-white"
+              className="flex space-x-6 list-none m-0 p-2 rounded-full relative shadow-lg bg-gray-800"
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.3 }}
             >
@@ -103,7 +103,7 @@ export default function NavBar() {
                   <motion.li key={item} className="relative z-10" variants={tabVariants}>
                     {activeTab === item && (
                       <motion.div
-                        className="absolute inset-0 bg-[#f94706] rounded-full shadow-md"
+                        className="absolute inset-0 bg-purple-600 rounded-full shadow-md"
                         layoutId="activeTab"
                         initial={false}
                         animate={{
@@ -121,7 +121,7 @@ export default function NavBar() {
                     <Link
                       href={`/${item.toLowerCase()}`}
                       className={`px-4 py-2 relative z-20 block transition-colors duration-300 no-underline ${
-                        activeTab === item ? 'text-white' : 'text-gray-800 hover:text-gray-600'
+                        activeTab === item ? 'text-white' : 'text-gray-300 hover:text-white'
                       }`}
                     >
                       <motion.span
@@ -130,14 +130,14 @@ export default function NavBar() {
                         whileHover={{
                           ...itemVariants.hover,
                           textShadow: '0 0 8px rgba(255, 255, 255, 0.8)',
-                          color: activeTab === item ? '#ffffff' : '#f94706',
+                          color: activeTab === item ? '#ffffff' : '#a855f7',
                         }}
                         whileTap="tap"
                         onClick={() => handleTabClick(item)}
                         animate={activeTab === item ? { rotate: [0, 5, -5, 0] } : {}}
                         transition={{ duration: 0.8 }}
                         style={{
-                          color: activeTab === item ? '#ffffff' : 'black',
+                          color: activeTab === item ? '#ffffff' : '#d1d5db',
                         }}
                       >
                         {item}

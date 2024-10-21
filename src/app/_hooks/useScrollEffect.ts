@@ -5,11 +5,16 @@ export function useScrollEffect(sections: string[]) {
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + window.innerHeight / 2;
+      const scrollPosition = window.scrollY;
+
+      if (scrollPosition < 100) {
+        setActiveSection('home');
+        return;
+      }
 
       for (let i = sections.length - 1; i >= 0; i--) {
         const section = document.getElementById(sections[i]);
-        if (section && section.offsetTop <= scrollPosition) {
+        if (section && section.offsetTop <= scrollPosition + window.innerHeight / 3) {
           setActiveSection(sections[i]);
           break;
         }

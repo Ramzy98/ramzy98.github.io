@@ -14,7 +14,7 @@ export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  const activeSection = useScrollEffect(tabs.map((tab) => tab.toLowerCase()));
+  const activeSection = useScrollEffect(['home', ...tabs.slice(1).map((tab) => tab.toLowerCase())]);
 
   useEffect(() => {
     setActiveTab(activeSection.charAt(0).toUpperCase() + activeSection.slice(1));

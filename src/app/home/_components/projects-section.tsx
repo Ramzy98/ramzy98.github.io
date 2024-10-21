@@ -43,7 +43,7 @@ const projects: Project[] = [
 
 export default function ProjectsSection() {
   return (
-    <section id="projects" className="py-16 sm:py-24 relative overflow-hidden">
+    <section id="projects" className="relative overflow-hidden">
       <div className="container mx-auto px-4">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}

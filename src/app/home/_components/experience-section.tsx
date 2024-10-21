@@ -51,7 +51,7 @@ export default function ExperienceSection() {
   const isTablet = useMediaQuery('(min-width:641px) and (max-width:1024px)');
 
   return (
-    <section id="experience" className="py-8 sm:py-16 md:py-24 lg:py-32 relative overflow-hidden">
+    <section id="experience" className="relative overflow-hidden">
       <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-6 sm:mb-8 md:mb-12 lg:mb-16 text-white">
         Experience
       </h2>

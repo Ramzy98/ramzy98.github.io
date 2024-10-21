@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaMedium, FaXTwitter } from 'react-icons/fa6';
 import { SiGmail } from 'react-icons/si';
 
-const Footer: React.FC = () => {
+export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   const socialLinks = [
@@ -51,6 +51,4 @@ const Footer: React.FC = () => {
       </div>
     </motion.footer>
   );
-};
-
-export default Footer;
+}

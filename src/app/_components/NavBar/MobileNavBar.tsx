@@ -1,5 +1,4 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import Link from 'next/link';
 import { FaBars } from 'react-icons/fa6';
 import { IoMdClose } from 'react-icons/io';
 
@@ -20,6 +19,13 @@ export default function MobileNavBar({
   setIsMenuOpen,
   handleTabClick,
 }: MobileNavBarProps) {
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <AnimatePresence>
       {isMobile ? (
@@ -67,13 +73,13 @@ export default function MobileNavBar({
                 whileHover={{ backgroundColor: 'rgba(249, 71, 6, 0.15)' }}
                 transition={{ duration: 0.2 }}
               >
-                <Link
-                  href={`/${item.toLowerCase()}`}
-                  className={`block ${
+                <button
+                  className={`block w-full text-left ${
                     activeTab === item ? 'text-[#ff5722]' : 'text-white hover:text-[#ff5722]'
                   } transition-colors duration-200`}
                   onClick={() => {
                     handleTabClick(item);
+                    scrollToSection(item.toLowerCase());
                     setIsMenuOpen(false);
                   }}
                 >
@@ -83,7 +89,7 @@ export default function MobileNavBar({
                   >
                     {item}
                   </motion.span>
-                </Link>
+                </button>
               </motion.li>
             ))}
           </ul>

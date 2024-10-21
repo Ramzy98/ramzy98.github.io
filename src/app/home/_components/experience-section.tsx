@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { FaRocket, FaSatellite, FaSpaceShuttle, FaLaptopCode } from 'react-icons/fa';
 import {
@@ -9,7 +9,7 @@ import {
   TimelineContent,
   TimelineDot,
 } from '@mui/lab';
-import { Typography, Paper } from '@mui/material';
+import { useMediaQuery } from '@mui/material';
 
 const experiences = [
   {
@@ -47,11 +47,24 @@ const experiences = [
 ];
 
 export default function ExperienceSection() {
+  const isMobile = useMediaQuery('(max-width:640px)');
+  const isTablet = useMediaQuery('(min-width:641px) and (max-width:1024px)');
+
   return (
-    <section id="experience" className="py-32 relative overflow-hidden">
-      <h2 className="text-4xl font-bold text-center mb-16 text-white">Experience</h2>
+    <section id="experience" className="py-8 sm:py-16 md:py-24 lg:py-32 relative overflow-hidden">
+      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-6 sm:mb-8 md:mb-12 lg:mb-16 text-white">
+        Experience
+      </h2>
       <div className="container mx-auto px-4">
-        <Timeline position="alternate" sx={{ '& .MuiTimelineItem-root': { minHeight: '200px' } }}>
+        <Timeline
+          position={isMobile ? 'right' : 'alternate'}
+          sx={{
+            '& .MuiTimelineItem-root': {
+              minHeight: isMobile ? '120px' : isTablet ? '160px' : '200px',
+              flexDirection: isMobile ? 'column' : 'row',
+            },
+          }}
+        >
           {experiences.map((exp, index) => (
             <TimelineItem key={index}>
               <TimelineSeparator>
@@ -62,7 +75,12 @@ export default function ExperienceSection() {
                     boxShadow: 'none',
                   }}
                 >
-                  {React.cloneElement(exp.icon, { style: { fontSize: '20px', color: '#3b82f6' } })}
+                  {React.cloneElement(exp.icon, {
+                    style: {
+                      fontSize: isMobile ? '14px' : isTablet ? '18px' : '20px',
+                      color: '#3b82f6',
+                    },
+                  })}
                 </TimelineDot>
                 {index !== experiences.length - 1 && (
                   <TimelineConnector sx={{ backgroundColor: '#3b82f6' }} />
@@ -75,10 +93,12 @@ export default function ExperienceSection() {
                     transition: { duration: 0.2 },
                   }}
                 >
-                  <div className="bg-gray-800 bg-opacity-30 text-white p-4 rounded-lg border border-gray-700 backdrop-filter backdrop-blur-sm">
-                    <h3 className="font-semibold text-lg mb-1">{exp.title}</h3>
-                    <p className="text-blue-300 text-sm mb-2">{exp.company}</p>
-                    <p className="text-gray-400 text-xs mb-2">{exp.description}</p>
+                  <div className="bg-gray-800 bg-opacity-30 text-white p-2 sm:p-3 md:p-4 rounded-lg border border-gray-700 backdrop-filter backdrop-blur-sm">
+                    <h3 className="font-semibold text-sm sm:text-base md:text-lg mb-1">
+                      {exp.title}
+                    </h3>
+                    <p className="text-blue-300 text-xs sm:text-sm mb-1 md:mb-2">{exp.company}</p>
+                    <p className="text-gray-400 text-xs mb-1 md:mb-2">{exp.description}</p>
                     <p className="text-gray-500 text-xs">
                       {exp.date.includes('Present') ? (
                         <>
@@ -98,7 +118,7 @@ export default function ExperienceSection() {
       </div>
 
       {[FaRocket, FaSatellite, FaSpaceShuttle, FaLaptopCode].map((Icon, index) => {
-        const size = Math.random() * 40 + 20; // Random size between 20 and 60
+        const size = Math.random() * 30 + 10; // Random size between 10 and 40
         const left = Math.random() * 100; // Random horizontal position
         const top = Math.random() * 100; // Random vertical position
         const duration = Math.random() * 20 + 10; // Random animation duration

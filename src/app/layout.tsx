@@ -1,7 +1,7 @@
 import { Syne } from 'next/font/google';
 import dynamic from 'next/dynamic';
 import './globals.css';
-import Footer from '@/app/_components/footer';
+import Footer from '@/app/_components/footer/footer';
 
 const StarryBackground = dynamic(() => import('@/app/_components/starry-background'), {
   ssr: false,

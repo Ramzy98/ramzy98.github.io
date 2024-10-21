@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import AnimatedLogo from '@/app/_components/animated-logo';
 import MobileNavBar from '@/app/_components/nav-bar/mobile-nav-bar';
 import { useScrollEffect } from '@/app/_hooks/useScrollEffect';
@@ -13,7 +13,6 @@ export default function NavBar() {
   const tabs = useMemo(() => ['Home', 'Experience', 'Skills', 'Projects', 'Contact'], []);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const router = useRouter();
 
   const activeSection = useScrollEffect(tabs.map((tab) => tab.toLowerCase()));
 
@@ -118,7 +117,7 @@ export default function NavBar() {
       const sectionId = item.toLowerCase();
       const element = document.getElementById(sectionId);
       if (element) {
-        const headerHeight = 80; // Adjust this value based on your header's actual height
+        const headerHeight = 80;
         const elementPosition = element.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
 

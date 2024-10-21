@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { FaBars } from 'react-icons/fa6';
+import { FaBars, FaBomb, FaStar, FaUser } from 'react-icons/fa6';
 import { IoMdClose } from 'react-icons/io';
 
 interface MobileNavBarProps {
@@ -40,6 +40,24 @@ export default function MobileNavBar({
     }
   };
 
+  const createSprinkle = (color: string) => {
+    const sprinkle = document.createElement('div');
+    sprinkle.style.position = 'fixed';
+    sprinkle.style.width = '10px';
+    sprinkle.style.height = '10px';
+    sprinkle.style.backgroundColor = color;
+    sprinkle.style.borderRadius = '50%';
+    sprinkle.style.pointerEvents = 'none';
+    sprinkle.style.left = `${Math.random() * 100}vw`;
+    sprinkle.style.top = `${Math.random() * 100}vh`;
+    sprinkle.style.animation = `fall 3s linear`;
+    document.body.appendChild(sprinkle);
+
+    setTimeout(() => {
+      document.body.removeChild(sprinkle);
+    }, 3000);
+  };
+
   return (
     <AnimatePresence>
       {isMobile ? (
@@ -64,11 +82,19 @@ export default function MobileNavBar({
         </div>
       ) : (
         <div className="hidden md:flex items-center justify-end flex-shrink-0 w-[200px]">
-          <motion.div
-            className="w-10 h-10 bg-purple-400 rounded-full"
-            whileHover={{ scale: 1.1 }}
+          <motion.button
+            className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-red-500 to-pink-500 rounded-full shadow-lg"
+            whileHover={{ scale: 1.1, boxShadow: '0 0 15px rgba(255, 0, 0, 0.7)' }}
             whileTap={{ scale: 0.9 }}
-          />
+            onClick={() => {
+              const colors = ['#FF69B4', '#00CED1', '#FFD700', '#FF6347', '#7B68EE'];
+              for (let i = 0; i < 50; i++) {
+                createSprinkle(colors[Math.floor(Math.random() * colors.length)]);
+              }
+            }}
+          >
+            <FaBomb className="text-white" size={20} />
+          </motion.button>
         </div>
       )}
       {isMenuOpen && isMobile && (

@@ -3,7 +3,7 @@
 import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 
-const StarryBackground: React.FC = () => {
+export default function StarryBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -77,6 +77,4 @@ const StarryBackground: React.FC = () => {
       transition={{ duration: 1 }}
     />
   );
-};
-
-export default StarryBackground;
+}

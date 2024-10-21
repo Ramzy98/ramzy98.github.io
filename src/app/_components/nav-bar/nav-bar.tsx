@@ -3,8 +3,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname, useRouter } from 'next/navigation';
-import AnimatedLogo from '@/app/_components/animatedLogo';
-import MobileNavBar from '@/app/_components/navBar/mobileNavBar';
+import AnimatedLogo from '@/app/_components/animated-logo';
+import MobileNavBar from '@/app/_components/nav-bar/mobile-nav-bar';
 import { useScrollEffect } from '@/app/_hooks/useScrollEffect';
 
 export default function NavBar() {

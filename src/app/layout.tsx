@@ -3,15 +3,15 @@ import dynamic from 'next/dynamic';
 import './globals.css';
 import Footer from '@/app/_components/footer';
 
-const StarryBackground = dynamic(() => import('@/app/_components/starryBackground'), {
+const StarryBackground = dynamic(() => import('@/app/_components/starry-background'), {
   ssr: false,
 });
 
-const ScrollProgress = dynamic(() => import('@/app/_components/ScrollProgress'), {
+const ScrollProgress = dynamic(() => import('@/app/_components/scroll-progress'), {
   ssr: false,
 });
 
-const NavBar = dynamic(() => import('@/app/_components/navBar/NavBar'), {
+const NavBar = dynamic(() => import('@/app/_components/nav-bar/nav-bar'), {
   ssr: false,
 });
 

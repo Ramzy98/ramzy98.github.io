@@ -83,7 +83,7 @@ export default function AboutSection() {
   }, []);
 
   return (
-    <section id="home" className="flex flex-col justify-center items-center sm:p-8">
+    <section id="about" className="flex flex-col justify-center items-center sm:p-8">
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}

@@ -20,9 +20,23 @@ export default function MobileNavBar({
   handleTabClick,
 }: MobileNavBarProps) {
   const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    if (sectionId.toLowerCase() === 'home' || sectionId.toLowerCase() === 'about') {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    } else {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        const headerHeight = 80;
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth',
+        });
+      }
     }
   };
 
@@ -79,7 +93,7 @@ export default function MobileNavBar({
                   } transition-colors duration-200`}
                   onClick={() => {
                     handleTabClick(item);
-                    scrollToSection(item.toLowerCase());
+                    scrollToSection(item.toLowerCase() === 'home' ? 'about' : item.toLowerCase());
                     setIsMenuOpen(false);
                   }}
                 >

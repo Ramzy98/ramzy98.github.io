@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import AnimatedLogo from '@/app/_components/animated-logo';
 import MobileNavBar from '@/app/_components/nav-bar/mobile-nav-bar';
 import { useScrollEffect } from '@/app/_hooks/useScrollEffect';
@@ -13,7 +13,6 @@ export default function NavBar() {
   const tabs = useMemo(() => ['Home', 'Experience', 'Skills', 'Projects', 'Contact'], []);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const router = useRouter();
 
   const activeSection = useScrollEffect(tabs.map((tab) => tab.toLowerCase()));
 
@@ -22,7 +21,7 @@ export default function NavBar() {
   }, [activeSection]);
 
   useEffect(() => {
-    const currentPath = pathname?.slice(1) || 'about';
+    const currentPath = pathname?.slice(1) || 'home';
     const currentTab = tabs.find((tab) => tab.toLowerCase() === currentPath);
     if (currentTab) {
       setActiveTab(currentTab);
@@ -108,25 +107,17 @@ export default function NavBar() {
   const handleTabClick = (item: string) => {
     setActiveTab(item);
     setIsMenuOpen(false);
+    const sectionId = item.toLowerCase() === 'home' ? 'about' : item.toLowerCase();
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const headerHeight = 80; // Adjust this value based on your header's actual height
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
 
-    if (item.toLowerCase() === 'home' || item.toLowerCase() === 'about') {
       window.scrollTo({
-        top: 0,
+        top: offsetPosition,
         behavior: 'smooth',
       });
-    } else {
-      const sectionId = item.toLowerCase();
-      const element = document.getElementById(sectionId);
-      if (element) {
-        const headerHeight = 80; // Adjust this value based on your header's actual height
-        const elementPosition = element.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
-
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: 'smooth',
-        });
-      }
     }
   };
 

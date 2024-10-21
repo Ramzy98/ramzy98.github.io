@@ -7,7 +7,11 @@ const StarryBackground = dynamic(() => import('@/app/_components/starryBackgroun
   ssr: false,
 });
 
-const NavBar = dynamic(() => import('@/app/_components/navBar/navBar'), {
+const ScrollProgress = dynamic(() => import('@/app/_components/ScrollProgress'), {
+  ssr: false,
+});
+
+const NavBar = dynamic(() => import('@/app/_components/navBar/NavBar'), {
   ssr: false,
 });
 
@@ -32,9 +36,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={`${syne.className} flex flex-col min-h-screen`}>
         <StarryBackground />
+        <ScrollProgress />
         <NavBar />
 
-        <main className="p-8">{children}</main>
+        <main className="flex-grow pt-20 p-8">{children}</main>
 
         <Footer />
       </body>

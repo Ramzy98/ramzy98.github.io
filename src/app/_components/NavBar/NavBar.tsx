@@ -6,13 +6,20 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import AnimatedLogo from '@/app/_components/animatedLogo';
 import MobileNavBar from '@/app/_components/navBar/mobileNavBar';
+import { useScrollEffect } from '@/app/_hooks/useScrollEffect';
 
 export default function NavBar() {
   const pathname = usePathname();
   const [activeTab, setActiveTab] = useState('Home');
-  const tabs = useMemo(() => ['Home', 'Resume', 'Blog', 'Contact'], []);
+  const tabs = useMemo(() => ['Home', 'Experience', 'Skills', 'Projects', 'Contact'], []);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+
+  const activeSection = useScrollEffect(tabs.map((tab) => tab.toLowerCase()));
+
+  useEffect(() => {
+    setActiveTab(activeSection.charAt(0).toUpperCase() + activeSection.slice(1));
+  }, [activeSection]);
 
   useEffect(() => {
     const currentPath = pathname?.slice(1) || 'home';
@@ -85,7 +92,12 @@ export default function NavBar() {
   };
 
   return (
-    <motion.header initial="visible" animate="visible" variants={navVariants} className="relative">
+    <motion.header
+      initial="visible"
+      animate="visible"
+      variants={navVariants}
+      className="fixed top-0 left-0 right-0 z-50 bg-gray-900 bg-opacity-80 backdrop-filter backdrop-blur-lg"
+    >
       <motion.nav
         className={`flex items-center ${isMobile ? 'justify-between' : 'justify-center'} p-4`}
       >

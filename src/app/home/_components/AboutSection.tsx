@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence, useTransform, useScroll } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaMedium, FaXTwitter } from 'react-icons/fa6';
 import { SiGmail } from 'react-icons/si';
 import Image from 'next/image';
@@ -8,9 +8,6 @@ export default function AboutSection() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [titleIndex, setTitleIndex] = useState(0);
   const titles = ['Software Engineer', 'Fullstack Engineer', 'Frontend Engineer', 'Pizza Lover 🍕'];
-
-  const { scrollYProgress } = useScroll();
-  const y = useTransform(scrollYProgress, [0, 1], [0, 300]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -86,26 +83,12 @@ export default function AboutSection() {
   }, []);
 
   return (
-    <motion.section
-      id="home"
-      className="flex flex-col justify-center items-center sm:p-8 relative"
-      style={{
-        backgroundImage: "url('/path-to-your-background-image.jpg')",
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
-    >
-      <motion.div
-        style={{
-          y: useTransform(scrollYProgress, [0, 1], [0, 300]),
-        }}
-        className="absolute inset-0 z-0"
-      />
+    <section id="home" className="flex flex-col justify-center items-center sm:p-8">
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="text-center w-full max-w-4xl relative z-10"
+        className="text-center w-full max-w-4xl"
       >
         <motion.div
           className="w-48 h-48 sm:w-64 sm:h-64 mx-auto mb-6 sm:mb-8 relative overflow-hidden rounded-full border-4 border-purple-500 shadow-2xl"
@@ -198,6 +181,6 @@ export default function AboutSection() {
           ))}
         </motion.div>
       </motion.div>
-    </motion.section>
+    </section>
   );
 }

@@ -47,24 +47,6 @@ const experiences = [
 ];
 
 export default function ExperienceSection() {
-  useEffect(() => {
-    const handleScroll = () => {
-      const experienceSection = document.getElementById('experience');
-      if (experienceSection) {
-        const rect = experienceSection.getBoundingClientRect();
-        if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
-          // If the experience section is in view, update the navbar
-          // You might want to use a global state management solution or context to update the navbar
-          // For now, we'll just log to the console
-          console.log('Experience section in view');
-        }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   return (
     <section id="experience" className="py-32 relative overflow-hidden">
       <h2 className="text-4xl font-bold text-center mb-16 text-white">Experience</h2>
@@ -74,63 +56,40 @@ export default function ExperienceSection() {
             <TimelineItem key={index}>
               <TimelineSeparator>
                 <TimelineDot
-                  color="primary"
                   sx={{
-                    width: '40px',
-                    height: '40px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
+                    backgroundColor: 'transparent',
+                    border: '2px solid #3b82f6',
+                    boxShadow: 'none',
                   }}
                 >
-                  {React.cloneElement(exp.icon, { style: { fontSize: '24px' } })}
+                  {React.cloneElement(exp.icon, { style: { fontSize: '20px', color: '#3b82f6' } })}
                 </TimelineDot>
-                {index !== experiences.length - 1 && <TimelineConnector sx={{ height: '120px' }} />}
+                {index !== experiences.length - 1 && (
+                  <TimelineConnector sx={{ backgroundColor: '#3b82f6' }} />
+                )}
               </TimelineSeparator>
-              <TimelineContent sx={{ py: '40px', px: 2 }}>
+              <TimelineContent sx={{ py: '12px', px: 2 }}>
                 <motion.div
                   whileHover={{
-                    scale: 1.05,
-                    transition: { duration: 0.3 },
+                    translateY: -5,
+                    transition: { duration: 0.2 },
                   }}
                 >
-                  <Paper
-                    elevation={1}
-                    className="p-6 bg-white bg-opacity-10 text-white rounded-lg relative overflow-hidden transition-all duration-300 hover:bg-opacity-20"
-                    style={{
-                      backdropFilter: 'blur(5px)',
-                    }}
-                  >
-                    <div className="relative z-10">
-                      <Typography variant="h6" component="h3" className="font-semibold mb-2">
-                        {exp.title}
-                      </Typography>
-                      <Typography className="text-blue-200 mb-2">{exp.company}</Typography>
-                      <Typography className="text-gray-300 mb-3 text-sm">
-                        {exp.description}
-                      </Typography>
-                      <Typography variant="caption" className="text-gray-400 block">
-                        {exp.date.includes('Present') ? (
-                          <>
-                            {exp.date.split(' - ')[0]} -{' '}
-                            <motion.span
-                              className="inline-block px-2 py-1 rounded-full border border-teal-400 text-teal-400 font-semibold text-xs transition-all duration-300"
-                              whileHover={{
-                                backgroundColor: 'rgba(45, 212, 191, 0.1)',
-                                transition: {
-                                  duration: 0.3,
-                                },
-                              }}
-                            >
-                              Present
-                            </motion.span>
-                          </>
-                        ) : (
-                          exp.date
-                        )}
-                      </Typography>
-                    </div>
-                  </Paper>
+                  <div className="bg-gray-800 bg-opacity-30 text-white p-4 rounded-lg border border-gray-700 backdrop-filter backdrop-blur-sm">
+                    <h3 className="font-semibold text-lg mb-1">{exp.title}</h3>
+                    <p className="text-blue-300 text-sm mb-2">{exp.company}</p>
+                    <p className="text-gray-400 text-xs mb-2">{exp.description}</p>
+                    <p className="text-gray-500 text-xs">
+                      {exp.date.includes('Present') ? (
+                        <>
+                          {exp.date.split(' - ')[0]} -{' '}
+                          <span className="text-teal-400">Present</span>
+                        </>
+                      ) : (
+                        exp.date
+                      )}
+                    </p>
+                  </div>
                 </motion.div>
               </TimelineContent>
             </TimelineItem>

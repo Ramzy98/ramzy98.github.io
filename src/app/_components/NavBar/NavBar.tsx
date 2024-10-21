@@ -2,8 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { usePathname } from 'next/navigation';
-import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 import AnimatedLogo from '@/app/_components/animatedLogo';
 import MobileNavBar from '@/app/_components/navBar/mobileNavBar';
 import { useScrollEffect } from '@/app/_hooks/useScrollEffect';
@@ -14,6 +13,7 @@ export default function NavBar() {
   const tabs = useMemo(() => ['Home', 'Experience', 'Skills', 'Projects', 'Contact'], []);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const router = useRouter();
 
   const activeSection = useScrollEffect(tabs.map((tab) => tab.toLowerCase()));
 
@@ -40,6 +40,25 @@ export default function NavBar() {
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash) {
+        const element = document.getElementById(hash);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    };
+
+    handleHashChange(); // Handle initial load
+    window.addEventListener('hashchange', handleHashChange);
+
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+    };
   }, []);
 
   const itemVariants = {
@@ -89,6 +108,7 @@ export default function NavBar() {
   const handleTabClick = (item: string) => {
     setActiveTab(item);
     setIsMenuOpen(false);
+    router.push(`/home#${item.toLowerCase()}`);
   };
 
   return (
@@ -130,11 +150,11 @@ export default function NavBar() {
                       />
                     )}
 
-                    <Link
-                      href={`/${item.toLowerCase()}`}
+                    <button
                       className={`px-4 py-2 relative z-20 block transition-colors duration-300 no-underline ${
                         activeTab === item ? 'text-white' : 'text-gray-300 hover:text-white'
                       }`}
+                      onClick={() => handleTabClick(item)}
                     >
                       <motion.span
                         variants={itemVariants}
@@ -145,7 +165,6 @@ export default function NavBar() {
                           color: activeTab === item ? '#ffffff' : '#a855f7',
                         }}
                         whileTap="tap"
-                        onClick={() => handleTabClick(item)}
                         animate={activeTab === item ? { rotate: [0, 5, -5, 0] } : {}}
                         transition={{ duration: 0.8 }}
                         style={{
@@ -154,7 +173,7 @@ export default function NavBar() {
                       >
                         {item}
                       </motion.span>
-                    </Link>
+                    </button>
                   </motion.li>
                 ))}
               </AnimatePresence>

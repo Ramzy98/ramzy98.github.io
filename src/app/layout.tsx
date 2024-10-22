@@ -39,7 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ScrollProgress />
         <NavBar />
 
-        <main className="flex-grow pt-20 p-8">{children}</main>
+        <main className="flex-grow py-40 p-8">{children}</main>
 
         <Footer />
       </body>

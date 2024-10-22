@@ -64,7 +64,7 @@ export default function NavBar() {
   }, []);
 
   const itemVariants = {
-    initial: { scale: 1, opacity: 0.7 },
+    initial: { scale: 1, opacity: 0.9 },
     hover: {
       scale: 1.1,
       opacity: 1,
@@ -182,7 +182,8 @@ export default function NavBar() {
                         animate={activeTab === item ? { rotate: [0, 5, -5, 0] } : {}}
                         transition={{ duration: 0.8 }}
                         style={{
-                          color: activeTab === item ? '#ffffff' : '#d1d5db',
+                          color: '#ffffff',
+                          opacity: 1,
                         }}
                       >
                         {item}

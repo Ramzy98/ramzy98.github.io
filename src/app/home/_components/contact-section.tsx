@@ -124,16 +124,6 @@ export default function ContactSection() {
             </motion.p>
           )}
         </div>
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-center text-white mt-8 flex items-center justify-center"
-        >
-          <FaStar className="text-yellow-400 mr-2" />
-          The stars are me, twinkling in the cosmic web of connections
-          <FaStar className="text-yellow-400 ml-2" />
-        </motion.p>
       </div>
       <ContactBackground />
     </section>

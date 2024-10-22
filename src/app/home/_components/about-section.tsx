@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaMedium, FaXTwitter } from 'react-icons/fa6';
 import { SiGmail } from 'react-icons/si';
 import Image from 'next/image';
-import { FaCode, FaGraduationCap, FaWater, FaUsers } from 'react-icons/fa';
 
 export default function AboutSection() {
   const canvasRef = useRef<HTMLCanvasElement>(null);

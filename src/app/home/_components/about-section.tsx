@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaMedium, FaXTwitter } from 'react-icons/fa6';
 import { SiGmail } from 'react-icons/si';
 import Image from 'next/image';
+import { FaCode, FaGraduationCap, FaWater, FaUsers } from 'react-icons/fa';
 
 export default function AboutSection() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -142,17 +143,20 @@ export default function AboutSection() {
             </motion.div>
           </AnimatePresence>
         </motion.div>
-        <motion.p
-          className="text-base sm:text-lg mb-6 sm:mb-8 max-w-2xl mx-auto text-gray-600 dark:text-gray-300"
+        <motion.div
+          className="mt-6 mb-8 text-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.8 }}
         >
-          Passionate Full Stack Software Engineer dedicated to crafting innovative digital
-          solutions. I thrive on solving complex problems and creating seamless user experiences.
-          With a background in teaching and a love for continuous learning. Always eager to dive
-          into new challenges, both in code and underwater! 🤿
-        </motion.p>
+          <p className="text-lg text-gray-300 leading-relaxed">
+            Passionate Full Stack Software Engineer crafting intuitive, user-centric web
+            applications. I build products that make a difference, blending clean code with
+            creativity. Always eager to learn and take on new challenges. When not coding, you'll
+            find me by the sea, playing football, or exploring new technologies.
+          </p>
+        </motion.div>
+
         <motion.div
           className="flex justify-center space-x-4 sm:space-x-6"
           initial={{ opacity: 0, y: 20 }}

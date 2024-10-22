@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as THREE from 'three';
 import { useRouter } from 'next/navigation';
+import { sendGTMEvent } from '@next/third-parties/google';
 
 export default function NotFound() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -91,6 +92,7 @@ export default function NotFound() {
   }, []);
 
   const handleEscape = () => {
+    sendGTMEvent({ event: '404_escape_click' });
     router.push('/home');
   };
 

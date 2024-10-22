@@ -64,8 +64,13 @@ jobs:
       - name: Install dependencies # Install project dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
 
-      - name: Build with Next.js # Build the Next.js application
-        run: ${{ steps.detect-package-manager.outputs.runner }} next build
+      - name: Build with Next.js
+        env:
+          NEXT_PUBLIC_GA_ID: ${{ secrets.NEXT_PUBLIC_GA_ID }}
+          NODE_ENV: production
+        run: |
+          echo "NEXT_PUBLIC_GA_ID=$NEXT_PUBLIC_GA_ID" >> .env
+          ${{ steps.detect-package-manager.outputs.runner }} next build
 
       - name: Add .nojekyll file
         run: touch ./out/.nojekyll

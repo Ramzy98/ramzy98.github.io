@@ -1,5 +1,5 @@
 import React from 'react';
-import Loading from '@/app/_components/loading';
+import Loading from '../_components/loading';
 
 export default function HomeLoading() {
   return (

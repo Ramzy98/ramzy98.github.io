@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
 import Image from 'next/image';
+import { sendGTMEvent } from '@next/third-parties/google';
 
 interface Project {
   title: string;
@@ -33,9 +34,9 @@ const projects: Project[] = [
   {
     title: 'Examify',
     description:
-      'React Native exam app: create, share, and take tests. Real-time updates and automatic grading make learning a breeze.',
+      'React exam app: create, share, and take tests. Real-time updates and automatic grading make learning a breeze.',
     image: '/mrbean.gif',
-    technologies: ['React Native', 'JavaScript'],
+    technologies: ['React', 'Axios', 'JavaScript'],
     githubLink: 'https://github.com/Ramzy98/examify',
     liveLink: 'https://examify.vercel.app/',
   },
@@ -90,6 +91,13 @@ export default function ProjectsSection() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-400 hover:text-blue-300 transition-colors duration-300"
+                    onClick={() =>
+                      sendGTMEvent({
+                        event: 'project_link_click',
+                        project: project.title,
+                        type: 'github',
+                      })
+                    }
                   >
                     <FaGithub className="inline-block mr-2" />
                     GitHub
@@ -100,6 +108,13 @@ export default function ProjectsSection() {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-green-400 hover:text-green-300 transition-colors duration-300"
+                      onClick={() =>
+                        sendGTMEvent({
+                          event: 'project_link_click',
+                          project: project.title,
+                          type: 'live_demo',
+                        })
+                      }
                     >
                       <FaExternalLinkAlt className="inline-block mr-2" />
                       Live Demo

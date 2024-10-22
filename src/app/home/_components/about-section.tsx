@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaMedium, FaXTwitter } from 'react-icons/fa6';
 import { SiGmail } from 'react-icons/si';
 import Image from 'next/image';
+import { sendGTMEvent } from '@next/third-parties/google';
 
 export default function AboutSection() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -184,6 +185,7 @@ export default function AboutSection() {
               }}
               whileTap={{ scale: 0.9 }}
               className="text-2xl sm:text-3xl text-gray-800 dark:text-white transition-colors duration-300"
+              onClick={() => sendGTMEvent({ event: 'social_link_click', platform: Icon.name })}
             >
               <Icon />
             </motion.a>

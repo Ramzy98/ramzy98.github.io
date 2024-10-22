@@ -3,9 +3,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname } from 'next/navigation';
-import AnimatedLogo from '@/app/_components/animated-logo';
-import MobileNavBar from '@/app/_components/nav-bar/mobile-nav-bar';
-import { useScrollEffect } from '@/app/_hooks/useScrollEffect';
+import AnimatedLogo from '../animated-logo';
+import MobileNavBar from './mobile-nav-bar';
+import { useScrollEffect } from '../../_hooks/useScrollEffect';
+import { sendGTMEvent } from '@next/third-parties/google';
 
 export default function NavBar() {
   const pathname = usePathname();
@@ -21,6 +22,7 @@ export default function NavBar() {
 
   useEffect(() => {
     setActiveTab(activeSection.charAt(0).toUpperCase() + activeSection.slice(1));
+    sendGTMEvent({ event: 'section_view', section: activeSection });
   }, [activeSection]);
 
   useEffect(() => {

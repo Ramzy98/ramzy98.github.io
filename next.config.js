@@ -6,9 +6,11 @@ const nextConfig = {
   },
   assetPrefix: '/',
   reactStrictMode: true,
-  swcMinify: true,
   compiler: {
     removeConsole: process.env.NODE_ENV !== 'development',
+  },
+  env: {
+    NEXT_PUBLIC_GA_ID: process.env.NEXT_PUBLIC_GA_ID,
   },
 };
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaPaperPlane, FaRocket } from 'react-icons/fa';
+import { sendGTMEvent } from '@next/third-parties/google';
 
 export default function ContactSection() {
   const [name, setName] = useState('');
@@ -26,14 +27,17 @@ export default function ContactSection() {
         setSubmitMessage(
           "Message sent to the cosmos! I'll respond faster than light travel permits."
         );
+        sendGTMEvent({ event: 'contact_form_submit', status: 'success' });
         setName('');
         setEmail('');
         setMessage('');
       } else {
         setSubmitMessage("Houston, we've had a problem. Please try again later.");
+        sendGTMEvent({ event: 'contact_form_submit', status: 'error' });
       }
     } catch (error) {
       setSubmitMessage('Communication disrupted by a black hole. Please try again.');
+      sendGTMEvent({ event: 'contact_form_submit', status: 'error' });
     } finally {
       setIsSubmitting(false);
     }

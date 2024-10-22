@@ -21,13 +21,11 @@ export default function NotFound() {
 
     renderer.setSize(300, 300);
 
-    // Create a black hole
     const blackHoleGeometry = new THREE.SphereGeometry(3, 32, 32);
     const blackHoleMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
     const blackHole = new THREE.Mesh(blackHoleGeometry, blackHoleMaterial);
     scene.add(blackHole);
 
-    // Create an accretion disk
     const diskGeometry = new THREE.RingGeometry(4, 8, 64);
     const diskMaterial = new THREE.ShaderMaterial({
       uniforms: {
@@ -58,7 +56,6 @@ export default function NotFound() {
     accretionDisk.rotation.x = Math.PI / 2;
     scene.add(accretionDisk);
 
-    // Add stars
     const starsGeometry = new THREE.BufferGeometry();
     const starsMaterial = new THREE.PointsMaterial({
       color: 0xffffff,
@@ -71,10 +68,7 @@ export default function NotFound() {
       const z = THREE.MathUtils.randFloatSpread(1000);
       starsVertices.push(x, y, z);
     }
-    starsGeometry.setAttribute(
-      'position',
-      new THREE.Float32BufferAttribute(starsVertices, 3)
-    );
+    starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starsVertices, 3));
     const starField = new THREE.Points(starsGeometry, starsMaterial);
     scene.add(starField);
 
@@ -101,23 +95,23 @@ export default function NotFound() {
   };
 
   return (
-    <div className='flex flex-col items-center justify-center p-10 min-h-screen overflow-hidden'>
+    <div className="flex flex-col items-center justify-center p-10 min-h-screen overflow-hidden">
       <AnimatePresence>
         <motion.div
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.5 }}
           transition={{ duration: 1, ease: 'easeInOut' }}
-          className='text-center flex flex-col items-center relative'
+          className="text-center flex flex-col items-center relative"
         >
           <canvas
             ref={canvasRef}
-            className='mb-4 rounded-full shadow-lg shadow-purple-500/50'
+            className="mb-4 rounded-full shadow-lg shadow-purple-500/50"
             width={300}
             height={300}
           />
           <motion.h1
-            className='text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 mb-2'
+            className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 mb-2"
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2, type: 'spring', stiffness: 120 }}
@@ -125,7 +119,7 @@ export default function NotFound() {
             404
           </motion.h1>
           <motion.p
-            className='text-xl text-white mb-2'
+            className="text-xl text-white mb-2"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.8 }}
@@ -133,28 +127,25 @@ export default function NotFound() {
             Oops! You&apos;ve been sucked into a black hole.
           </motion.p>
           <motion.div
-            className='text-white text-opacity-70 mb-4 max-w-md'
+            className="text-white text-opacity-70 mb-4 max-w-md"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1, duration: 1 }}
           >
-            <p>
-              Don&apos;t panic! Even light can&apos;t escape this 404 error, but
-              you can!
-            </p>
+            <p>Don&apos;t panic! Even light can&apos;t escape this 404 error, but you can!</p>
           </motion.div>
 
           <motion.button
             onClick={handleEscape}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className='bg-gradient-to-r from-purple-500 to-pink-500 text-white px-5 py-2 rounded-full font-semibold hover:from-purple-600 hover:to-pink-600 transition duration-300 shadow-lg'
+            className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-5 py-2 rounded-full font-semibold hover:from-purple-600 hover:to-pink-600 transition duration-300 shadow-lg"
           >
             Escape the Event Horizon
           </motion.button>
 
           <motion.div
-            className='absolute top-0 left-0 w-full h-full pointer-events-none'
+            className="absolute top-0 left-0 w-full h-full pointer-events-none"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.5, duration: 2 }}
@@ -162,7 +153,7 @@ export default function NotFound() {
             {[...Array(20)].map((_, index) => (
               <motion.div
                 key={index}
-                className='absolute bg-white rounded-full'
+                className="absolute bg-white rounded-full"
                 style={{
                   width: Math.random() * 3 + 1 + 'px',
                   height: Math.random() * 3 + 1 + 'px',

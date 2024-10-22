@@ -9,12 +9,15 @@ import { useScrollEffect } from '@/app/_hooks/useScrollEffect';
 
 export default function NavBar() {
   const pathname = usePathname();
-  const [activeTab, setActiveTab] = useState('Home');
-  const tabs = useMemo(() => ['Home', 'Experience', 'Skills', 'Projects', 'Contact'], []);
+  const [activeTab, setActiveTab] = useState('About');
+  const tabs = useMemo(() => ['About', 'Experience', 'Skills', 'Projects', 'Contact'], []);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  const activeSection = useScrollEffect(['home', ...tabs.slice(1).map((tab) => tab.toLowerCase())]);
+  const activeSection = useScrollEffect([
+    'about',
+    ...tabs.slice(1).map((tab) => tab.toLowerCase()),
+  ]);
 
   useEffect(() => {
     setActiveTab(activeSection.charAt(0).toUpperCase() + activeSection.slice(1));
@@ -52,7 +55,7 @@ export default function NavBar() {
       }
     };
 
-    handleHashChange(); // Handle initial load
+    handleHashChange();
     window.addEventListener('hashchange', handleHashChange);
 
     return () => {
@@ -108,24 +111,17 @@ export default function NavBar() {
     setActiveTab(item);
     setIsMenuOpen(false);
 
-    if (item.toLowerCase() === 'home' || item.toLowerCase() === 'about') {
+    const sectionId = item.toLowerCase();
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const headerHeight = 80;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
+
       window.scrollTo({
-        top: 0,
+        top: offsetPosition,
         behavior: 'smooth',
       });
-    } else {
-      const sectionId = item.toLowerCase();
-      const element = document.getElementById(sectionId);
-      if (element) {
-        const headerHeight = 80;
-        const elementPosition = element.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
-
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: 'smooth',
-        });
-      }
     }
   };
 

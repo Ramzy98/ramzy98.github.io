@@ -52,7 +52,7 @@ export default function Footer() {
         <div className="mt-4 text-center text-xs text-gray-400">
           <p>Built with Next.js, TypeScript, Tailwind CSS, and Framer Motion.</p>
           <p>
-            Deployed on GitHub Pages. View the
+            Deployed on GitHub Pages. View the{' '}
             <a
               href="https://github.com/Ramzy98/ramzy98.github.io"
               target="_blank"

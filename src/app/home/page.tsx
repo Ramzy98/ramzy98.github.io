@@ -40,7 +40,7 @@ export default function Page() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center space-y-40">
+    <div className="flex flex-col items-center justify-center space-y-80">
       <AboutSection />
       <ExperienceSection />
       <SkillsSection />

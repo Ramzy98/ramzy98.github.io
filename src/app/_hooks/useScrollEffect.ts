@@ -8,7 +8,7 @@ export function useScrollEffect(sections: string[]) {
       const scrollPosition = window.scrollY;
 
       if (scrollPosition < 100) {
-        setActiveSection('home');
+        setActiveSection('about');
         return;
       }
 

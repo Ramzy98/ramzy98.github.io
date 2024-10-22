@@ -118,11 +118,11 @@ export default function ExperienceSection() {
       </div>
 
       {[FaRocket, FaSatellite, FaSpaceShuttle, FaLaptopCode].map((Icon, index) => {
-        const size = Math.random() * 30 + 10; // Random size between 10 and 40
-        const left = Math.random() * 100; // Random horizontal position
-        const top = Math.random() * 100; // Random vertical position
-        const duration = Math.random() * 20 + 10; // Random animation duration
-        const delay = Math.random() * 5; // Random delay for staggered start
+        const size = Math.random() * 30 + 10;
+        const left = Math.random() * 100;
+        const top = Math.random() * 100;
+        const duration = Math.random() * 20 + 10;
+        const delay = Math.random() * 5;
 
         return (
           <motion.div

@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { FaBars, FaBomb, FaStar, FaUser } from 'react-icons/fa6';
+import { FaBars, FaBomb } from 'react-icons/fa6';
 import { IoMdClose } from 'react-icons/io';
 
 interface MobileNavBarProps {
@@ -20,7 +20,7 @@ export default function MobileNavBar({
   handleTabClick,
 }: MobileNavBarProps) {
   const scrollToSection = (sectionId: string) => {
-    if (sectionId.toLowerCase() === 'home' || sectionId.toLowerCase() === 'about') {
+    if (sectionId.toLowerCase() === 'about') {
       window.scrollTo({
         top: 0,
         behavior: 'smooth',
@@ -119,7 +119,7 @@ export default function MobileNavBar({
                   } transition-colors duration-200`}
                   onClick={() => {
                     handleTabClick(item);
-                    scrollToSection(item.toLowerCase() === 'home' ? 'about' : item.toLowerCase());
+                    scrollToSection(item.toLowerCase());
                     setIsMenuOpen(false);
                   }}
                 >

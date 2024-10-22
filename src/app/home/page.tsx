@@ -1,12 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import AboutSection from './_components/about-section';
-import ExperienceSection from './_components/experience-section';
-import Loading from '../_components/loading';
-import SkillsSection from './_components/skills-section';
-import ProjectsSection from './_components/projects-section';
-import ContactSection from './_components/contact-section';
+import AboutSection from '@/app/home/_components/about-section';
+import ExperienceSection from '@/app/home/_components/experience-section';
+import Loading from '@/app/_components/loading';
+import SkillsSection from '@/app/home/_components/skills-section';
+import ProjectsSection from '@/app/home/_components/projects-section';
+import ContactSection from '@/app/home/_components/contact-section';
 
 export default function Page() {
   const [isLoading, setIsLoading] = useState(true);

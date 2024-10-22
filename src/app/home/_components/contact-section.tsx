@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { FaPaperPlane, FaRocket, FaStar } from 'react-icons/fa';
+import { FaPaperPlane, FaRocket } from 'react-icons/fa';
 
 export default function ContactSection() {
   const [name, setName] = useState('');

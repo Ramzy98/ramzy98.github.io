@@ -4,11 +4,13 @@ import { FaGithub, FaLinkedin, FaMedium, FaXTwitter } from 'react-icons/fa6';
 import { SiGmail } from 'react-icons/si';
 import Image from 'next/image';
 import { sendGTMEvent } from '@next/third-parties/google';
+import ResumeModal from '../../_components/resume-modal';
 
 export default function AboutSection() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [titleIndex, setTitleIndex] = useState(0);
   const titles = ['Software Engineer', 'Fullstack Engineer', 'Frontend Engineer', 'Pizza Lover 🍕'];
+  const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -191,7 +193,17 @@ export default function AboutSection() {
             </motion.a>
           ))}
         </motion.div>
+
+        <motion.button
+          className="mt-6 px-6 py-3 bg-purple-600 text-white rounded-full font-semibold hover:bg-purple-700 transition duration-300 shadow-lg"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setIsResumeModalOpen(true)}
+        >
+          View Resume
+        </motion.button>
       </motion.div>
+      <ResumeModal isOpen={isResumeModalOpen} onClose={() => setIsResumeModalOpen(false)} />
     </section>
   );
 }

@@ -15,7 +15,7 @@ export default function Footer() {
       color: '#0077B5',
       link: 'https://www.linkedin.com/in/ahmadramzyag/',
     },
-    { Icon: FaMedium, color: '#00AB6C', link: 'https://medium.com/@aramzy' },
+    { Icon: FaMedium, color: '#00AB6C', link: 'https://medium.com/@ahmadramzy' },
     { Icon: FaXTwitter, color: '#1DA1F2', link: 'https://x.com/amazingramzy' },
     { Icon: SiGmail, color: '#EA4335', link: 'mailto:ahmadramzy988@gmail.com' },
   ];

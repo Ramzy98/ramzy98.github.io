@@ -84,7 +84,7 @@ export default function AboutSection() {
   }, []);
 
   return (
-    <section id="about" className="flex flex-col justify-center items-center lg:pt-8">
+    <section id="about" className="flex flex-col justify-center items-center">
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}

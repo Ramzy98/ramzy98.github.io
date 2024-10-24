@@ -124,6 +124,8 @@ export default function NavBar() {
         top: offsetPosition,
         behavior: 'smooth',
       });
+    } else {
+      window.location.href = `/`;
     }
   };
 

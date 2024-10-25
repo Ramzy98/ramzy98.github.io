@@ -44,18 +44,18 @@ export default function ContactSection() {
   };
 
   return (
-    <section id="contact" className="relative overflow-hidden p-8">
-      <div className="container mx-auto px-4">
+    <section id="contact" className="relative overflow-hidden py-12 px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-3xl sm:text-4xl font-bold text-center mb-12 text-white"
+          className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-8 sm:mb-12 text-white"
         >
           Contact Mission Control
         </motion.h2>
-        <div className="max-w-2xl mx-auto bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-lg rounded-lg p-8 shadow-lg">
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="max-w-lg sm:max-w-xl md:max-w-2xl mx-auto bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-lg rounded-lg p-6 sm:p-8 shadow-lg">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             <div>
               <label htmlFor="name" className="block text-white mb-2">
                 Your Earth Name
@@ -102,7 +102,7 @@ export default function ContactSection() {
               type="submit"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="w-full bg-purple-600 text-white py-3 rounded-md font-semibold flex items-center justify-center space-x-2"
+              className="w-full bg-purple-600 text-white py-2 sm:py-3 rounded-md font-semibold flex items-center justify-center space-x-2 text-sm sm:text-base"
               disabled={isSubmitting}
             >
               {isSubmitting ? (
@@ -140,15 +140,15 @@ function ContactBackground() {
       {[...Array(20)].map((_, index) => (
         <motion.div
           key={index}
-          className="absolute w-2 h-2 bg-purple-500 rounded-full"
+          className="absolute w-1 h-1 sm:w-2 sm:h-2 bg-purple-500 rounded-full"
           initial={{
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
+            x: `${Math.random() * 100}%`,
+            y: `${Math.random() * 100}%`,
             opacity: Math.random(),
           }}
           animate={{
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
+            x: `${Math.random() * 100}%`,
+            y: `${Math.random() * 100}%`,
             opacity: [0.2, 0.5, 0.2],
           }}
           transition={{

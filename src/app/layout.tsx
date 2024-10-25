@@ -26,7 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${syne.className} flex flex-col min-h-screen`}>
         {process.env.NEXT_PUBLIC_GA_ID && <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />}
         <DynamicComponents />
-        <main className="flex-grow py-32 p-8 lg:py-40 md:py-40">{children}</main>
+        <main className="flex-grow py-32 sm:p-8 lg:py-40 md:py-40">{children}</main>
         <Footer />
       </body>
     </html>

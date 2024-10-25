@@ -151,7 +151,7 @@ export default function AboutSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.8 }}
         >
-          <p className="text-lg text-gray-300 leading-relaxed">
+          <p className="text-lg text-gray-300 leading-relaxed px-4">
             Passionate Full Stack Software Engineer crafting intuitive, user-centric web
             applications. I build products that make a difference, blending clean code with
             creativity. Always eager to learn and take on new challenges. When not coding, you'll

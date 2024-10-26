@@ -19,7 +19,7 @@ const projects: Project[] = [
     description:
       'A Node.js API for ecommerce: users shop, admins manage. Express and PostgreSQL power this digital marketplace.',
     image: '/takemymoney.gif',
-    technologies: ['Node.js', 'TypeScript', 'PostgreSQL', '(AWS)'],
+    technologies: ['Node.js', 'TypeScript', 'PostgreSQL', 'AWS'],
     githubLink: 'https://github.com/Ramzy98/ecommerce-website-restful-api',
   },
   {
@@ -37,7 +37,7 @@ const projects: Project[] = [
       'React exam app: create, share, and take tests. Real-time updates and automatic grading make learning a breeze.',
     image: '/mrbean.gif',
     technologies: ['React', 'Axios', 'JavaScript'],
-    githubLink: 'https://github.com/Ramzy98/examify',
+    githubLink: 'https://github.com/Ahmed-HossamElDin/Examify',
     liveLink: 'https://examify.vercel.app/',
   },
 ];

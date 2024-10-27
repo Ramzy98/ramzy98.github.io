@@ -14,12 +14,17 @@ const NavBar = dynamic(() => import('@/app/_components/nav-bar/nav-bar'), {
   ssr: false,
 });
 
+const EnhancedPerformanceMonitor = dynamic(() => import('@/app/_components/enhanced-performance-monitor'), {
+  ssr: false,
+});
+
 export default function DynamicComponents() {
   return (
     <>
       <StarryBackground />
       <ScrollProgress />
       <NavBar />
+      <EnhancedPerformanceMonitor />
     </>
   );
 }

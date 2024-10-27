@@ -10,14 +10,19 @@ import {
   TimelineDot,
 } from '@mui/lab';
 import { useMediaQuery, Tooltip, Chip } from '@mui/material';
+import ReactMarkdown from 'react-markdown';
 
 const experiences = [
   {
     title: 'Full Stack Software Engineer',
     company: 'Centroid Solutions',
     date: 'Mar 2024 - Present',
-    description:
-      'Developing new product, full-stack development, API documentation, agile collaboration.',
+    description: [
+      'Part of the core team developing a new software product, working on both **frontend** and **backend** technologies',
+      'Developed frontend components with **React** and **TypeScript**, ensuring a responsive and user-friendly interface',
+      'Designed and documented RESTful APIs using **Swagger**, facilitating clear and efficient backend-frontend communication',
+      'Built scalable backend services with **Node.js**, **Fastify**, and **Prisma**, optimizing performance and data management',
+    ],
     icon: <FaLaptopCode />,
     skills: ['React', 'Next.js', 'Node.js', 'Tailwind', 'TypeScript', 'PostgresSQL'],
   },
@@ -25,8 +30,11 @@ const experiences = [
     title: 'Web Development Session Lead',
     company: 'Udacity',
     date: 'Dec 2023 - Present',
-    description:
-      'Conducting weekly sessions in HTML, CSS, and JavaScript for students. Offering hands-on guidance for projects and providing continuous support via community platform.',
+    description: [
+      'Mentored **50+ students** aged 12-17 in **HTML**, **CSS**, and **JavaScript**, enhancing their coding skills and comprehension',
+      'Guided students through project implementation, fostering practical application of web development concepts',
+      'Provided support and addressed inquiries during Connect sessions, ensuring a supportive learning environment',
+    ],
     skills: ['HTML', 'CSS', 'JavaScript'],
     icon: <FaRocket />,
   },
@@ -34,8 +42,15 @@ const experiences = [
     title: 'Frontend Software Engineer',
     company: 'Bayzat',
     date: 'Oct 2022 - Jan 2024',
-    description:
-      'Focused on React and Typescript development, driving feature implementation, utilizing Cypress for testing, and collaborating with cross-functional teams.',
+    description: [
+      'Part of the HR team responsible for developing and optimizing core features using **React** with **TypeScript**',
+      'Implemented shift scheduler feature with calendar view, optimized to handle **4,000+ cells** without performance issues',
+      'Developed deduction system for admins to set salary deduction policies based on user check-in delays',
+      'Contributed to migrating legacy features from **Ember.js**, improving performance and usability',
+      'Implemented design system components ensuring consistency across the application',
+      'Created automated tests with **Cypress** and utilized **Storybook** for component development',
+      'Engaged in entire product development lifecycle, from ideation to deployment',
+    ],
     skills: ['React', 'Typescript', 'Material UI', 'Cypress', 'Storybook'],
     icon: <FaSatellite />,
   },
@@ -43,8 +58,13 @@ const experiences = [
     title: 'Full Stack Software Engineer',
     company: 'Knowledge Officer',
     date: 'Sep 2021 - Aug 2022',
-    description:
-      'Improved the main platform and implemented new features to enhance the learning journey for users.',
+    description: [
+      `Led the revamp of the company's online platform using **React** with **TypeScript**`,
+      'Implemented automated tests with **Cypress** for integration and component testing',
+      'Contributed to backend development using **Ruby on Rails**',
+      'Collaborated daily with cross-functional teams to ensure smooth project execution',
+      'Resolved customer-reported bugs promptly, improving product quality',
+    ],
     skills: ['React', 'Redux', 'Ruby on Rails', 'TypeScript', 'PostgresSQL', 'AWS'],
     icon: <FaSpaceShuttle />,
   },
@@ -97,12 +117,65 @@ export default function ExperienceSection() {
                     transition: { duration: 0.2 },
                   }}
                 >
-                  <div className="bg-gray-800 bg-opacity-30 text-white p-4 rounded-lg border border-gray-700 backdrop-filter backdrop-blur-sm">
-                    <h3 className="font-semibold text-lg mb-1">{exp.title}</h3>
-                    <p className="text-blue-300 text-sm mb-2">{exp.company}</p>
-                    <p className="text-gray-400 text-sm mb-2">{exp.description}</p>
+                  <div className="bg-gray-800/40 text-white p-6 rounded-xl border border-gray-700/50 backdrop-blur-md shadow-lg hover:shadow-blue-500/10 transition-all duration-300">
+                    <div className="flex flex-col mb-4 text-start">
+                      <div className="flex items-center justify-between gap-2 text-sm">
+                        <h3 className="font-bold text-xl text-blue-400 mb-1">{exp.title}</h3>
+
+                        <Tooltip title={`Duration: ${calculateDuration(exp.date)}`} arrow>
+                          <span className="text-gray-400 cursor-help">
+                            {exp.date.includes('Present') ? (
+                              <>
+                                {exp.date.split(' - ')[0]} -{' '}
+                                <span className="text-teal-400 font-medium">Present</span>
+                              </>
+                            ) : (
+                              exp.date
+                            )}
+                          </span>
+                        </Tooltip>
+                      </div>
+                      <span className="text-gray-300">{exp.company}</span>
+                    </div>
+
+                    <ul className="space-y-2 mb-4 text-start">
+                      {Array.isArray(exp.description) ? (
+                        exp.description.map((item, i) => (
+                          <li
+                            key={i}
+                            className="text-start text-gray-300 text-sm inline-flex text-start items-start"
+                          >
+                            <span className="text-blue-400 mr-2">•</span>
+                            <span>
+                              <ReactMarkdown
+                                components={{
+                                  strong: ({ children }) => (
+                                    <span className="text-blue-400">{children}</span>
+                                  ),
+                                }}
+                              >
+                                {item}
+                              </ReactMarkdown>
+                            </span>
+                          </li>
+                        ))
+                      ) : (
+                        <li className="text-gray-300 text-sm">
+                          <ReactMarkdown
+                            components={{
+                              strong: ({ children }) => (
+                                <span className="text-blue-400 font-semibold">{children}</span>
+                              ),
+                            }}
+                          >
+                            {exp.description}
+                          </ReactMarkdown>
+                        </li>
+                      )}
+                    </ul>
+
                     {exp.skills && (
-                      <div className="inline-flex flex-wrap gap-2 mb-2">
+                      <div className="flex flex-wrap gap-2">
                         {exp.skills.map((skill, skillIndex) => (
                           <Chip
                             key={skillIndex}
@@ -111,36 +184,22 @@ export default function ExperienceSection() {
                             sx={{
                               backgroundColor: 'rgba(59, 130, 246, 0.1)',
                               backdropFilter: 'blur(8px)',
-                              color: '#a5f3fc',
-                              border: '1px solid rgba(165, 243, 252, 0.3)',
+                              color: '#93c5fd',
+                              border: '1px solid rgba(147, 197, 253, 0.2)',
                               fontWeight: 500,
                               fontSize: '0.75rem',
-                              padding: '4px 10px',
-                              borderRadius: '12px',
+                              height: '24px',
                               '&:hover': {
                                 backgroundColor: 'rgba(59, 130, 246, 0.2)',
-                                color: '#22d3ee',
-                                borderColor: 'rgba(34, 211, 238, 0.5)',
-                                boxShadow: '0 0 12px rgba(34, 211, 238, 0.3)',
+                                borderColor: 'rgba(147, 197, 253, 0.4)',
+                                boxShadow: '0 0 12px rgba(147, 197, 253, 0.2)',
                               },
-                              transition: 'all 0.3s ease-in-out',
+                              transition: 'all 0.2s ease-in-out',
                             }}
                           />
                         ))}
                       </div>
                     )}
-                    <Tooltip title={`Duration: ${calculateDuration(exp.date)}`} arrow>
-                      <p className="text-gray-500 text-xs cursor-help">
-                        {exp.date.includes('Present') ? (
-                          <>
-                            {exp.date.split(' - ')[0]} -{' '}
-                            <span className="text-teal-400">Present</span>
-                          </>
-                        ) : (
-                          exp.date
-                        )}
-                      </p>
-                    </Tooltip>
                   </div>
                 </motion.div>
               </TimelineContent>

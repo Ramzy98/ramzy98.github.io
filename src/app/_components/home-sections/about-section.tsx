@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaMedium, FaXTwitter } from 'react-icons/fa6';
 import { SiGmail } from 'react-icons/si';
 import Image from 'next/image';
-import { sendGTMEvent } from '@next/third-parties/google';
+import { useAnalyticsContext } from '../../_components/analytics-provider';
 import ResumeModal from '../../_components/resume-modal';
 
 export default function AboutSection() {
@@ -11,6 +11,7 @@ export default function AboutSection() {
   const [titleIndex, setTitleIndex] = useState(0);
   const titles = ['Software Engineer', 'Fullstack Engineer', 'Frontend Engineer', 'Pizza Lover 🍕'];
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
+  const { trackInteraction, trackUserJourney, trackConversion } = useAnalyticsContext();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -85,6 +86,32 @@ export default function AboutSection() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleSocialLinkClick = (platform: string) => {
+    trackInteraction('social_link_click', {
+      platform,
+      section: 'about',
+      link_type: 'social_media',
+    });
+    
+    trackUserJourney('social_media_engagement', 'about');
+    
+    // Track as conversion if it's LinkedIn (professional networking)
+    if (platform === 'FaLinkedin') {
+      trackConversion('linkedin_click', 1);
+    }
+  };
+
+  const handleResumeClick = () => {
+    setIsResumeModalOpen(true);
+    trackInteraction('resume_view', {
+      section: 'about',
+      action: 'open_resume_modal',
+    });
+    
+    trackUserJourney('resume_view', 'about');
+    trackConversion('resume_view', 1);
+  };
+
   return (
     <section id="about" className="flex flex-col justify-center items-center pt-2">
       <motion.div
@@ -134,7 +161,7 @@ export default function AboutSection() {
         >
           <AnimatePresence mode="wait">
             <motion.div
-              key={titleIndex}
+              key={`title-${titleIndex}`}
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -50, opacity: 0 }}
@@ -164,20 +191,20 @@ export default function AboutSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8, duration: 0.8 }}
-        >
-          {[
-            { Icon: FaGithub, color: 'white', link: 'https://github.com/Ramzy98' },
+        >          {[
+            { Icon: FaGithub, color: 'white', link: 'https://github.com/Ramzy98', platform: 'FaGithub' },
             {
               Icon: FaLinkedin,
               color: '#0077B5',
               link: 'https://www.linkedin.com/in/ahmadramzyag/',
+              platform: 'FaLinkedin',
             },
-            { Icon: FaMedium, color: '#00AB6C', link: 'https://medium.com/@ahmadramzy' },
-            { Icon: FaXTwitter, color: '#1DA1F2', link: 'https://x.com/amazingramzy' },
-            { Icon: SiGmail, color: '#EA4335', link: 'mailto:ahmadramzy988@gmail.com' },
-          ].map(({ Icon, color, link }, index) => (
+            { Icon: FaMedium, color: '#00AB6C', link: 'https://medium.com/@ahmadramzy', platform: 'FaMedium' },
+            { Icon: FaXTwitter, color: '#1DA1F2', link: 'https://x.com/amazingramzy', platform: 'FaXTwitter' },
+            { Icon: SiGmail, color: '#EA4335', link: 'mailto:ahmadramzy988@gmail.com', platform: 'SiGmail' },
+          ].map(({ Icon, color, link, platform }) => (
             <motion.a
-              key={index}
+              key={platform}
               target="_blank"
               rel="noopener noreferrer"
               href={link}
@@ -187,7 +214,7 @@ export default function AboutSection() {
               }}
               whileTap={{ scale: 0.9 }}
               className="text-2xl sm:text-3xl text-gray-800 dark:text-white transition-colors duration-300"
-              onClick={() => sendGTMEvent({ event: 'social_link_click', platform: Icon.name })}
+              onClick={() => handleSocialLinkClick(platform)}
             >
               <Icon />
             </motion.a>
@@ -198,7 +225,7 @@ export default function AboutSection() {
           className="mt-6 px-6 py-3 bg-purple-600 text-white rounded-full font-semibold hover:bg-purple-700 transition duration-300 shadow-lg"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => setIsResumeModalOpen(true)}
+          onClick={handleResumeClick}
         >
           View Resume
         </motion.button>

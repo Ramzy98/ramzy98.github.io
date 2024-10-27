@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaPaperPlane, FaRocket } from 'react-icons/fa';
-import { sendGTMEvent } from '@next/third-parties/google';
+import { useAnalyticsContext } from '../../_components/analytics-provider';
 
 export default function ContactSection() {
   const [name, setName] = useState('');
@@ -9,10 +9,37 @@ export default function ContactSection() {
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
+  const { trackInteraction, trackUserJourney, trackConversion, trackError } = useAnalyticsContext();
+
+  const handleFieldFocus = (fieldName: string) => {
+    trackInteraction('form_field_focus', {
+      field: fieldName,
+      section: 'contact',
+      action: 'focus',
+    });
+  };
+
+  const handleFieldChange = (fieldName: string, value: string) => {
+    trackInteraction('form_field_change', {
+      field: fieldName,
+      section: 'contact',
+      action: 'input',
+      value_length: value.length,
+    });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+
+    // Track form submission attempt
+    trackInteraction('form_submit_attempt', {
+      section: 'contact',
+      form_type: 'contact_form',
+      fields_filled: [name, email, message].filter(Boolean).length,
+    });
+
+    trackUserJourney('contact_form_submit', 'contact');
 
     try {
       const response = await fetch('https://formspree.io/f/xanynodr', {
@@ -27,17 +54,43 @@ export default function ContactSection() {
         setSubmitMessage(
           "Message sent to the cosmos! I'll respond faster than light travel permits."
         );
-        sendGTMEvent({ event: 'contact_form_submit', status: 'success' });
+        
+        // Track successful submission
+        trackInteraction('contact_form_submit', {
+          status: 'success',
+          section: 'contact',
+          response_time: Date.now(),
+        });
+        
+        trackConversion('contact_form_submit', 1);
+        
         setName('');
         setEmail('');
         setMessage('');
       } else {
         setSubmitMessage("Houston, we've had a problem. Please try again later.");
-        sendGTMEvent({ event: 'contact_form_submit', status: 'error' });
+        
+        // Track submission error
+        trackInteraction('contact_form_submit', {
+          status: 'error',
+          section: 'contact',
+          error_type: 'http_error',
+          status_code: response.status,
+        });
+        
+        trackError(new Error(`Form submission failed with status: ${response.status}`), 'contact_form');
       }
     } catch (error) {
       setSubmitMessage('Communication disrupted by a black hole. Please try again.');
-      sendGTMEvent({ event: 'contact_form_submit', status: 'error' });
+      
+      // Track network error
+      trackInteraction('contact_form_submit', {
+        status: 'error',
+        section: 'contact',
+        error_type: 'network_error',
+      });
+      
+      trackError(error as Error, 'contact_form_network');
     } finally {
       setIsSubmitting(false);
     }
@@ -64,7 +117,11 @@ export default function ContactSection() {
                 type="text"
                 id="name"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  handleFieldChange('name', e.target.value);
+                }}
+                onFocus={() => handleFieldFocus('name')}
                 required
                 className="w-full px-4 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                 placeholder="E.T., Yoda, or just Bob..."
@@ -78,7 +135,11 @@ export default function ContactSection() {
                 type="email"
                 id="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  handleFieldChange('email', e.target.value);
+                }}
+                onFocus={() => handleFieldFocus('email')}
                 required
                 className="w-full px-4 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                 placeholder="you@milkyway.universe"
@@ -91,7 +152,11 @@ export default function ContactSection() {
               <textarea
                 id="message"
                 value={message}
-                onChange={(e) => setMessage(e.target.value)}
+                onChange={(e) => {
+                  setMessage(e.target.value);
+                  handleFieldChange('message', e.target.value);
+                }}
+                onFocus={() => handleFieldFocus('message')}
                 required
                 rows={4}
                 className="w-full px-4 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
@@ -122,42 +187,13 @@ export default function ContactSection() {
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-4 text-green-400 text-center"
+              className="mt-4 text-green-400 text-center "
             >
               {submitMessage}
             </motion.p>
           )}
         </div>
       </div>
-      <ContactBackground />
     </section>
-  );
-}
-
-function ContactBackground() {
-  return (
-    <div className="absolute inset-0 z-[-1]">
-      {[...Array(20)].map((_, index) => (
-        <motion.div
-          key={index}
-          className="absolute w-1 h-1 sm:w-2 sm:h-2 bg-purple-500 rounded-full"
-          initial={{
-            x: `${Math.random() * 100}%`,
-            y: `${Math.random() * 100}%`,
-            opacity: Math.random(),
-          }}
-          animate={{
-            x: `${Math.random() * 100}%`,
-            y: `${Math.random() * 100}%`,
-            opacity: [0.2, 0.5, 0.2],
-          }}
-          transition={{
-            duration: Math.random() * 10 + 10,
-            repeat: Infinity,
-            repeatType: 'reverse',
-          }}
-        />
-      ))}
-    </div>
   );
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
 import Image from 'next/image';
-import { sendGTMEvent } from '@next/third-parties/google';
+import { useAnalyticsContext } from '../../_components/analytics-provider';
 
 interface Project {
   title: string;
@@ -43,6 +43,32 @@ const projects: Project[] = [
 ];
 
 export default function ProjectsSection() {
+  const { trackInteraction, trackUserJourney, trackConversion } = useAnalyticsContext();
+
+  const handleProjectLinkClick = (project: string, type: 'github' | 'live_demo') => {
+    trackInteraction('project_link_click', {
+      project,
+      type,
+      section: 'projects',
+      link_type: type === 'github' ? 'source_code' : 'live_demo',
+    });
+    
+    trackUserJourney('project_engagement', 'projects');
+    
+    // Track as conversion for live demo clicks (shows interest in the project)
+    if (type === 'live_demo') {
+      trackConversion('project_demo_view', 1);
+    }
+  };
+
+  const handleProjectCardHover = (project: string) => {
+    trackInteraction('project_card_hover', {
+      project,
+      section: 'projects',
+      action: 'hover',
+    });
+  };
+
   return (
     <section id="projects" className="relative overflow-hidden p-8">
       <div className="container mx-auto px-4">
@@ -61,6 +87,7 @@ export default function ProjectsSection() {
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
+              onMouseOver={() => handleProjectCardHover(project.title)}
               className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300"
             >
               <div className="relative h-48">
@@ -91,13 +118,7 @@ export default function ProjectsSection() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-400 hover:text-blue-300 transition-colors duration-300"
-                    onClick={() =>
-                      sendGTMEvent({
-                        event: 'project_link_click',
-                        project: project.title,
-                        type: 'github',
-                      })
-                    }
+                    onClick={() => handleProjectLinkClick(project.title, 'github')}
                   >
                     <FaGithub className="inline-block mr-2" />
                     GitHub
@@ -108,13 +129,7 @@ export default function ProjectsSection() {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-green-400 hover:text-green-300 transition-colors duration-300"
-                      onClick={() =>
-                        sendGTMEvent({
-                          event: 'project_link_click',
-                          project: project.title,
-                          type: 'live_demo',
-                        })
-                      }
+                      onClick={() => handleProjectLinkClick(project.title, 'live_demo')}
                     >
                       <FaExternalLinkAlt className="inline-block mr-2" />
                       Live Demo

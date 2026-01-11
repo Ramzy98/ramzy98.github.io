@@ -15,6 +15,15 @@ interface Project {
 
 const projects: Project[] = [
   {
+    title: 'Frame Forge',
+    description:
+      'A modern iframe viewer & tester with device presets, responsive preview, postMessage console, and code injection capabilities.',
+    image: '/thanos.gif',
+    technologies: ['React', 'TypeScript', 'Tailwind CSS'],
+    githubLink: '',
+    liveLink: 'https://frame-forge-rho.vercel.app/',
+  },
+  {
     title: 'eCommerce Restful API',
     description:
       'A Node.js API for ecommerce: users shop, admins manage. Express and PostgreSQL power this digital marketplace.',
@@ -52,9 +61,9 @@ export default function ProjectsSection() {
       section: 'projects',
       link_type: type === 'github' ? 'source_code' : 'live_demo',
     });
-    
+
     trackUserJourney('project_engagement', 'projects');
-    
+
     // Track as conversion for live demo clicks (shows interest in the project)
     if (type === 'live_demo') {
       trackConversion('project_demo_view', 1);

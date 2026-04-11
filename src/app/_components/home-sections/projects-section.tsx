@@ -20,7 +20,7 @@ const projects: Project[] = [
       'A modern iframe viewer & tester with device presets, responsive preview, postMessage console, and code injection capabilities.',
     image: '/thanos.gif',
     technologies: ['React', 'TypeScript', 'Tailwind CSS'],
-    githubLink: '',
+    githubLink: 'https://github.com/Ramzy98/frame-forge',
     liveLink: 'https://frame-forge-rho.vercel.app/',
   },
   {

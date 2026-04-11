@@ -14,6 +14,14 @@ const NavBar = dynamic(() => import('@/app/_components/nav-bar/nav-bar'), {
   ssr: false,
 });
 
+const CustomCursor = dynamic(() => import('@/app/_components/custom-cursor'), {
+  ssr: false,
+});
+
+const CommandPalette = dynamic(() => import('@/app/_components/command-palette'), {
+  ssr: false,
+});
+
 const EnhancedPerformanceMonitor = dynamic(() => import('@/app/_components/enhanced-performance-monitor'), {
   ssr: false,
 });
@@ -22,6 +30,8 @@ export default function DynamicComponents() {
   return (
     <>
       <StarryBackground />
+      <CustomCursor />
+      <CommandPalette />
       <ScrollProgress />
       <NavBar />
       <EnhancedPerformanceMonitor />

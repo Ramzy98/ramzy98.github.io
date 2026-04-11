@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FaPaperPlane, FaRocket } from 'react-icons/fa';
 import { useAnalyticsContext } from '../../_components/analytics-provider';
 
@@ -11,85 +13,32 @@ export default function ContactSection() {
   const [submitMessage, setSubmitMessage] = useState('');
   const { trackInteraction, trackUserJourney, trackConversion, trackError } = useAnalyticsContext();
 
-  const handleFieldFocus = (fieldName: string) => {
-    trackInteraction('form_field_focus', {
-      field: fieldName,
-      section: 'contact',
-      action: 'focus',
-    });
-  };
-
   const handleFieldChange = (fieldName: string, value: string) => {
-    trackInteraction('form_field_change', {
-      field: fieldName,
-      section: 'contact',
-      action: 'input',
-      value_length: value.length,
-    });
+    trackInteraction('form_field_change', { field: fieldName, section: 'contact', action: 'input', value_length: value.length });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-
-    // Track form submission attempt
-    trackInteraction('form_submit_attempt', {
-      section: 'contact',
-      form_type: 'contact_form',
-      fields_filled: [name, email, message].filter(Boolean).length,
-    });
-
     trackUserJourney('contact_form_submit', 'contact');
 
     try {
       const response = await fetch('https://formspree.io/f/xanynodr', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, message }),
       });
 
       if (response.ok) {
-        setSubmitMessage(
-          "Message sent to the cosmos! I'll respond faster than light travel permits."
-        );
-        
-        // Track successful submission
-        trackInteraction('contact_form_submit', {
-          status: 'success',
-          section: 'contact',
-          response_time: Date.now(),
-        });
-        
+        setSubmitMessage("Message received! I'll get back to you faster than light.");
         trackConversion('contact_form_submit', 1);
-        
-        setName('');
-        setEmail('');
-        setMessage('');
+        setName(''); setEmail(''); setMessage('');
       } else {
-        setSubmitMessage("Houston, we've had a problem. Please try again later.");
-        
-        // Track submission error
-        trackInteraction('contact_form_submit', {
-          status: 'error',
-          section: 'contact',
-          error_type: 'http_error',
-          status_code: response.status,
-        });
-        
+        setSubmitMessage("Error in transmission. Please try again.");
         trackError(new Error(`Form submission failed with status: ${response.status}`), 'contact_form');
       }
     } catch (error) {
-      setSubmitMessage('Communication disrupted by a black hole. Please try again.');
-      
-      // Track network error
-      trackInteraction('contact_form_submit', {
-        status: 'error',
-        section: 'contact',
-        error_type: 'network_error',
-      });
-      
+      setSubmitMessage("Connection lost. Please check your signal.");
       trackError(error as Error, 'contact_form_network');
     } finally {
       setIsSubmitting(false);
@@ -97,57 +46,74 @@ export default function ContactSection() {
   };
 
   return (
-    <section id="contact" className="relative overflow-hidden py-12 px-4 sm:px-6 lg:px-8">
-      <div className="container mx-auto">
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-8 sm:mb-12 text-white"
+    <section id="contact" className="py-24 px-8 relative">
+      <div className="container mx-auto max-w-4xl">
+        <motion.div
+           initial={{ opacity: 0, y: 20 }}
+           whileInView={{ opacity: 1, y: 0 }}
+           transition={{ duration: 0.8 }}
+           viewport={{ once: true }}
+           className="mb-16 text-center"
         >
-          Contact Mission Control
-        </motion.h2>
-        <div className="max-w-lg sm:max-w-xl md:max-w-2xl mx-auto bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-lg rounded-lg p-6 sm:p-8 shadow-lg">
-          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
-            <div>
-              <label htmlFor="name" className="block text-white mb-2">
-                Your Earth Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                  handleFieldChange('name', e.target.value);
-                }}
-                onFocus={() => handleFieldFocus('name')}
-                required
-                className="w-full px-4 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                placeholder="E.T., Yoda, or just Bob..."
-              />
+          <h2 className="text-4xl sm:text-6xl font-black text-white mb-4 tracking-tighter">
+            GET IN <span className="text-gradient-purple">TOUCH</span>
+          </h2>
+          <p className="text-gray-400 text-lg sm:text-xl">
+             Ready to start a new project or just want to say hi?
+          </p>
+        </motion.div>
+
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="glass-panel p-8 sm:p-12 rounded-3xl shadow-2xl overflow-hidden relative"
+        >
+          {/* Decorative radial gradient */}
+          <div className="absolute -top-24 -right-24 w-64 h-64 bg-purple-500/10 blur-[100px] rounded-full pointer-events-none" />
+          <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-blue-500/10 blur-[100px] rounded-full pointer-events-none" />
+
+          <form onSubmit={handleSubmit} className="space-y-8 relative z-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="space-y-2">
+                <label htmlFor="name" className="text-sm font-bold text-gray-400 uppercase tracking-widest px-1">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  value={name}
+                  onChange={(e) => {
+                    setName(e.target.value);
+                    handleFieldChange('name', e.target.value);
+                  }}
+                  required
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-purple-500/50 transition-colors placeholder:text-gray-600"
+                  placeholder="Ahmad Ramzy"
+                />
+              </div>
+              <div className="space-y-2">
+                <label htmlFor="email" className="text-sm font-bold text-gray-400 uppercase tracking-widest px-1">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    handleFieldChange('email', e.target.value);
+                  }}
+                  required
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-purple-500/50 transition-colors placeholder:text-gray-600"
+                  placeholder="ramzy@example.com"
+                />
+              </div>
             </div>
-            <div>
-              <label htmlFor="email" className="block text-white mb-2">
-                Intergalactic Email Address
-              </label>
-              <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  handleFieldChange('email', e.target.value);
-                }}
-                onFocus={() => handleFieldFocus('email')}
-                required
-                className="w-full px-4 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                placeholder="you@milkyway.universe"
-              />
-            </div>
-            <div>
-              <label htmlFor="message" className="block text-white mb-2">
-                Your Cosmic Message
+            <div className="space-y-2">
+              <label htmlFor="message" className="text-sm font-bold text-gray-400 uppercase tracking-widest px-1">
+                Message
               </label>
               <textarea
                 id="message"
@@ -156,43 +122,45 @@ export default function ContactSection() {
                   setMessage(e.target.value);
                   handleFieldChange('message', e.target.value);
                 }}
-                onFocus={() => handleFieldFocus('message')}
                 required
-                rows={4}
-                className="w-full px-4 py-2 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                placeholder="Share your thoughts, but please no Klingon... my translator is broken."
+                rows={5}
+                className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-purple-500/50 transition-colors placeholder:text-gray-600 resize-none"
+                placeholder="How can I help you?"
               ></textarea>
             </div>
             <motion.button
               type="submit"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="w-full bg-purple-600 text-white py-2 sm:py-3 rounded-md font-semibold flex items-center justify-center space-x-2 text-sm sm:text-base"
+              whileTap={{ scale: 0.98 }}
+              className="w-full bg-white text-black py-5 rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-purple-500 hover:text-white transition-all duration-300 shadow-xl disabled:opacity-50"
               disabled={isSubmitting}
             >
               {isSubmitting ? (
                 <>
-                  <FaRocket className="animate-spin" />
-                  <span>Launching Message...</span>
+                  <FaRocket className="animate-bounce" />
+                  <span>TRANSMITTING...</span>
                 </>
               ) : (
                 <>
                   <FaPaperPlane />
-                  <span>Send to the Stars</span>
+                  <span>SEND MESSAGE</span>
                 </>
               )}
             </motion.button>
           </form>
-          {submitMessage && (
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-4 text-green-400 text-center "
-            >
-              {submitMessage}
-            </motion.p>
-          )}
-        </div>
+          
+          <AnimatePresence>
+            {submitMessage && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="mt-8 p-4 bg-white/5 border border-white/10 rounded-xl text-center text-sm font-medium text-purple-400"
+              >
+                {submitMessage}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
       </div>
     </section>
   );

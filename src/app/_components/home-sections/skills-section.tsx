@@ -28,67 +28,48 @@ const skills = [
 
 export default function SkillsSection() {
   return (
-    <section id="skills" className="relative overflow-hidden p-8">
-      <div className="container mx-auto px-4">
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-3xl sm:text-4xl font-bold text-center mb-12 text-white"
+    <section id="skills" className="py-24 px-8 relative">
+      <div className="container mx-auto max-w-6xl">
+        <motion.div
+           initial={{ opacity: 0, y: 20 }}
+           whileInView={{ opacity: 1, y: 0 }}
+           transition={{ duration: 0.8 }}
+           viewport={{ once: true }}
+           className="mb-16 text-center"
         >
-          Skills & Technologies
-        </motion.h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
+          <h2 className="text-4xl sm:text-6xl font-black text-white mb-4 tracking-tighter">
+            TECH <span className="text-gradient-cyan">STACK</span>
+          </h2>
+          <p className="text-gray-400 text-lg sm:text-xl">
+            Modern tools and frameworks I use to bring ideas to life.
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
           {skills.map((skill, index) => (
             <motion.div
               key={skill.name}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="flex flex-col items-center group"
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
+              transition={{ duration: 0.4, delay: index * 0.05 }}
+              viewport={{ once: true }}
+              className="glass-panel p-6 rounded-3xl flex flex-col items-center justify-center group cursor-default shadow-none hover:shadow-lg"
             >
-              <div className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center rounded-full bg-gray-800 mb-4 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-purple-500/50">
+              <div className="relative mb-4">
                 <skill.icon
-                  className="text-4xl sm:text-5xl transition-colors duration-300"
-                  style={{ color: skill.color }}
+                  className="text-4xl sm:text-5xl transition-transform duration-300 group-hover:scale-110 grayscale group-hover:grayscale-0"
+                  style={{ filter: `drop-shadow(0 0 10px rgba(255,255,255,0.1))` }}
                 />
+                <div className="absolute inset-0 blur-2xl opacity-0 group-hover:opacity-40 transition-opacity duration-500" style={{ backgroundColor: skill.color }} />
               </div>
-              <p className="text-center text-white font-semibold group-hover:text-purple-400 transition-colors duration-300">
+              <p className="text-sm font-bold text-gray-400 group-hover:text-white transition-colors duration-300 uppercase tracking-widest">
                 {skill.name}
               </p>
             </motion.div>
           ))}
         </div>
       </div>
-      <SkillsBackground />
     </section>
-  );
-}
-
-function SkillsBackground() {
-  return (
-    <div className="absolute inset-0 z-[-1]">
-      {[...Array(20)].map((_, index) => (
-        <motion.div
-          key={index}
-          className="absolute w-2 h-2 bg-purple-500 rounded-full"
-          initial={{
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
-            opacity: Math.random(),
-          }}
-          animate={{
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
-            opacity: [0.2, 0.5, 0.2],
-          }}
-          transition={{
-            duration: Math.random() * 10 + 10,
-            repeat: Infinity,
-            repeatType: 'reverse',
-          }}
-        />
-      ))}
-    </div>
   );
 }

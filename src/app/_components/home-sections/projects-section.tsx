@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
@@ -17,8 +19,8 @@ const projects: Project[] = [
   {
     title: 'Frame Forge',
     description:
-      'A modern iframe viewer & tester with device presets, responsive preview, postMessage console, and code injection capabilities.',
-    image: '/thanos.gif',
+      'A modern iframe viewer & tester with device presets, responsive preview, and code injection capabilities.',
+    image: '/mockups/frame-forge.png',
     technologies: ['React', 'TypeScript', 'Tailwind CSS'],
     githubLink: 'https://github.com/Ramzy98/frame-forge',
     liveLink: 'https://frame-forge-rho.vercel.app/',
@@ -26,16 +28,16 @@ const projects: Project[] = [
   {
     title: 'eCommerce Restful API',
     description:
-      'A Node.js API for ecommerce: users shop, admins manage. Express and PostgreSQL power this digital marketplace.',
-    image: '/takemymoney.gif',
+      'A Node.js API for ecommerce with complex relationship handling and secure transaction logic.',
+    image: '/mockups/ecommerce-api.png',
     technologies: ['Node.js', 'TypeScript', 'PostgreSQL', 'AWS'],
     githubLink: 'https://github.com/Ramzy98/ecommerce-website-restful-api',
   },
   {
     title: 'Would You Rather',
     description:
-      'React-Redux game: choose between two options. Users face tough choices, selecting between alternatives.',
-    image: '/spongebob.gif',
+      'React-Redux game with real-time state management and sophisticated user voting mechanisms.',
+    image: '/mockups/would-you-rather.png',
     technologies: ['React', 'JavaScript', 'Redux'],
     githubLink: 'https://github.com/Ramzy98/Would-you-rather',
     liveLink: 'https://would-you-rather-coral.vercel.app/',
@@ -43,8 +45,8 @@ const projects: Project[] = [
   {
     title: 'Examify',
     description:
-      'React exam app: create, share, and take tests. Real-time updates and automatic grading make learning a breeze.',
-    image: '/mrbean.gif',
+      'React exam app features real-time grading and dynamic test generation for educators.',
+    image: '/mockups/examify.png',
     technologies: ['React', 'Axios', 'JavaScript'],
     githubLink: 'https://github.com/Ahmed-HossamElDin/Examify',
     liveLink: 'https://examify.vercel.app/',
@@ -64,121 +66,124 @@ export default function ProjectsSection() {
 
     trackUserJourney('project_engagement', 'projects');
 
-    // Track as conversion for live demo clicks (shows interest in the project)
-    if (type === 'live_demo') {
-      trackConversion('project_demo_view', 1);
-    }
-  };
-
-  const handleProjectCardHover = (project: string) => {
-    trackInteraction('project_card_hover', {
-      project,
-      section: 'projects',
-      action: 'hover',
-    });
+    if (type === 'live_demo') trackConversion('project_demo_view', 1);
   };
 
   return (
-    <section id="projects" className="relative overflow-hidden p-8">
-      <div className="container mx-auto px-4">
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-3xl sm:text-4xl font-bold text-center mb-12 text-white"
+    <section id="projects" className="py-32 px-6 sm:px-8 relative z-10">
+      <div className="container mx-auto max-w-7xl">
+        <motion.div
+           initial={{ opacity: 0, y: 20 }}
+           whileInView={{ opacity: 1, y: 0 }}
+           transition={{ duration: 0.8 }}
+           viewport={{ once: true }}
+           className="mb-20"
         >
-          Projects
-        </motion.h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="flex flex-col items-center text-center">
+            <span className="text-cyan-400 font-mono tracking-widest text-sm mb-4 uppercase">System Portfolio</span>
+            <h2 className="text-5xl sm:text-7xl font-black text-white mb-6 tracking-tighter">
+              Selected <span className="text-gradient-cyan border-b-4 border-cyan-400/30">Works</span>
+            </h2>
+            <p className="text-gray-400 text-lg sm:text-xl max-w-2xl font-light leading-relaxed">
+              A curated collection of scalable, high-performance applications engineered with modern web technologies.
+            </p>
+          </div>
+        </motion.div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           {projects.map((project, index) => (
-            <motion.div
+            <ProjectCard
               key={project.title}
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              onMouseOver={() => handleProjectCardHover(project.title)}
-              className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300"
-            >
-              <div className="relative h-48">
-                <Image
-                  src={project.image}
-                  alt={project.title}
-                  layout="fill"
-                  objectFit="cover"
-                  className="transition-transform duration-300 transform hover:scale-110"
-                />
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-semibold mb-2 text-purple-400">{project.title}</h3>
-                <p className="text-gray-300 mb-4">{project.description}</p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {project.technologies.map((tech) => (
-                    <span
-                      key={tech}
-                      className="px-2 py-1 bg-purple-600 text-xs text-white rounded-full"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-                <div className="flex justify-between items-center">
-                  <a
-                    href={project.githubLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-400 hover:text-blue-300 transition-colors duration-300"
-                    onClick={() => handleProjectLinkClick(project.title, 'github')}
-                  >
-                    <FaGithub className="inline-block mr-2" />
-                    GitHub
-                  </a>
-                  {project.liveLink && (
-                    <a
-                      href={project.liveLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-green-400 hover:text-green-300 transition-colors duration-300"
-                      onClick={() => handleProjectLinkClick(project.title, 'live_demo')}
-                    >
-                      <FaExternalLinkAlt className="inline-block mr-2" />
-                      Live Demo
-                    </a>
-                  )}
-                </div>
-              </div>
-            </motion.div>
+              project={project}
+              index={index}
+              onClickLink={handleProjectLinkClick}
+            />
           ))}
         </div>
       </div>
-      <ProjectsBackground />
     </section>
   );
 }
 
-function ProjectsBackground() {
+function ProjectCard({ project, index, onClickLink }: { project: Project, index: number, onClickLink: any }) {
+  const displayIndex = String(index + 1).padStart(2, '0');
+
   return (
-    <div className="absolute inset-0 z-[-1]">
-      {[...Array(20)].map((_, index) => (
-        <motion.div
-          key={index}
-          className="absolute w-2 h-2 bg-purple-500 rounded-full"
-          initial={{
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
-            opacity: Math.random(),
-          }}
-          animate={{
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
-            opacity: [0.2, 0.5, 0.2],
-          }}
-          transition={{
-            duration: Math.random() * 10 + 10,
-            repeat: Infinity,
-            repeatType: 'reverse',
-          }}
-        />
-      ))}
-    </div>
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, delay: index * 0.15, ease: 'easeOut' }}
+      viewport={{ once: true, margin: "-100px" }}
+      className="group relative flex flex-col w-full bg-[#080808] border border-white/10 rounded-[2rem] overflow-hidden hover:border-cyan-400/30 transition-colors duration-500 shadow-2xl"
+    >
+      {/* Index Number */}
+      <div className="absolute top-6 left-6 z-20 text-white/20 font-black text-3xl font-mono tracking-tighter group-hover:text-cyan-400/80 transition-colors duration-500">
+        {displayIndex}
+      </div>
+
+      {/* Top Zone: The Showcase */}
+      <div className="relative w-full h-72 sm:h-80 bg-[#0c101c] overflow-hidden p-8 sm:p-12 flex items-center justify-center">
+        {/* Glow underneath image */}
+        <div className="absolute inset-0 bg-cyan-400/0 group-hover:bg-cyan-400/10 blur-3xl transition-all duration-700 w-3/4 h-3/4 m-auto rounded-full mix-blend-screen" />
+        
+        <div className="relative w-full h-full rounded-xl overflow-hidden shadow-2xl border border-white/5 transform group-hover:-translate-y-2 group-hover:scale-[1.02] transition-all duration-500 ease-out">
+          <Image
+            src={project.image}
+            alt={project.title}
+            layout="fill"
+            objectFit="cover"
+            className="grayscale contrast-125 opacity-70 group-hover:grayscale-0 group-hover:opacity-100 group-hover:contrast-100 transition-all duration-700 ease-out"
+          />
+          <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
+        </div>
+      </div>
+
+      {/* Bottom Zone: Data Console */}
+      <div className="flex flex-col flex-1 p-8 sm:p-10 border-t border-white/5 bg-[#030303]">
+         <div className="flex flex-col sm:flex-row sm:items-baseline justify-between mb-4 gap-2">
+            <h3 className="text-3xl font-bold text-white tracking-tight">{project.title}</h3>
+         </div>
+         
+         <p className="text-gray-400 text-sm sm:text-base mb-8 leading-relaxed font-light flex-1">
+           {project.description}
+         </p>
+         
+         <div className="flex flex-wrap gap-2 mb-8 mt-auto">
+            {project.technologies.map(tech => (
+              <span key={tech} className="px-3 py-1.5 bg-cyan-400/5 hover:bg-cyan-400/10 border border-cyan-400/10 rounded-full text-xs text-cyan-200 font-mono tracking-tight transition-colors cursor-default">
+                {tech}
+              </span>
+            ))}
+         </div>
+
+         <div className="flex items-center gap-8 border-t border-white/5 pt-6 mt-auto">
+            <a
+              href={project.githubLink}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => onClickLink(project.title, 'github')}
+              className="group/link flex items-center gap-2 text-white/60 hover:text-white transition-colors"
+            >
+              <FaGithub size={20} />
+              <span className="text-sm font-semibold tracking-wide">Repo</span>
+            </a>
+            {project.liveLink && (
+              <a
+                href={project.liveLink}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => onClickLink(project.title, 'live_demo')}
+                className="group/link flex items-center gap-2 text-white/60 hover:text-cyan-400 transition-colors"
+              >
+                <FaExternalLinkAlt size={16} />
+                <span className="text-sm font-semibold tracking-wide">Live Demo</span>
+                <span className="opacity-0 group-hover/link:opacity-100 group-hover/link:translate-x-1 transition-all duration-300">
+                  &rarr;
+                </span>
+              </a>
+            )}
+         </div>
+      </div>
+    </motion.div>
   );
 }

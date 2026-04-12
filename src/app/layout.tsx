@@ -10,17 +10,35 @@ const syne = Syne({
   variable: '--font-syne',
 });
 
-export const metadata = {
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
   title: {
     default: 'Ahmad Ramzy | Software Engineer',
     template: '%s | Ahmad Ramzy',
   },
-  description: 'Ahmad Ramzy Portfolio',
+  description: 'Full Stack Software Engineer specializing in high-performance web applications, modern frontend architecture, and clean UI/UX design.',
+  keywords: ['Software Engineer', 'Full Stack Developer', 'Frontend Engineer', 'React', 'Next.js', 'TypeScript', 'Node.js', 'Portfolio'],
+  authors: [{ name: 'Ahmad Ramzy' }],
+  creator: 'Ahmad Ramzy',
   icons: {
-    icon: '/favicon.ico',
+    icon: '/favicon.png',
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://ramzy98.github.io/',
+    title: 'Ahmad Ramzy | Premium Engineering Portfolio',
+    description: 'Explore the portfolio of Ahmad Ramzy. High-performance engineering meets premium design.',
+    siteName: 'Ahmad Ramzy',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Ahmad Ramzy | Software Engineer',
+    description: 'Full Stack Software Engineer specializing in high-performance web applications.',
+    creator: '@amazingramzy',
   },
 };
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">

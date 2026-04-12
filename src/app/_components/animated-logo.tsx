@@ -35,10 +35,10 @@ export default function AnimatedLogo() {
 
   return (
     <div className="text-white font-mono text-lg flex-shrink-0 w-[200px]">
-      <span className="text-[#f94706]">&lt;</span>
+      <span className="text-cyan-400 font-bold">&lt;</span>
       {displayText}
-      <span className="animate-pulse">|</span>
-      <span className="text-[#f94706]">/&gt;</span>
+      <span className="animate-pulse text-gray-500">_</span>
+      <span className="text-cyan-400 font-bold">/&gt;</span>
     </div>
   );
 }

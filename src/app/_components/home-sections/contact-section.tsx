@@ -19,6 +19,18 @@ export default function ContactSection() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Frontend Rate Limiting
+    const LAST_SUBMIT_KEY = 'contact_last_submit';
+    const lastSubmitTime = localStorage.getItem(LAST_SUBMIT_KEY);
+    const now = Date.now();
+    const COOLDOWN_MS = 5 * 60 * 1000; // 5 minutes
+
+    if (lastSubmitTime && now - parseInt(lastSubmitTime) < COOLDOWN_MS) {
+      setSubmitMessage("You've already sent a message recently. Please wait a few minutes.");
+      return;
+    }
+
     setIsSubmitting(true);
     trackUserJourney('contact_form_submit', 'contact');
 
@@ -30,6 +42,7 @@ export default function ContactSection() {
       });
 
       if (response.ok) {
+        localStorage.setItem(LAST_SUBMIT_KEY, now.toString());
         setSubmitMessage("Message received! I'll get back to you faster than light.");
         trackConversion('contact_form_submit', 1);
         setName(''); setEmail(''); setMessage('');
@@ -56,7 +69,7 @@ export default function ContactSection() {
            className="mb-16 text-center"
         >
           <h2 className="text-4xl sm:text-6xl font-black text-white mb-4 tracking-tighter">
-            GET IN <span className="text-gradient-purple">TOUCH</span>
+            GET IN <span className="text-gradient-cyan">TOUCH</span>
           </h2>
           <p className="text-gray-400 text-lg sm:text-xl">
              Ready to start a new project or just want to say hi?

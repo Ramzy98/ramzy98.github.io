@@ -80,7 +80,7 @@ export default function AboutSection() {
               <div className="absolute bottom-0 left-0 right-0 p-5 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-start">
                  <span className="text-cyan-400 font-mono text-[10px] tracking-widest mb-1">ID: AR-98</span>
                  <span className="text-white font-bold tracking-widest text-sm uppercase leading-tight relative z-10">Ahmad Ramzy</span>
-                 <span className="text-white/50 font-mono text-xs mt-0.5">Lvl: Senior Engineer</span>
+                 <span className="text-white/50 font-mono text-xs mt-0.5">Lvl: Software Engineer</span>
               </div>
             </div>
             

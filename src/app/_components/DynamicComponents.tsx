@@ -22,15 +22,10 @@ const CommandPalette = dynamic(() => import('@/app/_components/command-palette')
   ssr: false,
 });
 
-const GraffitiCanvas = dynamic(() => import('@/app/_components/GraffitiCanvas'), {
-  ssr: false,
-});
-
 export default function DynamicComponents() {
   return (
     <>
       <StarryBackground />
-      <GraffitiCanvas />
       <CustomCursor />
       <CommandPalette />
       <ScrollProgress />

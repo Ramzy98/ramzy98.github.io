@@ -4,6 +4,7 @@ import Footer from '@/app/_components/footer/footer';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import DynamicComponents from '@/app/_components/DynamicComponents';
 import AnalyticsProvider from '@/app/_components/analytics-provider';
+import { Suspense } from 'react';
 
 const syne = Syne({
   subsets: ['latin'],
@@ -41,7 +42,7 @@ export const metadata: Metadata = {
 };
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <head>
         <meta httpEquiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.digitaloceanspaces.com https://raw.githubusercontent.com https://raw.githack.com; connect-src 'self' https://www.google-analytics.com https://formspree.io https://*.digitaloceanspaces.com https://raw.githubusercontent.com https://raw.githack.com;" />
       </head>
@@ -49,7 +50,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         {process.env.NEXT_PUBLIC_GA_ID && <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />}
         <AnalyticsProvider>
-          <DynamicComponents />
+          <Suspense fallback={null}>
+            <DynamicComponents />
+          </Suspense>
           <main className="flex-grow py-32 sm:p-8 lg:py-40 md:py-40">{children}</main>
           <Footer />
         </AnalyticsProvider>

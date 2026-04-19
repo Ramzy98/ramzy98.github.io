@@ -84,8 +84,8 @@ export default function ContactSection() {
           className="glass-panel p-8 sm:p-12 rounded-3xl shadow-2xl overflow-hidden relative"
         >
           {/* Decorative radial gradient */}
-          <div className="absolute -top-24 -right-24 w-64 h-64 bg-purple-500/10 blur-[100px] rounded-full pointer-events-none" />
-          <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-blue-500/10 blur-[100px] rounded-full pointer-events-none" />
+          <div className="absolute -top-24 -right-24 w-64 h-64 bg-cyan-500/10 blur-[100px] rounded-full pointer-events-none" />
+          <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-cyan-600/10 blur-[100px] rounded-full pointer-events-none" />
 
           <form onSubmit={handleSubmit} className="space-y-8 relative z-10">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -102,7 +102,7 @@ export default function ContactSection() {
                     handleFieldChange('name', e.target.value);
                   }}
                   required
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-purple-500/50 transition-colors placeholder:text-gray-600"
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-cyan-400/50 transition-colors placeholder:text-gray-600"
                   placeholder="Ahmad Ramzy"
                 />
               </div>
@@ -119,7 +119,7 @@ export default function ContactSection() {
                     handleFieldChange('email', e.target.value);
                   }}
                   required
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-purple-500/50 transition-colors placeholder:text-gray-600"
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-cyan-400/50 transition-colors placeholder:text-gray-600"
                   placeholder="ramzy@example.com"
                 />
               </div>
@@ -137,14 +137,14 @@ export default function ContactSection() {
                 }}
                 required
                 rows={5}
-                className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-purple-500/50 transition-colors placeholder:text-gray-600 resize-none"
+                className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-cyan-400/50 transition-colors placeholder:text-gray-600 resize-none"
                 placeholder="How can I help you?"
               ></textarea>
             </div>
             <motion.button
               type="submit"
               whileTap={{ scale: 0.98 }}
-              className="w-full bg-white text-black py-5 rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-purple-500 hover:text-white transition-all duration-300 shadow-xl disabled:opacity-50"
+              className="w-full bg-white text-black py-5 rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-cyan-400 hover:text-black transition-all duration-300 shadow-xl disabled:opacity-50"
               disabled={isSubmitting}
             >
               {isSubmitting ? (
@@ -167,7 +167,7 @@ export default function ContactSection() {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
-                className="mt-8 p-4 bg-white/5 border border-white/10 rounded-xl text-center text-sm font-medium text-purple-400"
+                className="mt-8 p-4 bg-white/5 border border-white/10 rounded-xl text-center text-sm font-medium text-cyan-400"
               >
                 {submitMessage}
               </motion.div>

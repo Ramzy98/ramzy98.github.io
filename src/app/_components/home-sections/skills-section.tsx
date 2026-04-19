@@ -13,7 +13,6 @@ import {
   SiJasmine,
   SiRubyonrails,
 } from 'react-icons/si';
-import { use3DTilt } from '@/app/_hooks/use-3d-tilt';
 
 const skills = [
   { name: 'JavaScript', icon: SiJavascript, color: '#F7DF1E' },
@@ -63,21 +62,16 @@ export default function SkillsSection() {
 }
 
 function SkillCard({ skill, index }: { skill: any; index: number }) {
-  const { ref, rotateX, rotateY, handleMouseMove, handleMouseLeave } = use3DTilt(15);
-
   return (
     <motion.div
-      ref={ref}
       initial={{ opacity: 0, scale: 0.95 }}
       whileInView={{ opacity: 1, scale: 1 }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
+      whileHover={{ scale: 1.1, y: -5 }}
       transition={{ duration: 0.4, delay: index * 0.05 }}
       viewport={{ once: true }}
       className="glass-panel p-6 rounded-3xl flex flex-col items-center justify-center group shadow-none transition-all duration-300 bg-[#ffffff03] border-[#ffffff08] hover:border-cyan-400/30"
     >
-      <div className="relative mb-3" style={{ transform: 'translateZ(20px)' }}>
+      <div className="relative mb-3">
         <skill.icon
           className="text-4xl sm:text-5xl transition-all duration-300 grayscale group-hover:grayscale-0"
           style={{ filter: `drop-shadow(0 0 10px rgba(255,255,255,0.1))` }}

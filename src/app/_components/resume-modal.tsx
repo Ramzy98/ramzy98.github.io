@@ -2,18 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   FaDownload, 
-  FaTimes, 
   FaBriefcase, 
-  FaCode, 
   FaGraduationCap, 
   FaTerminal,
   FaGlobe,
   FaEnvelope,
   FaPhoneAlt,
-  FaGithub,
-  FaExternalLinkAlt
+  FaGithub
 } from 'react-icons/fa';
-import { use3DTilt } from '@/app/_hooks/use-3d-tilt';
 
 interface ResumeModalProps {
   isOpen: boolean;
@@ -86,11 +82,14 @@ export default function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
   const [isBooting, setIsBooting] = useState(true);
 
   useEffect(() => {
+    let timer: NodeJS.Timeout;
     if (isOpen) {
       setIsBooting(true);
-      const timer = setTimeout(() => setIsBooting(false), 800);
-      return () => clearTimeout(timer);
+      timer = setTimeout(() => setIsBooting(false), 800);
     }
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
   }, [isOpen]);
 
   return (
@@ -277,17 +276,12 @@ export default function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
 }
 
 function ExperienceItem({ exp, index }: { exp: any, index: number }) {
-  const { ref, rotateX, rotateY, handleMouseMove, handleMouseLeave } = use3DTilt(10);
-
   return (
     <motion.div
-      ref={ref}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
       initial={{ x: 20, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
+      whileInView={{ x: 0, opacity: 1 }}
       transition={{ delay: 0.1 * index + 0.5 }}
-      style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
+      whileHover={{ x: 10 }}
       className="relative group "
     >
       {/* Connector Node */}
@@ -297,7 +291,7 @@ function ExperienceItem({ exp, index }: { exp: any, index: number }) {
         {/* Glow */}
         <div className="absolute -right-10 -top-10 w-40 h-40 bg-cyan-400/0 group-hover:bg-cyan-400/5 blur-3xl rounded-full transition-all duration-700" />
         
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6" style={{ transform: 'translateZ(30px)' }}>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
            <div>
              <h4 className="text-2xl font-black text-white leading-none mb-2 tracking-tight group-hover:text-cyan-100 transition-colors">
                {exp.company}
@@ -315,7 +309,7 @@ function ExperienceItem({ exp, index }: { exp: any, index: number }) {
            </div>
         </div>
 
-        <ul className="space-y-3" style={{ transform: 'translateZ(10px)' }}>
+        <ul className="space-y-3">
           {exp.highlights.map((h: string, i: number) => (
             <li key={i} className="flex gap-3 text-sm text-gray-400 leading-relaxed font-light">
               <span className="text-cyan-400/40 mt-1.5 shrink-0">•</span>

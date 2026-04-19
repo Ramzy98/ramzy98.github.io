@@ -5,13 +5,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaXTwitter } from 'react-icons/fa6';
 import { SiGmail } from 'react-icons/si';
 import Image from 'next/image';
-import dynamic from 'next/dynamic';
 import { useAnalyticsContext } from '../../_components/analytics-provider';
 import ResumeModal from '../../_components/resume-modal';
 import { useMagnetic } from '../../_hooks/use-magnetic';
-import { use3DTilt } from '@/app/_hooks/use-3d-tilt';
-
-const Scene3D = dynamic(() => import('../../_components/Scene3D'), { ssr: false });
 
 export default function AboutSection() {
   const [titleIndex, setTitleIndex] = useState(0);
@@ -20,17 +16,6 @@ export default function AboutSection() {
   const { trackInteraction, trackUserJourney, trackConversion } = useAnalyticsContext();
 
   const magneticProfile = useMagnetic(0.2);
-  const { ref: tiltRef, rotateX, rotateY, handleMouseMove: handleTiltMove, handleMouseLeave: handleTiltLeave } = use3DTilt(10);
-
-  const handleProfileMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    magneticProfile.handleMouseMove(e);
-    handleTiltMove(e);
-  };
-
-  const handleProfileLeave = () => {
-    magneticProfile.handleMouseLeave();
-    handleTiltLeave();
-  };
 
   useEffect(() => {
     const titleInterval = setInterval(() => {
@@ -54,7 +39,6 @@ export default function AboutSection() {
 
   return (
     <section id="about" className="min-h-[80vh] flex flex-col justify-center items-center px-6 relative overflow-hidden">
-      <Scene3D />
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -63,14 +47,13 @@ export default function AboutSection() {
       >
         {/* Clean Bento Profile Image */}
         <div
-          ref={tiltRef}
-          onMouseMove={handleProfileMove}
-          onMouseLeave={handleProfileLeave}
+          ref={magneticProfile.ref}
+          onMouseMove={magneticProfile.handleMouseMove}
+          onMouseLeave={magneticProfile.handleMouseLeave}
           className="relative inline-block mb-16"
         >
           <motion.div
             animate={{ x: magneticProfile.position.x, y: magneticProfile.position.y }}
-            style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
             transition={{ type: 'spring', stiffness: 150, damping: 15, mass: 0.1 }}
             className="group relative w-56 h-56 sm:w-72 sm:h-72 rounded-[2rem] bg-gray-900 border-2 border-white/5 hover:border-cyan-400/50 transition-colors duration-500 shadow-2xl p-2"
           >

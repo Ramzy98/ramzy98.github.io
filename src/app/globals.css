@@ -10,12 +10,6 @@
   --glass-border: rgba(255, 255, 255, 0.08);
 }
 
-.theme-cyan { --accent-color: #00F0FF; }
-.theme-purple { --accent-color: #A855F7; }
-.theme-amber { --accent-color: #F59E0B; }
-.theme-emerald { --accent-color: #10B981; }
-.theme-rose { --accent-color: #F43F5E; }
-
 html {
   scroll-behavior: smooth;
   background-color: var(--background);

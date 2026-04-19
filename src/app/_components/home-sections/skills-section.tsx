@@ -2,31 +2,8 @@
 
 import React from 'react';
 import { motion, useMotionValue, useMotionTemplate } from 'framer-motion';
-import { FaReact, FaNodeJs, FaDatabase } from 'react-icons/fa';
-import {
-  SiTypescript,
-  SiJavascript,
-  SiNextdotjs,
-  SiTailwindcss,
-  SiStorybook,
-  SiCypress,
-  SiJasmine,
-  SiRubyonrails,
-} from 'react-icons/si';
 
-const skills = [
-  { name: 'JavaScript', icon: SiJavascript, color: '#F7DF1E' },
-  { name: 'TypeScript', icon: SiTypescript, color: '#3178C6' },
-  { name: 'React', icon: FaReact, color: '#61DAFB' },
-  { name: 'Next.js', icon: SiNextdotjs, color: '#000000' },
-  { name: 'Node.js', icon: FaNodeJs, color: '#339933' },
-  { name: 'Ruby on Rails', icon: SiRubyonrails, color: '#CC0000' },
-  { name: 'SQL', icon: FaDatabase, color: '#4479A1' },
-  { name: 'Tailwind CSS', icon: SiTailwindcss, color: '#06B6D4' },
-  { name: 'Storybook', icon: SiStorybook, color: '#FF4785' },
-  { name: 'Cypress', icon: SiCypress, color: '#04C38E' },
-  { name: 'Jasmine', icon: SiJasmine, color: '#8A4182' },
-];
+import { PORTFOLIO_DATA } from '@/constants/portfolio';
 
 export default function SkillsSection() {
   return (
@@ -48,7 +25,7 @@ export default function SkillsSection() {
         </motion.div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          {skills.map((skill, index) => (
+          {PORTFOLIO_DATA.skills.map((skill, index) => (
             <SkillCard 
               key={skill.name} 
               skill={skill} 

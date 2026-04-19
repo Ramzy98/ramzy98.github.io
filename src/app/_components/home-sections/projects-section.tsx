@@ -15,43 +15,7 @@ interface Project {
   liveLink?: string;
 }
 
-const projects: Project[] = [
-  {
-    title: 'Frame Forge',
-    description:
-      'A modern iframe viewer & tester with device presets, responsive preview, and code injection capabilities.',
-    image: '/mockups/frame-forge.png',
-    technologies: ['React', 'TypeScript', 'Tailwind CSS'],
-    githubLink: 'https://github.com/Ramzy98/frame-forge',
-    liveLink: 'https://frame-forge-rho.vercel.app/',
-  },
-  {
-    title: 'eCommerce Restful API',
-    description:
-      'A Node.js API for ecommerce with complex relationship handling and secure transaction logic.',
-    image: '/mockups/ecommerce-api.png',
-    technologies: ['Node.js', 'TypeScript', 'PostgreSQL', 'AWS'],
-    githubLink: 'https://github.com/Ramzy98/ecommerce-website-restful-api',
-  },
-  {
-    title: 'Would You Rather',
-    description:
-      'React-Redux game with real-time state management and sophisticated user voting mechanisms.',
-    image: '/mockups/would-you-rather.png',
-    technologies: ['React', 'JavaScript', 'Redux'],
-    githubLink: 'https://github.com/Ramzy98/Would-you-rather',
-    liveLink: 'https://would-you-rather-coral.vercel.app/',
-  },
-  {
-    title: 'Examify',
-    description:
-      'React exam app features real-time grading and dynamic test generation for educators.',
-    image: '/mockups/examify.png',
-    technologies: ['React', 'Axios', 'JavaScript'],
-    githubLink: 'https://github.com/Ahmed-HossamElDin/Examify',
-    liveLink: 'https://examify.vercel.app/',
-  },
-];
+import { PORTFOLIO_DATA } from '@/constants/portfolio';
 
 export default function ProjectsSection() {
   const { trackInteraction, trackUserJourney, trackConversion } = useAnalyticsContext();
@@ -91,7 +55,7 @@ export default function ProjectsSection() {
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-          {projects.map((project, index) => (
+          {PORTFOLIO_DATA.projects.map((project, index) => (
             <ProjectCard
               key={project.title}
               project={project}

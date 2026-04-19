@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 
 export default function StarryBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const requestRef = useRef<number>();
   const { scrollYProgress } = useScroll();
 
   // Parallax transforms for the nebula blobs
@@ -116,12 +117,13 @@ export default function StarryBackground() {
         }
       });
 
-      requestAnimationFrame(animate);
+      requestRef.current = requestAnimationFrame(animate);
     };
 
-    animate();
+    requestRef.current = requestAnimationFrame(animate);
 
     return () => {
+      if (requestRef.current) cancelAnimationFrame(requestRef.current);
       window.removeEventListener('resize', resizeCanvas);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseleave', handleMouseLeave);

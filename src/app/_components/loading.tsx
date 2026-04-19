@@ -3,21 +3,23 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
+const BOOT_LOGS = [
+  'INIT_KERNEL_v1.0.4',
+  'LOAD_NEURAL_ASSETS',
+  'MOUNT_PROJECT_DB',
+  'SYNC_EXPERIENCE_LOGS',
+  'ESTABLISH_HANDSHAKE',
+  'BYPASS_FIREWALL',
+  'SYNCHRONIZATION_COMPLETE'
+];
+
 export default function Loading() {
   const [progress, setProgress] = useState(0);
   const [logIndex, setLogIndex] = useState(0);
-  
-  const logs = [
-    'INIT_KERNEL_v1.0.4',
-    'LOAD_NEURAL_ASSETS',
-    'MOUNT_PROJECT_DB',
-    'SYNC_EXPERIENCE_LOGS',
-    'ESTABLISH_HANDSHAKE',
-    'BYPASS_FIREWALL',
-    'SYNCHRONIZATION_COMPLETE'
-  ];
+  const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
+    setHasMounted(true);
     const timer = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
@@ -30,7 +32,7 @@ export default function Loading() {
     }, 120);
 
     const logTimer = setInterval(() => {
-      setLogIndex((prev) => (prev < logs.length - 1 ? prev + 1 : prev));
+      setLogIndex((prev) => (prev < BOOT_LOGS.length - 1 ? prev + 1 : prev));
     }, 600);
 
     return () => {
@@ -43,7 +45,7 @@ export default function Loading() {
     <div className="fixed inset-0 flex flex-col justify-center items-center bg-[#020202] z-[9999] overflow-hidden">
       {/* Background Matrix/Binary Rain */}
       <div className="absolute inset-0 opacity-[0.05] pointer-events-none flex justify-around">
-        {Array(15).fill(0).map((_, i) => (
+        {hasMounted && Array(15).fill(0).map((_, i) => (
           <motion.div
             key={i}
             initial={{ y: -500 }}
@@ -93,7 +95,7 @@ export default function Loading() {
         <div className="h-4 flex items-center gap-3 mb-8">
            <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_10px_#00F0FF] animate-pulse" />
            <span className="text-cyan-400/60 font-mono text-[9px] tracking-widest uppercase">
-              [ {logs[logIndex]} ]
+              [ {BOOT_LOGS[logIndex]} ]
            </span>
         </div>
 

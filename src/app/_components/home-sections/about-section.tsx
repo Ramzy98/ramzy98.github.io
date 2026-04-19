@@ -2,16 +2,16 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaGithub, FaLinkedin, FaXTwitter } from 'react-icons/fa6';
-import { SiGmail } from 'react-icons/si';
 import Image from 'next/image';
 import { useAnalyticsContext } from '../../_components/analytics-provider';
 import ResumeModal from '../../_components/resume-modal';
 import { useMagnetic } from '../../_hooks/use-magnetic';
 
+import { PORTFOLIO_DATA } from '@/constants/portfolio';
+
 export default function AboutSection() {
   const [titleIndex, setTitleIndex] = useState(0);
-  const titles = ['Software Engineer', 'Fullstack Engineer', 'Frontend Engineer', 'Problem Solver'];
+  const titles = PORTFOLIO_DATA.titles;
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
   const { trackInteraction, trackUserJourney, trackConversion } = useAnalyticsContext();
 
@@ -20,12 +20,12 @@ export default function AboutSection() {
       setTitleIndex((prevIndex) => (prevIndex + 1) % titles.length);
     }, 3000);
     return () => clearInterval(titleInterval);
-  }, []);
+  }, [titles.length]);
 
   const handleSocialLinkClick = (platform: string) => {
     trackInteraction('social_link_click', { platform, section: 'about', link_type: 'social_media' });
     trackUserJourney('social_media_engagement', 'about');
-    if (platform === 'FaLinkedin') trackConversion('linkedin_click', 1);
+    if (platform === 'LinkedIn') trackConversion('linkedin_click', 1);
   };
 
   const handleResumeClick = () => {
@@ -103,12 +103,15 @@ export default function AboutSection() {
           animate="visible"
         >
           <p className="text-lg sm:text-xl text-gray-400 leading-relaxed font-light flex flex-wrap justify-center gap-x-1">
-            <motion.span variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}>Crafting premium digital experiences where</motion.span>
-            <motion.span variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }} className="text-white font-medium">clean architecture</motion.span>
-            <motion.span variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}>meets</motion.span>
-            <motion.span variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }} className="text-cyan-400 font-medium">creative design.</motion.span>
-            <motion.span variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}>Specializing in high-performance web applications</motion.span>
-            <motion.span variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}>that push the boundaries of the modern web.</motion.span>
+             {PORTFOLIO_DATA.about.description.map((text, i) => (
+               <motion.span 
+                 key={i} 
+                 variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}
+                 className={i === 1 ? "text-white font-medium" : i === 3 ? "text-white font-medium" : i === 5 ? "text-cyan-400 font-medium" : ""}
+               >
+                 {text}
+               </motion.span>
+             ))}
           </p>
         </motion.div>
 
@@ -119,12 +122,7 @@ export default function AboutSection() {
           transition={{ delay: 0.8, duration: 0.8 }}
         >
           <div className="flex space-x-6">
-            {[
-              { Icon: FaGithub, link: 'https://github.com/Ramzy98', platform: 'FaGithub' },
-              { Icon: FaLinkedin, link: 'https://www.linkedin.com/in/ahmadramzyag/', platform: 'FaLinkedin' },
-              { Icon: FaXTwitter, link: 'https://x.com/amazingramzy', platform: 'FaXTwitter' },
-              { Icon: SiGmail, link: 'mailto:ahmadramzy988@gmail.com', platform: 'SiGmail' },
-            ].map(({ Icon, link, platform }) => (
+            {PORTFOLIO_DATA.about.socialLinks.map(({ Icon, link, platform }) => (
               <MagneticItem key={platform} onClick={() => handleSocialLinkClick(platform)} href={link}>
                 <Icon className="text-2xl sm:text-3xl" />
               </MagneticItem>

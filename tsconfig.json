@@ -25,13 +25,17 @@
     "paths": {
       "@/*": [
         "src/*"
+      ],
+      "react-icons/*": [
+        "node_modules/react-icons/*"
       ]
     },
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "target": "ES2017"
+    "target": "ES2017",
+    "preserveSymlinks": true
   },
   "include": [
     "next-env.d.ts",

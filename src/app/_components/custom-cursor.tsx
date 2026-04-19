@@ -32,31 +32,24 @@ export default function CustomCursor() {
 
     const handleMouseDown = () => setIsClicked(true);
     const handleMouseUp = () => setIsClicked(false);
-    const handleHoverStart = () => setIsHovering(true);
-    const handleHoverEnd = () => setIsHovering(false);
+
+    // Optimized Event Delegation for hover states
+    const handleMouseOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const isInteractive = target.closest('button, a, input, [role="button"], .interactive');
+      setIsHovering(!!isInteractive);
+    };
 
     window.addEventListener('mousemove', moveCursor);
     window.addEventListener('mousedown', handleMouseDown);
     window.addEventListener('mouseup', handleMouseUp);
-
-    const updateInteractiveElements = () => {
-      const interactiveElements = document.querySelectorAll(
-        'button, a, input, [role="button"], .interactive'
-      );
-      interactiveElements.forEach((el) => {
-        el.addEventListener('mouseenter', handleHoverStart);
-        el.addEventListener('mouseleave', handleHoverEnd);
-      });
-    };
-
-    updateInteractiveElements();
-    const interval = setInterval(updateInteractiveElements, 2000);
+    window.addEventListener('mouseover', handleMouseOver);
 
     return () => {
       window.removeEventListener('mousemove', moveCursor);
       window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mouseup', handleMouseUp);
-      clearInterval(interval);
+      window.removeEventListener('mouseover', handleMouseOver);
     };
   }, [cursorX, cursorY]);
 

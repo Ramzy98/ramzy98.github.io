@@ -2,59 +2,17 @@
 
 import React, { useRef } from 'react';
 import { motion, useScroll, useSpring } from 'framer-motion';
-import { FaRocket, FaSatellite, FaSpaceShuttle, FaLaptopCode } from 'react-icons/fa';
 import ReactMarkdown from 'react-markdown';
+import { FaLaptopCode, FaRocket, FaSatellite, FaSpaceShuttle } from 'react-icons/fa';
 
-const experiences = [
-  {
-    title: 'Full Stack Software Engineer',
-    company: 'Centroid Solutions',
-    date: 'Mar 2024 - Present',
-    description: [
-      'Part of the core team developing a new software product, working on both **frontend** and **backend** technologies',
-      'Developed frontend components with **React** and **TypeScript**, ensuring a responsive and user-friendly interface',
-      'Designed and documented RESTful APIs using **Swagger**',
-      'Built scalable backend services with **Node.js**, **Fastify**, and **Prisma**',
-    ],
-    icon: <FaLaptopCode />,
-    skills: ['React', 'Next.js', 'Node.js', 'Tailwind', 'TypeScript', 'PostgresSQL'],
-  },
-  {
-    title: 'Web Development Session Lead',
-    company: 'Udacity',
-    date: 'Dec 2023 - Present',
-    description: [
-      'Mentored **50+ students** aged 12-17 in **HTML**, **CSS**, and **JavaScript**',
-      'Guided students through project implementation and web development concepts',
-    ],
-    skills: ['HTML', 'CSS', 'JavaScript'],
-    icon: <FaRocket />,
-  },
-  {
-    title: 'Frontend Software Engineer',
-    company: 'Bayzat',
-    date: 'Oct 2022 - Jan 2024',
-    description: [
-      'Developed and optimized core HR features using **React** with **TypeScript**',
-      'Implemented shift scheduler feature optimized for **4,000+ cells**',
-      'Migrated legacy features from **Ember.js**, improving performance',
-      'Created automated tests with **Cypress** and utilized **Storybook**',
-    ],
-    skills: ['React', 'Typescript', 'Material UI', 'Cypress', 'Storybook'],
-    icon: <FaSatellite />,
-  },
-  {
-    title: 'Full Stack Software Engineer',
-    company: 'Knowledge Officer',
-    date: 'Sep 2021 - Aug 2022',
-    description: [
-      `Led the revamp of the company's online platform using **React** with **TypeScript**`,
-      'Implemented automated tests with **Cypress** and contributed to **Ruby on Rails** backend',
-    ],
-    skills: ['React', 'Redux', 'Ruby on Rails', 'TypeScript', 'PostgresSQL', 'AWS'],
-    icon: <FaSpaceShuttle />,
-  },
-];
+import { PORTFOLIO_DATA } from '@/constants/portfolio';
+
+const ICON_MAP: Record<string, React.ReactNode> = {
+  FaLaptopCode: <FaLaptopCode />,
+  FaRocket: <FaRocket />,
+  FaSatellite: <FaSatellite />,
+  FaSpaceShuttle: <FaSpaceShuttle />,
+};
 
 export default function ExperienceSection() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -91,11 +49,11 @@ export default function ExperienceSection() {
           {/* Custom Timeline Line */}
           <motion.div 
             style={{ scaleY }}
-            className="absolute left-4 md:left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-500 via-purple-500 to-cyan-500 origin-top rounded-full"
+            className="absolute left-4 md:left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-cyan-600 via-cyan-400 to-transparent origin-top rounded-full"
           />
 
           <div className="space-y-24">
-            {experiences.map((exp, index) => (
+            {PORTFOLIO_DATA.experiences.map((exp, index) => (
               <TimelineItem key={index} experience={exp} index={index} />
             ))}
           </div>
@@ -119,9 +77,11 @@ function TimelineItem({ experience, index }: { experience: any, index: number })
            initial={{ scale: 0 }}
            whileInView={{ scale: 1 }}
            viewport={{ once: true }}
-           className="w-6 h-6 rounded-full bg-gray-950 border-4 border-blue-400 glow-blue flex items-center justify-center p-1"
+           className="w-6 h-6 rounded-full bg-gray-950 border-4 border-cyan-400 shadow-[0_0_15px_rgba(0,240,255,0.4)] flex items-center justify-center p-1"
          >
-            <div className="w-2 h-2 rounded-full bg-blue-400" />
+            <div className="text-[10px] text-cyan-400">
+               {ICON_MAP[experience.icon] || <FaLaptopCode />}
+            </div>
          </motion.div>
       </div>
 
@@ -133,9 +93,9 @@ function TimelineItem({ experience, index }: { experience: any, index: number })
          viewport={{ once: true }}
          className="w-full md:w-[45%] ml-12 md:ml-0"
       >
-        <div className="glass-panel p-6 rounded-2xl border border-white/5 hover:border-blue-500/30 transition-all duration-500">
+        <div className="glass-panel p-6 rounded-2xl border border-white/5 hover:border-cyan-400/30 transition-all duration-500">
            <div className="flex flex-col mb-4">
-              <span className="text-xs font-bold text-blue-400 uppercase tracking-widest mb-1">{experience.date}</span>
+              <span className="text-xs font-bold text-cyan-400 uppercase tracking-widest mb-1">{experience.date}</span>
               <h3 className="text-2xl font-bold text-white mb-1">{experience.title}</h3>
               <span className="text-gray-400 font-medium">{experience.company}</span>
            </div>
@@ -143,7 +103,7 @@ function TimelineItem({ experience, index }: { experience: any, index: number })
            <ul className="space-y-2 mb-6">
               {experience.description.map((item: string, i: number) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-gray-400">
-                   <span className="text-blue-500 pt-1">▹</span>
+                   <span className="text-cyan-500 pt-1">▹</span>
                    <ReactMarkdown 
                      components={{
                        strong: ({children}) => <span className="text-white font-medium">{children}</span>
@@ -157,7 +117,7 @@ function TimelineItem({ experience, index }: { experience: any, index: number })
 
            <div className="flex flex-wrap gap-2">
               {experience.skills.map((skill: string) => (
-                <span key={skill} className="px-3 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full text-[10px] font-bold text-blue-300 uppercase tracking-wider">
+                <span key={skill} className="px-3 py-1 bg-cyan-500/10 border border-cyan-500/20 rounded-full text-[10px] font-bold text-cyan-300 uppercase tracking-wider">
                   {skill}
                 </span>
               ))}

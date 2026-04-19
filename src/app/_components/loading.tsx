@@ -5,6 +5,17 @@ import { motion } from 'framer-motion';
 
 export default function Loading() {
   const [progress, setProgress] = useState(0);
+  const [logIndex, setLogIndex] = useState(0);
+  
+  const logs = [
+    'INIT_KERNEL_v1.0.4',
+    'LOAD_NEURAL_ASSETS',
+    'MOUNT_PROJECT_DB',
+    'SYNC_EXPERIENCE_LOGS',
+    'ESTABLISH_HANDSHAKE',
+    'BYPASS_FIREWALL',
+    'SYNCHRONIZATION_COMPLETE'
+  ];
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -13,82 +24,93 @@ export default function Loading() {
           clearInterval(timer);
           return 100;
         }
-        return prev + Math.floor(Math.random() * 15);
+        const inc = Math.floor(Math.random() * 12) + 1;
+        return Math.min(prev + inc, 100);
       });
-    }, 150);
-    return () => clearInterval(timer);
+    }, 120);
+
+    const logTimer = setInterval(() => {
+      setLogIndex((prev) => (prev < logs.length - 1 ? prev + 1 : prev));
+    }, 600);
+
+    return () => {
+      clearInterval(timer);
+      clearInterval(logTimer);
+    };
   }, []);
 
   return (
-    <div className="fixed inset-0 flex flex-col justify-center items-center bg-[#050505] z-[9999] overflow-hidden pointer-events-none">
-      {/* Background Grid Accent */}
-      <div className="absolute inset-0 opacity-10" 
-           style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(0,240,255,0.15) 1px, transparent 0)', backgroundSize: '40px 40px' }} />
+    <div className="fixed inset-0 flex flex-col justify-center items-center bg-[#020202] z-[9999] overflow-hidden">
+      {/* Background Matrix/Binary Rain */}
+      <div className="absolute inset-0 opacity-[0.05] pointer-events-none flex justify-around">
+        {Array(15).fill(0).map((_, i) => (
+          <motion.div
+            key={i}
+            initial={{ y: -500 }}
+            animate={{ y: 1000 }}
+            transition={{ duration: Math.random() * 5 + 5, repeat: Infinity, ease: 'linear' }}
+            className="text-cyan-400 font-mono text-[8px] whitespace-pre"
+          >
+            {Array(50).fill(0).map(() => Math.round(Math.random())).join('\n')}
+          </motion.div>
+        ))}
+      </div>
 
-      <div className="relative flex justify-center items-center w-72 h-72">
-        {/* Breathing Aura */}
-        <motion.div
-           className="absolute w-32 h-32 bg-cyan-500/20 rounded-full blur-[60px]"
-           animate={{ scale: [1, 1.4, 1], opacity: [0.2, 0.4, 0.2] }}
-           transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-        />
-
-        {/* Data Rings */}
-        <motion.div
-          className="absolute w-64 h-64 border-2 border-cyan-400/20 rounded-full border-t-cyan-400"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-        />
-        
-        <motion.div
-          className="absolute w-56 h-56 border border-white/5 rounded-full border-b-white/20"
-          animate={{ rotate: -360 }}
-          transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
-        />
-
-        {/* Binary Stream (Subtle) */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden opacity-20">
-           <div className="text-[8px] font-mono whitespace-nowrap animate-marquee vertical text-cyan-400/50">
-              {Array(10).fill('101001101010 011010101001 ').join('\n')}
+      <div className="relative flex flex-col items-center">
+        {/* Core Geometry Unfolding */}
+        <div className="relative mb-12">
+           <motion.div
+             animate={{ rotate: 360 }}
+             transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+             className="w-32 h-32 border-[1px] border-cyan-400/20 border-t-cyan-400 border-r-cyan-400 rounded-full"
+           />
+           <motion.div
+             animate={{ rotate: -360 }}
+             transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+             className="absolute inset-2 border-[1px] border-white/5 border-b-white/40 rounded-full"
+           />
+           <div className="absolute inset-0 flex items-center justify-center">
+              <motion.div 
+                animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="w-1 h-1 bg-white rounded-full shadow-[0_0_15px_#ffffff]" 
+              />
            </div>
         </div>
 
-        {/* Center Neural Node */}
-        <div className="relative z-10 flex flex-col items-center">
-            <motion.div 
-              animate={{ 
-                scale: [1, 1.1, 1],
-                boxShadow: ['0 0 10px #00F0FF', '0 0 30px #00F0FF', '0 0 10px #00F0FF']
-              }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-              className="w-12 h-12 bg-[#0a0a0a] border border-cyan-400/50 rounded-xl flex items-center justify-center transform rotate-45 overflow-hidden"
-            >
-               <div className="w-full h-full bg-gradient-to-br from-cyan-400/20 to-transparent flex items-center justify-center -rotate-45">
-                  <div className="w-2 h-2 bg-white rounded-full shadow-[0_0_10px_#fff]" />
-               </div>
-            </motion.div>
-        </div>
-      </div>
-
-      {/* Progress Stats */}
-      <div className="mt-12 flex flex-col items-center gap-2">
-        <div className="flex items-center gap-4 text-cyan-400 font-mono text-[10px] tracking-[0.2em] uppercase">
-          <span className="opacity-40">System_Status:</span>
-          <span className="font-bold text-white transition-all duration-300">
-             {progress < 100 ? 'Establishing Neural Link...' : 'Synchronization Complete'}
-          </span>
-        </div>
-        
-        <div className="w-48 h-[2px] bg-white/5 rounded-full overflow-hidden relative border border-white/5">
-           <motion.div 
-             className="absolute top-0 left-0 h-full bg-cyan-400 shadow-[0_0_10px_#00F0FF]"
-             initial={{ width: 0 }}
-             animate={{ width: `${progress}%` }}
-           />
+        {/* Deciphering Name */}
+        <div className="mb-6 h-8 flex items-center justify-center">
+           <motion.h1 
+             className="text-white font-mono text-2xl tracking-[0.4em] font-bold"
+             initial={{ opacity: 0 }}
+             animate={{ opacity: 1 }}
+           >
+              {progress < 40 ? '#######' : progress < 80 ? 'R#MZY_8' : 'RAMZY.IO'}
+           </motion.h1>
         </div>
 
-        <div className="text-cyan-400/50 font-mono text-[12px] mt-1">
-          {progress.toString().padStart(3, '0')}%
+        {/* Status Log Line */}
+        <div className="h-4 flex items-center gap-3 mb-8">
+           <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_10px_#00F0FF] animate-pulse" />
+           <span className="text-cyan-400/60 font-mono text-[9px] tracking-widest uppercase">
+              [ {logs[logIndex]} ]
+           </span>
+        </div>
+
+        {/* Progress Container */}
+        <div className="w-64 flex flex-col items-center">
+           <div className="w-full h-[1px] bg-white/5 relative overflow-hidden">
+              <motion.div 
+                className="absolute top-0 left-0 h-full bg-cyan-400 shadow-[0_0_10px_#00F0FF]"
+                initial={{ width: 0 }}
+                animate={{ width: `${progress}%` }}
+              />
+           </div>
+           
+           <div className="mt-4 flex justify-between w-full font-mono text-[10px]">
+              <span className="text-gray-600">SYST_OS_v1.2</span>
+              <span className="text-cyan-400">{progress}%</span>
+           </div>
         </div>
       </div>
     </div>

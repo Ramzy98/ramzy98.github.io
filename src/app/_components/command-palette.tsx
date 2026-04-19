@@ -103,80 +103,134 @@ export default function CommandPalette() {
             />
             
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: -20 }}
+              initial={{ opacity: 0, scale: 0.98, y: -10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: -20 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-              className="relative w-full max-w-2xl overflow-hidden rounded-2xl border border-white/10 bg-[#0a0a0a]/90 shadow-[0_0_50px_rgba(0,0,0,0.5)] glass-panel"
+              exit={{ opacity: 0, scale: 0.98, y: -10 }}
+              transition={{ type: 'spring', stiffness: 500, damping: 40 }}
+              className="relative w-full max-w-3xl overflow-hidden rounded-lg border border-cyan-400/20 bg-[#050505]/95 shadow-[0_0_50px_rgba(0,240,255,0.1)] backdrop-blur-xl"
             >
-              {/* Animated Scanline */}
-              <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.03]">
+              {/* CRT / System Grain Filter */}
+              <div className="absolute inset-0 pointer-events-none z-50 mix-blend-overlay opacity-[0.08]">
+                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+                    <filter id="crtNoise">
+                       <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch" />
+                    </filter>
+                    <rect width="100%" height="100%" filter="url(#crtNoise)" />
+                 </svg>
+              </div>
+
+              {/* Animated Scanline (High Precision) */}
+              <div className="absolute inset-0 pointer-events-none overflow-hidden z-20">
                 <motion.div 
                   animate={{ y: ['-100%', '100%'] }}
-                  transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
-                  className="w-full h-1/2 bg-gradient-to-b from-transparent via-cyan-400 to-transparent"
+                  transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
+                  className="w-full h-1 bg-cyan-400/10 shadow-[0_0_15px_rgba(0,240,255,0.3)]"
                 />
               </div>
 
               {/* Terminal Header */}
-              <div className="flex items-center gap-3 px-6 py-5 border-b border-white/5 bg-white/[0.02]">
-                <div className="text-cyan-400 font-mono text-sm opacity-50">&gt;_</div>
-                <input
-                  type="text"
-                  autoFocus
-                  placeholder="Execute command..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="flex-1 bg-transparent text-white placeholder-gray-600 focus:outline-none text-lg font-light tracking-wide lg:text-xl"
-                />
-                <div className="flex items-center gap-2">
-                   <span className="text-[10px] text-gray-500 font-mono bg-white/5 border border-white/10 px-1.5 py-0.5 rounded uppercase tracking-tighter">Ctrl</span>
-                   <span className="text-[10px] text-gray-500 font-mono bg-white/5 border border-white/10 px-1.5 py-0.5 rounded uppercase tracking-tighter text-cyan-400">K</span>
+              <div className="px-6 pt-6 pb-4 border-b border-white/5 bg-white/[0.02]">
+                <div className="flex items-center gap-2 mb-4">
+                   <div className="w-2 h-2 rounded-full bg-red-500/50" />
+                   <div className="w-2 h-2 rounded-full bg-amber-500/50" />
+                   <div className="w-2 h-2 rounded-full bg-emerald-500/50" />
+                   <span className="ml-2 text-[10px] font-mono text-gray-500 tracking-tighter uppercase opacity-50">Secure_Shell // Portfolio_Auth // Root</span>
+                </div>
+                
+                <div className="flex items-center gap-4">
+                  <div className="text-cyan-400 font-mono text-lg font-bold animate-pulse">&gt;_</div>
+                  <input
+                    type="text"
+                    autoFocus
+                    placeholder="Search System Database..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="flex-1 bg-transparent text-white placeholder-gray-700 focus:outline-none text-xl font-mono tracking-tight"
+                  />
+                  <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 rounded font-mono">
+                     <span className="text-[10px] text-gray-500">ESC</span>
+                     <span className="text-[10px] text-gray-700">TO</span>
+                     <span className="text-[10px] text-cyan-400">EXIT</span>
+                  </div>
                 </div>
               </div>
 
-              <div className="max-h-[60vh] overflow-y-auto p-3 scrollbar-hide">
+              <div className="max-h-[50vh] overflow-y-auto p-4 scrollbar-hide bg-[#0a0a0a]/50">
                 {filteredCommands.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-12 text-center">
-                    <p className="text-gray-500 text-sm font-mono tracking-widest uppercase">Null result</p>
-                    <p className="text-gray-700 text-xs mt-1 italic">No matching commands in system database.</p>
+                  <div className="flex flex-col items-center justify-center py-16">
+                    <motion.div 
+                      animate={{ opacity: [0.3, 1, 0.3] }}
+                      transition={{ duration: 0.1, repeat: Infinity }}
+                      className="text-red-500 font-mono text-xs uppercase tracking-[0.5em] mb-2"
+                    >
+                      [ Access Denied ]
+                    </motion.div>
+                    <p className="text-gray-700 font-mono text-[10px]">Requested PID not found in kernel logs.</p>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-1 gap-1">
-                    {/* Categories could go here, currently simple list */}
+                  <div className="flex flex-col gap-1">
                     {filteredCommands.map((command) => (
                       <button
                         key={command.id}
                         onClick={command.action}
-                        className="group w-full flex items-center justify-between px-5 py-4 text-left rounded-xl transition-all duration-200 hover:bg-cyan-400/5 hover:border-cyan-400/20 border border-transparent focus:outline-none focus:bg-cyan-400/5 group"
+                        className="group w-full flex items-center justify-between px-4 py-3 rounded border border-transparent hover:border-cyan-400/30 hover:bg-cyan-400/5 transition-all duration-150 relative overflow-hidden"
                       >
-                        <div className="flex items-center gap-4">
-                           <div className="p-2 rounded-lg bg-white/5 group-hover:bg-cyan-400/10 transition-colors">
+                        <div className="flex items-center gap-4 relative z-10">
+                           <div className="text-gray-600 group-hover:text-cyan-400 transition-colors">
                               {command.icon}
                            </div>
-                           <div className="flex flex-col">
-                              <span className="text-sm font-medium text-gray-300 group-hover:text-white transition-colors">{command.name}</span>
-                              <span className="text-[10px] text-gray-600 font-mono group-hover:text-cyan-400/60 uppercase">{command.section}</span>
+                           <div className="flex items-baseline gap-2">
+                              <span className="text-xs font-mono text-gray-500 opacity-40">&gt; EXEC</span>
+                              <span className="text-sm font-mono text-gray-300 group-hover:text-white group-hover:pl-2 transition-all">
+                                 {command.name.replace('Go to ', '').toUpperCase()}
+                              </span>
+                              <span className="hidden sm:inline text-[9px] font-mono text-gray-700 group-hover:text-cyan-400/40 uppercase ml-4">
+                                 ADDR:{command.section}
+                              </span>
                            </div>
                         </div>
-                        <div className="opacity-0 group-hover:opacity-100 transition-opacity transform group-hover:translate-x-1 duration-300">
-                           <span className="text-cyan-400/50 text-xs font-mono">EXECUTE &rarr;</span>
+                        
+                        <div className="flex items-center gap-4 relative z-10">
+                           <span className="text-[10px] font-mono text-gray-700 group-hover:text-cyan-400 transition-colors">
+                              [ STATUS: OK ]
+                           </span>
+                           <div className="w-1 h-3 bg-cyan-400 opacity-0 group-hover:opacity-100 animate-pulse" />
                         </div>
+                        
+                        {/* Interactive Glint Effect */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
                       </button>
                     ))}
                   </div>
                 )}
               </div>
               
-              {/* Footer status bar */}
-              <div className="px-6 py-3 border-t border-white/5 bg-white/[0.01] flex justify-between items-center">
-                 <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-1.5 text-[10px] text-gray-500">
-                       <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/50 animate-pulse" />
-                       SYSTEM ONLINE
+              {/* Expandable Meta Footer */}
+              <div className="px-6 py-4 border-t border-white/5 bg-[#0a0a0a] flex flex-col gap-3">
+                 <div className="flex justify-between items-center opacity-60">
+                    <div className="flex items-center gap-6">
+                       <div className="flex items-center gap-2 text-[9px] font-mono text-gray-500">
+                          <span className="text-cyan-400">KERNEL:</span> 0.12.8-STABLE
+                       </div>
+                       <div className="flex items-center gap-2 text-[9px] font-mono text-gray-500">
+                          <span className="text-cyan-400">MEMORY:</span> 1.2GB/32GB
+                       </div>
+                       <div className="hidden sm:flex items-center gap-2 text-[9px] font-mono text-gray-500">
+                          <span className="text-cyan-400">UPTIME:</span> 243h
+                       </div>
+                    </div>
+                    <div className="text-[9px] font-mono text-gray-600">LN 1, COL 1</div>
+                 </div>
+
+                 <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2 text-[10px] font-mono text-emerald-500 uppercase tracking-tighter">
+                       <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                       Connection_Secure_TLS_1.3
+                    </div>
+                    <div className="text-[10px] font-mono text-gray-500">
+                       USER@RAMZY_SYSTEM: ~
                     </div>
                  </div>
-                 <p className="text-[10px] font-mono text-gray-600 tracking-tighter">PORTFOLIO_DB_V0.1</p>
               </div>
             </motion.div>
           </div>

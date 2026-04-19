@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useMotionTemplate } from 'framer-motion';
 import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
 import Image from 'next/image';
 import { useAnalyticsContext } from '../../_components/analytics-provider';
@@ -107,6 +107,27 @@ export default function ProjectsSection() {
 
 function ProjectCard({ project, index, onClickLink }: { project: Project; index: number; onClickLink: any }) {
   const displayIndex = String(index + 1).padStart(2, '0');
+  
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const springConfig = { damping: 25, stiffness: 150 };
+  const mouseXSpring = useSpring(mouseX, springConfig);
+  const mouseYSpring = useSpring(mouseY, springConfig);
+
+  function onMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
+
+  const background = useMotionTemplate`
+    radial-gradient(
+      600px circle at ${mouseXSpring}px ${mouseYSpring}px,
+      rgba(0, 240, 255, 0.12),
+      transparent 80%
+    )
+  `;
 
   return (
     <motion.div
@@ -115,8 +136,15 @@ function ProjectCard({ project, index, onClickLink }: { project: Project; index:
       transition={{ duration: 0.7, delay: index * 0.15, ease: 'easeOut' }}
       viewport={{ once: true, margin: '-100px' }}
       whileHover={{ y: -10 }}
+      onMouseMove={onMouseMove}
       className="group relative flex flex-col w-full bg-[#080808] border border-white/10 rounded-[2rem] overflow-hidden hover:border-cyan-400/30 transition-all duration-500 shadow-2xl"
     >
+      {/* Glint Overlay */}
+      <motion.div
+        className="pointer-events-none absolute -inset-px rounded-[2rem] opacity-0 transition duration-300 group-hover:opacity-100 z-10"
+        style={{ background }}
+      />
+
       {/* Index Number */}
       <div className="absolute top-6 left-6 z-20 text-white/20 font-black text-3xl font-mono tracking-tighter group-hover:text-cyan-400/80 transition-colors duration-500">
         {displayIndex}
@@ -127,7 +155,7 @@ function ProjectCard({ project, index, onClickLink }: { project: Project; index:
         {/* Glow underneath image */}
         <div className="absolute inset-0 bg-cyan-400/0 group-hover:bg-cyan-400/10 blur-3xl transition-all duration-700 w-3/4 h-3/4 m-auto rounded-full mix-blend-screen" />
         
-        <div className="relative w-full h-full rounded-xl overflow-hidden shadow-2xl border border-white/5 transform group-hover:-translate-y-2 group-hover:scale-[1.02] transition-all duration-500 ease-out">
+        <div className="relative w-full h-full rounded-xl overflow-hidden shadow-2xl border border-white/5 transform group-hover:-translate-y-2 group-hover:scale-[1.02] transition-all duration-500 ease-out z-10">
           <Image
             src={project.image}
             alt={project.title}
@@ -140,7 +168,7 @@ function ProjectCard({ project, index, onClickLink }: { project: Project; index:
       </div>
 
       {/* Bottom Zone: Data Console */}
-      <div className="flex flex-col flex-1 p-8 sm:p-10 border-t border-white/5 bg-[#030303]">
+      <div className="flex flex-col flex-1 p-8 sm:p-10 border-t border-white/5 bg-[#030303] z-10">
          <div className="flex flex-col sm:flex-row sm:items-baseline justify-between mb-4 gap-2">
             <h3 className="text-3xl font-bold text-white tracking-tight">{project.title}</h3>
          </div>

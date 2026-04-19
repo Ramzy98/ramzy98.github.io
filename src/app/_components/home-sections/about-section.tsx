@@ -15,8 +15,6 @@ export default function AboutSection() {
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
   const { trackInteraction, trackUserJourney, trackConversion } = useAnalyticsContext();
 
-  const magneticProfile = useMagnetic(0.2);
-
   useEffect(() => {
     const titleInterval = setInterval(() => {
       setTitleIndex((prevIndex) => (prevIndex + 1) % titles.length);
@@ -45,40 +43,21 @@ export default function AboutSection() {
         transition={{ duration: 0.8 }}
         className="text-center w-full max-w-5xl"
       >
-        {/* Clean Bento Profile Image */}
-        <div
-          ref={magneticProfile.ref}
-          onMouseMove={magneticProfile.handleMouseMove}
-          onMouseLeave={magneticProfile.handleMouseLeave}
-          className="relative inline-block mb-16"
-        >
-          <motion.div
-            animate={{ x: magneticProfile.position.x, y: magneticProfile.position.y }}
-            transition={{ type: 'spring', stiffness: 150, damping: 15, mass: 0.1 }}
-            className="group relative w-56 h-56 sm:w-72 sm:h-72 rounded-[2rem] bg-gray-900 border-2 border-white/5 hover:border-cyan-400/50 transition-colors duration-500 shadow-2xl p-2"
-          >
-            <div className="absolute -top-3 -right-3 z-20 flex items-center gap-2 bg-black/80 backdrop-blur-md border border-white/10 rounded-full px-3 py-1.5 shadow-xl">
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-500"></span>
-              </span>
-              <span className="text-[10px] font-mono text-cyan-50 font-bold tracking-widest uppercase">Available</span>
-            </div>
-
+        {/* Stable Profile Image */}
+        <div className="relative inline-block mb-16">
+          <div className="group relative w-56 h-56 sm:w-72 sm:h-72 rounded-[2rem] bg-gray-900 border-2 border-white/5 hover:border-cyan-400/50 transition-colors duration-500 shadow-2xl p-2">
             <div className="relative w-full h-full overflow-hidden rounded-[1.5rem] bg-black">
               <Image
                 src="/me.jpeg"
                 alt="Profile Picture"
                 layout="fill"
                 objectFit="cover"
-                className="grayscale contrast-125 opacity-80 group-hover:grayscale-0 group-hover:opacity-100 group-hover:contrast-100 group-hover:scale-105 transition-all duration-700 ease-out"
+                className="grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700 ease-out"
                 priority
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 bg-cyan-400/20 blur-[50px] -z-10 rounded-[2rem] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
             </div>
-            
-            <div className="absolute inset-0 bg-cyan-400/20 blur-[50px] -z-10 rounded-[2rem] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-          </motion.div>
+          </div>
         </div>
 
         <motion.h1

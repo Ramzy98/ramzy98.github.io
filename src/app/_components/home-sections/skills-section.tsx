@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useMotionTemplate } from 'framer-motion';
 import { FaReact, FaNodeJs, FaDatabase } from 'react-icons/fa';
 import {
   SiTypescript,
@@ -62,23 +62,46 @@ export default function SkillsSection() {
 }
 
 function SkillCard({ skill, index }: { skill: any; index: number }) {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  function onMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
+
+  const background = useMotionTemplate`
+    radial-gradient(
+      250px circle at ${mouseX}px ${mouseY}px,
+      rgba(0, 240, 255, 0.15),
+      transparent 80%
+    )
+  `;
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       whileInView={{ opacity: 1, scale: 1 }}
-      whileHover={{ scale: 1.1, y: -5 }}
+      whileHover={{ scale: 1.05, y: -5 }}
+      onMouseMove={onMouseMove}
       transition={{ duration: 0.4, delay: index * 0.05 }}
       viewport={{ once: true }}
-      className="glass-panel p-6 rounded-3xl flex flex-col items-center justify-center group shadow-none transition-all duration-300 bg-[#ffffff03] border-[#ffffff08] hover:border-cyan-400/30"
+      className="glass-panel relative p-6 rounded-3xl flex flex-col items-center justify-center group shadow-none transition-all duration-300 bg-[#0a0a0a] border-white/5 hover:border-cyan-400/30 overflow-hidden"
     >
-      <div className="relative mb-3">
+      <motion.div
+        className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition duration-300 group-hover:opacity-100"
+        style={{ background }}
+      />
+      
+      <div className="relative mb-3 z-10">
         <skill.icon
           className="text-4xl sm:text-5xl transition-all duration-300 grayscale group-hover:grayscale-0"
-          style={{ filter: `drop-shadow(0 0 10px rgba(255,255,255,0.1))` }}
+          style={{ filter: `drop-shadow(0 0 10px rgba(0, 240, 255, 0.1))` }}
         />
         <div className="absolute inset-0 blur-2xl opacity-0 group-hover:opacity-40 transition-opacity duration-500" style={{ backgroundColor: skill.color }} />
       </div>
-      <p className="text-[10px] sm:text-[11px] font-bold text-gray-400 group-hover:text-white transition-colors duration-300 uppercase tracking-widest text-center">
+      <p className="relative z-10 text-[10px] sm:text-[11px] font-bold text-gray-400 group-hover:text-white transition-colors duration-300 uppercase tracking-widest text-center">
         {skill.name}
       </p>
     </motion.div>

@@ -1,10 +1,11 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useMotionTemplate, useTransform } from 'framer-motion';
 import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
 import Image from 'next/image';
 import { useAnalyticsContext } from '../../_components/analytics-provider';
+import { use3DTilt } from '@/app/_hooks/use-3d-tilt';
 
 interface Project {
   title: string;
@@ -105,17 +106,38 @@ export default function ProjectsSection() {
   );
 }
 
-function ProjectCard({ project, index, onClickLink }: { project: Project, index: number, onClickLink: any }) {
+function ProjectCard({ project, index, onClickLink }: { project: Project; index: number; onClickLink: any }) {
   const displayIndex = String(index + 1).padStart(2, '0');
+  const { ref, rotateX, rotateY, mouseX, mouseY, handleMouseMove, handleMouseLeave } = use3DTilt(10);
+  const glareBackground = useMotionTemplate`radial-gradient(circle at ${useTransform(mouseX, [0, 1], [0, 100])}% ${useTransform(
+    mouseY,
+    [0, 1],
+    [0, 100]
+  )}%, rgba(255,255,255,0.08) 0%, transparent 60%)`;
 
   return (
     <motion.div
+      ref={ref}
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7, delay: index * 0.15, ease: 'easeOut' }}
-      viewport={{ once: true, margin: "-100px" }}
+      viewport={{ once: true, margin: '-100px' }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        rotateX,
+        rotateY,
+        transformStyle: 'preserve-3d',
+      }}
       className="group relative flex flex-col w-full bg-[#080808] border border-white/10 rounded-[2rem] overflow-hidden hover:border-cyan-400/30 transition-colors duration-500 shadow-2xl"
     >
+      {/* Interactive Glare / Shine Effect */}
+      <motion.div
+        className="absolute inset-0 z-30 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        style={{
+          background: glareBackground,
+        }}
+      />
       {/* Index Number */}
       <div className="absolute top-6 left-6 z-20 text-white/20 font-black text-3xl font-mono tracking-tighter group-hover:text-cyan-400/80 transition-colors duration-500">
         {displayIndex}

@@ -43,9 +43,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
-        <meta httpEquiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://www.google-analytics.com https://formspree.io;" />
+        <meta httpEquiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.digitaloceanspaces.com https://raw.githubusercontent.com https://raw.githack.com; connect-src 'self' https://www.google-analytics.com https://formspree.io https://*.digitaloceanspaces.com https://raw.githubusercontent.com https://raw.githack.com;" />
       </head>
-      <body className={`${syne.className} flex flex-col min-h-screen`}>
+      <body className={`${syne.className} flex flex-col min-h-screen relative overflow-x-hidden`}>
+
         {process.env.NEXT_PUBLIC_GA_ID && <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />}
         <AnalyticsProvider>
           <DynamicComponents />

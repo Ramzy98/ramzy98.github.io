@@ -74,7 +74,7 @@ export default function CommandPalette() {
       name: 'Download Resume',
       icon: <FaFileAlt className="text-blue-400" />,
       section: 'Actions',
-      action: () => runCommand(() => window.open('/Ahmad_Ramzy_Resume.pdf', '_blank')),
+      action: () => runCommand(() => window.open('/Ahmad_Ramzy_Software_Engineer_Resume.pdf', '_blank')),
     },
     {
       id: 'github',

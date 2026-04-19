@@ -8,6 +8,7 @@ import MobileNavBar from './mobile-nav-bar';
 import { useScrollEffect } from '../../_hooks/useScrollEffect';
 import { sendGTMEvent } from '@next/third-parties/google';
 import { useMagnetic } from '../../_hooks/use-magnetic';
+import { FaPaintBrush } from 'react-icons/fa';
 
 export default function NavBar() {
   const pathname = usePathname();
@@ -15,6 +16,7 @@ export default function NavBar() {
   const tabs = useMemo(() => ['About', 'Experience', 'Projects', 'Contact'], []);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isPaintActive, setIsPaintActive] = useState(false);
 
   const activeSection = useScrollEffect([
     'about',
@@ -79,6 +81,12 @@ export default function NavBar() {
     }
   };
 
+  const togglePaint = () => {
+    const newState = !isPaintActive;
+    setIsPaintActive(newState);
+    window.dispatchEvent(new CustomEvent('site-paint-toggle', { detail: { enabled: newState } }));
+  };
+
   const navVariants = {
     visible: { opacity: 1, transition: { duration: 0.5, when: 'beforeChildren', staggerChildren: 0.1 } },
   };
@@ -96,7 +104,7 @@ export default function NavBar() {
       className="fixed top-6 left-0 right-0 z-50 flex justify-center px-6"
     >
       <motion.nav
-        className="py-2.5 px-6 rounded-full flex items-center gap-8 max-w-fit bg-black/60 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.8)] border border-white/10"
+        className="py-2.5 px-6 rounded-full flex items-center gap-6 sm:gap-8 max-w-fit bg-black/60 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.8)] border border-white/10"
       >
         <div className="mr-2">
           <AnimatedLogo />
@@ -117,6 +125,23 @@ export default function NavBar() {
             </AnimatePresence>
           </motion.ul>
         )}
+
+        {/* Global Fun Toggles */}
+        <div className="flex items-center gap-4 border-l border-white/10 pl-4 h-6">
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={togglePaint}
+            className={`transition-all duration-300 flex items-center justify-center p-2 rounded-full ${
+              isPaintActive 
+                ? 'text-purple-400 bg-purple-400/10 shadow-[0_0_15px_rgba(168,85,247,0.3)]' 
+                : 'text-gray-400 hover:text-white hover:bg-white/5'
+            }`}
+            title="Creative Mode"
+          >
+            <FaPaintBrush size={16} />
+          </motion.button>
+        </div>
 
         {isMobile && (
            <MobileNavBar
@@ -147,9 +172,9 @@ function NavTab({ item, activeTab, onClick, tabVariants }: any) {
     >
       {isActive && (
         <motion.div
-          layoutId="navIndicator"
-          className="absolute inset-0 bg-white/5 rounded-full border border-white/10"
-          transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+           layoutId="navIndicator"
+           className="absolute inset-0 bg-white/5 rounded-full border border-white/10"
+           transition={{ type: 'spring', stiffness: 350, damping: 30 }}
         />
       )}
       <button

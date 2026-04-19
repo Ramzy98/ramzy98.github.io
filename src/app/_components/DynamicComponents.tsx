@@ -22,7 +22,7 @@ const CommandPalette = dynamic(() => import('@/app/_components/command-palette')
   ssr: false,
 });
 
-const EnhancedPerformanceMonitor = dynamic(() => import('@/app/_components/enhanced-performance-monitor'), {
+const GraffitiCanvas = dynamic(() => import('@/app/_components/GraffitiCanvas'), {
   ssr: false,
 });
 
@@ -30,11 +30,11 @@ export default function DynamicComponents() {
   return (
     <>
       <StarryBackground />
+      <GraffitiCanvas />
       <CustomCursor />
       <CommandPalette />
       <ScrollProgress />
       <NavBar />
-      <EnhancedPerformanceMonitor />
     </>
   );
 }

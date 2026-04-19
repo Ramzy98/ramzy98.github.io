@@ -1,11 +1,17 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaGithub, FaLinkedin, FaXTwitter } from 'react-icons/fa6';
 import { SiGmail } from 'react-icons/si';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import { useAnalyticsContext } from '../../_components/analytics-provider';
 import ResumeModal from '../../_components/resume-modal';
 import { useMagnetic } from '../../_hooks/use-magnetic';
+import { use3DTilt } from '@/app/_hooks/use-3d-tilt';
+
+const Scene3D = dynamic(() => import('../../_components/Scene3D'), { ssr: false });
 
 export default function AboutSection() {
   const [titleIndex, setTitleIndex] = useState(0);
@@ -14,6 +20,17 @@ export default function AboutSection() {
   const { trackInteraction, trackUserJourney, trackConversion } = useAnalyticsContext();
 
   const magneticProfile = useMagnetic(0.2);
+  const { ref: tiltRef, rotateX, rotateY, handleMouseMove: handleTiltMove, handleMouseLeave: handleTiltLeave } = use3DTilt(10);
+
+  const handleProfileMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    magneticProfile.handleMouseMove(e);
+    handleTiltMove(e);
+  };
+
+  const handleProfileLeave = () => {
+    magneticProfile.handleMouseLeave();
+    handleTiltLeave();
+  };
 
   useEffect(() => {
     const titleInterval = setInterval(() => {
@@ -36,7 +53,8 @@ export default function AboutSection() {
   };
 
   return (
-    <section id="about" className="min-h-[80vh] flex flex-col justify-center items-center px-6">
+    <section id="about" className="min-h-[80vh] flex flex-col justify-center items-center px-6 relative overflow-hidden">
+      <Scene3D />
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -45,17 +63,17 @@ export default function AboutSection() {
       >
         {/* Clean Bento Profile Image */}
         <div
-          ref={magneticProfile.ref}
-          onMouseMove={magneticProfile.handleMouseMove}
-          onMouseLeave={magneticProfile.handleMouseLeave}
+          ref={tiltRef}
+          onMouseMove={handleProfileMove}
+          onMouseLeave={handleProfileLeave}
           className="relative inline-block mb-16"
         >
           <motion.div
             animate={{ x: magneticProfile.position.x, y: magneticProfile.position.y }}
+            style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
             transition={{ type: 'spring', stiffness: 150, damping: 15, mass: 0.1 }}
             className="group relative w-56 h-56 sm:w-72 sm:h-72 rounded-[2rem] bg-gray-900 border-2 border-white/5 hover:border-cyan-400/50 transition-colors duration-500 shadow-2xl p-2"
           >
-            {/* Pulsing Status Badge */}
             <div className="absolute -top-3 -right-3 z-20 flex items-center gap-2 bg-black/80 backdrop-blur-md border border-white/10 rounded-full px-3 py-1.5 shadow-xl">
               <span className="relative flex h-2.5 w-2.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
@@ -64,7 +82,6 @@ export default function AboutSection() {
               <span className="text-[10px] font-mono text-cyan-50 font-bold tracking-widest uppercase">Available</span>
             </div>
 
-            {/* Image Container */}
             <div className="relative w-full h-full overflow-hidden rounded-[1.5rem] bg-black">
               <Image
                 src="/me.jpeg"
@@ -75,16 +92,8 @@ export default function AboutSection() {
                 priority
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500" />
-              
-              {/* ID Badge overlay */}
-              <div className="absolute bottom-0 left-0 right-0 p-5 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-start">
-                 <span className="text-cyan-400 font-mono text-[10px] tracking-widest mb-1">ID: AR-98</span>
-                 <span className="text-white font-bold tracking-widest text-sm uppercase leading-tight relative z-10">Ahmad Ramzy</span>
-                 <span className="text-white/50 font-mono text-xs mt-0.5">Lvl: Software Engineer</span>
-              </div>
             </div>
             
-            {/* Background Glow */}
             <div className="absolute inset-0 bg-cyan-400/20 blur-[50px] -z-10 rounded-[2rem] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
           </motion.div>
         </div>

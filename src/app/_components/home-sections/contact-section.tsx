@@ -1,13 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion } from 'motion/react';
 import { FaEnvelope, FaPaperPlane } from 'react-icons/fa6';
 import { PORTFOLIO_DATA } from '@/constants/portfolio';
 import { track } from '@/app/_lib/analytics';
 import { party } from '@/app/_lib/party';
-import { RevealHeading, RevealWords } from '../scroll/reveal-text';
-import { ScrambleText } from '../scroll/scramble-text';
+import SectionHeader from '../section-header';
 
 const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xanynodr';
 
@@ -52,16 +50,11 @@ export default function ContactSection() {
     <section id="contact" aria-labelledby="contact-heading" className="w-full py-24 px-6">
       <div className="mx-auto max-w-3xl">
         <div className="mb-12 text-center">
-          <ScrambleText className="section-eyebrow mb-4" text="Contact" />
-          <RevealHeading
+          <SectionHeader
             id="contact-heading"
-            lead="Let's"
-            accent="talk"
-            className="font-display text-4xl sm:text-6xl font-extrabold text-white mb-4 tracking-tight"
-          />
-          <RevealWords
-            className="text-gray-300 text-lg"
-            segments={[{ text: 'Hiring, collaborating, or just want to say hi? Send a message or email me directly.' }]}
+            eyebrow="Contact"
+            title="Let's talk"
+            description="Hiring, building something interesting, or just want to say hi? Drop me a message."
           />
           <a
             href={`mailto:${PORTFOLIO_DATA.email}`}
@@ -72,12 +65,7 @@ export default function ContactSection() {
           </a>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          viewport={{ once: true }}
-          className="glass-panel p-6 sm:p-10"
+        <div className="glass-panel p-6 sm:p-10"
         >
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -138,7 +126,7 @@ export default function ContactSection() {
               {status.kind === 'error' && status.message}
             </p>
           </form>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

@@ -13,8 +13,7 @@ import {
 } from 'react-icons/fa6';
 import { SiFastify, SiPostgresql, SiRedis } from 'react-icons/si';
 import { party } from '@/app/_lib/party';
-import { RevealHeading, RevealWords } from '../scroll/reveal-text';
-import { ScrambleText } from '../scroll/scramble-text';
+import SectionHeader from '../section-header';
 
 type NodeId = 'checkout' | 'api' | 'router' | 'psp' | 'webhook' | 'redis' | 'ledger';
 
@@ -207,24 +206,19 @@ export default function LabSection() {
   return (
     <section id="lab" aria-labelledby="lab-heading" className="w-full py-24 px-6">
       <div className="mx-auto max-w-6xl">
-        <div className="mb-12 text-center">
-          <ScrambleText className="section-eyebrow mb-4" text="Lab · Interactive" />
-          <RevealHeading
-            id="lab-heading"
-            lead="Break my"
-            accent="payments pipeline"
-            className="font-display text-4xl sm:text-6xl font-extrabold text-white mb-4 tracking-tight"
-          />
-          <RevealWords
-            className="text-gray-300 text-lg max-w-2xl mx-auto"
-            segments={[
-              { text: 'A playable model of the webhook pipeline from my payments work. Flip the chaos switches and try to' },
-              { text: 'lose a transaction', tone: 'bright' },
-              { text: 'or' },
-              { text: 'charge someone twice.', tone: 'accent' },
-            ]}
-          />
-        </div>
+        <SectionHeader
+          id="lab-heading"
+          eyebrow="Lab · Interactive"
+          title="Break my payments pipeline"
+          description={
+            <>
+              A playable model of the webhook pipeline from my payments work. Flip the chaos switches and try to{' '}
+              <span className="text-white font-medium">lose a transaction</span> or{' '}
+              <span className="text-cyan-400 font-medium">charge someone twice.</span>
+            </>
+          }
+          className="mb-12"
+        />
 
         <div className="glass-panel p-5 sm:p-8">
           {/* Controls */}

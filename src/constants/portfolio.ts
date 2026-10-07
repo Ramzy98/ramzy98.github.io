@@ -35,6 +35,8 @@ export const PORTFOLIO_DATA: PortfolioData = {
   name: 'Ahmad Ramzy',
   role: 'Full Stack Software Engineer',
   location: 'Alexandria, Egypt',
+  offTheClock:
+    "Outside work I'm at the gym, watching Formula 1 (Max Verstappen fan) or following FC Barcelona, and I'm working towards a diving licence.",
   email: 'ahmadramzy988@gmail.com',
   siteUrl: 'https://ramzy98.github.io',
   resumePath: '/Ahmad_Ramzy_Software_Engineer_Resume.pdf',
@@ -98,10 +100,10 @@ export const PORTFOLIO_DATA: PortfolioData = {
       date: 'Mar 2024 – Present',
       location: 'Remote · Dubai, UAE',
       highlights: [
-        'Architected the technical foundation of a **CRM platform**, taking it from MVP to a mature product as the team grew to **20+ members**',
+        'Architected the technical foundation of a **CRM platform** and took it from MVP to a mature product as the team grew around it',
         'Led the initial frontend in **React**, **TypeScript** and **Tailwind CSS**, establishing the design system and core component library',
-        'Built backend services with **Node.js**, **Fastify**, **Prisma** and **Redis**, keeping **99.9% reliability** through on-call rotations',
-        'Designed the payment infrastructure: integrated **8+ payment service providers** and a webhook system processing **2,000+ transactions** with full integrity',
+        'Built backend services with **Node.js**, **Fastify**, **Prisma** and **Redis**, and shared on-call for production reliability',
+        'Designed the payment infrastructure: integrated **8+ payment service providers** behind a resilient webhook system with full transaction integrity',
       ],
       skills: ['React', 'TypeScript', 'Node.js', 'Fastify', 'Prisma', 'Redis', 'PostgreSQL'],
     },
@@ -110,11 +112,8 @@ export const PORTFOLIO_DATA: PortfolioData = {
       company: 'Udacity',
       date: 'Dec 2023 – Present',
       location: 'Part-time · Remote',
-      highlights: [
-        'Mentored **50+ students** aged 12–17 in **HTML**, **CSS** and **JavaScript**',
-        'Guided students through project implementation and core web development concepts',
-      ],
-      skills: ['HTML', 'CSS', 'JavaScript', 'Mentoring'],
+      highlights: ['Mentor students aged 12–17 through their first projects in **HTML**, **CSS** and **JavaScript**'],
+      skills: [],
     },
     {
       title: 'Frontend Software Engineer',
@@ -147,7 +146,7 @@ export const PORTFOLIO_DATA: PortfolioData = {
       title: 'Payments & CRM Platform',
       kicker: 'Case study · Centroid Solutions',
       description:
-        'Architected the payment infrastructure of a production CRM: integrations with 8+ global payment service providers and a resilient webhook system that processed 2,000+ transactions with 100% integrity. Built on Fastify, Prisma and Redis, with a React design system on top.',
+        'The money side of a production CRM. I designed how it talks to payment providers around the world, and the webhook system behind it that never loses a transaction or processes one twice. Fastify, Prisma and Redis underneath, a React design system on top.',
       technologies: ['Node.js', 'Fastify', 'Prisma', 'Redis', 'PostgreSQL', 'React', 'TypeScript'],
       metrics: [
         { value: '8+', label: 'Payment providers integrated' },
@@ -161,7 +160,7 @@ export const PORTFOLIO_DATA: PortfolioData = {
       title: 'Globe Party',
       kicker: 'Product · Two Grains · Live',
       description:
-        'A daily country-guessing game that runs as a Discord Activity and as an installable website. Three rounds a day, the same countries for everyone, and friends can watch each other play live. One Cloudflare Worker serves it all: a Durable Object per room keeps live state over WebSockets, a cron posts each new day to Discord, and anonymous usage stats land in Analytics Engine.',
+        'My friends and I play daily puzzles like Wordle every day, so I built one for geography, except here you can watch each other get it wrong in real time. Three rounds a day, the same countries for everyone, playable right inside Discord or in the browser. Under the hood, one Cloudflare Worker runs it all: a Durable Object per room keeps everyone in sync over WebSockets, and a cron posts each new day to Discord.',
       image: '/projects/globe-party.webp',
       technologies: ['React 19', 'TypeScript', 'three.js', 'Cloudflare Workers', 'Durable Objects', 'WebSockets', 'Discord SDK'],
       liveLink: 'https://globeparty.twograins.app/',
@@ -170,20 +169,11 @@ export const PORTFOLIO_DATA: PortfolioData = {
       title: 'Frame Forge',
       kicker: 'Side project · 2026',
       description:
-        'A multi-viewport iframe tester for validating UI across device sizes at once. A runtime injection engine applies CSS and JS to the framed page live, and a built-in console shows postMessage traffic both ways.',
+        'I was working with iframes a lot at work and kept wishing I could see every screen size at once, so I built the tool. Frame Forge shows a page in several viewports side by side, lets you inject CSS and JS into it live, and logs the postMessage traffic going both ways.',
       image: '/projects/frame-forge.webp',
       technologies: ['React 19', 'TypeScript', 'Zustand', 'Vite', 'Tailwind CSS'],
       githubLink: 'https://github.com/Ramzy98/frame-forge',
       liveLink: 'https://frame-forge-rho.vercel.app/',
-    },
-    {
-      title: 'eCommerce REST API',
-      kicker: 'Backend · Open source',
-      description:
-        'A REST API for an online store built with Express and PostgreSQL: users, products and orders with relational modelling, JWT authentication, bcrypt password hashing and a separate test database.',
-      image: '/projects/ecommerce-api.webp',
-      technologies: ['Node.js', 'Express', 'TypeScript', 'PostgreSQL', 'JWT'],
-      githubLink: 'https://github.com/Ramzy98/ecommerce-website-restful-api',
     },
   ],
   education: {

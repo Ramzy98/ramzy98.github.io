@@ -58,6 +58,8 @@ export interface PortfolioData {
   name: string;
   role: string;
   location: string;
+  /** A sentence about life outside work, shown under the hero. */
+  offTheClock: string;
   email: string;
   siteUrl: string;
   resumePath: string;

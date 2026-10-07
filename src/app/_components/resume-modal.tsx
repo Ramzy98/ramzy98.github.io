@@ -6,7 +6,6 @@ import { PORTFOLIO_DATA } from '@/constants/portfolio';
 import { OPEN_RESUME_EVENT } from '@/app/_lib/events';
 import { Highlight } from '@/app/_lib/highlight';
 import { track } from '@/app/_lib/analytics';
-import { pauseScroll, resumeScroll } from '@/app/_lib/smooth-scroll';
 
 const { name, role, email, siteUrl, resumePath, summary, experiences, skillGroups, education, socialLinks } =
   PORTFOLIO_DATA;
@@ -28,11 +27,9 @@ export default function ResumeModal() {
       if (dialog.open) return;
       dialog.showModal();
       document.documentElement.style.overflow = 'hidden';
-      pauseScroll();
     };
     const onClose = () => {
       document.documentElement.style.overflow = '';
-      resumeScroll();
     };
 
     window.addEventListener(OPEN_RESUME_EVENT, open);
@@ -58,7 +55,7 @@ export default function ResumeModal() {
           <h2 id="resume-title" className="font-display text-3xl sm:text-5xl font-extrabold tracking-tight">
             {name}
           </h2>
-          <p className="mt-2 font-mono text-sm uppercase tracking-widest text-accent">{role}</p>
+          <p className="mt-2 font-mono text-sm uppercase tracking-widest text-gray-400">{role}</p>
         </div>
         <div className="flex items-center gap-3">
           <a
@@ -102,7 +99,7 @@ export default function ResumeModal() {
                   <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-4">
                     <div>
                       <h4 className="text-xl font-semibold text-white">{exp.company}</h4>
-                      <p className="text-sm text-accent">{exp.title}</p>
+                      <p className="text-sm text-gray-300">{exp.title}</p>
                     </div>
                     <div className="sm:text-right text-sm text-gray-400">
                       <p className="font-mono">{exp.date}</p>
@@ -112,7 +109,7 @@ export default function ResumeModal() {
                   <ul className="space-y-2">
                     {exp.highlights.map((h) => (
                       <li key={h} className="flex gap-3 text-sm text-gray-300 leading-relaxed">
-                        <span aria-hidden="true" className="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent" />
+                        <span aria-hidden="true" className="mt-2 h-1 w-1 shrink-0 rounded-full bg-gray-500" />
                         <span>
                           <Highlight text={h} />
                         </span>
@@ -166,7 +163,7 @@ export default function ResumeModal() {
               Education
             </h3>
             <p className="flex items-start gap-2 text-white font-medium">
-              <FaGraduationCap aria-hidden="true" className="mt-1 text-accent shrink-0" />
+              <FaGraduationCap aria-hidden="true" className="mt-1 text-gray-400 shrink-0" />
               {education.degree}
             </p>
             <p className="mt-2 text-sm text-gray-300">{education.school}</p>

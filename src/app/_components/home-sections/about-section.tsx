@@ -1,36 +1,22 @@
 'use client';
 
-import { useRef } from 'react';
-import { motion, useMotionTemplate, useReducedMotion, useScroll, useTransform } from 'motion/react';
+import { motion } from 'motion/react';
 import Image from 'next/image';
 import { FaArrowDown, FaLocationDot } from 'react-icons/fa6';
 import { PORTFOLIO_DATA } from '@/constants/portfolio';
 import { openResume } from '@/app/_lib/events';
 import { track } from '@/app/_lib/analytics';
-import { RevealWords } from '../scroll/reveal-text';
-import { useIntroDone } from '@/app/_hooks/use-intro-done';
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 const HIDDEN = { opacity: 0, y: 16 };
 const SHOWN = { opacity: 1, y: 0 };
 
 export default function AboutSection({ years }: { years: number }) {
-  const heroRef = useRef<HTMLElement>(null);
-  const shouldReduceMotion = useReducedMotion();
-  // Hold the entrance until the intro curtain starts lifting (instant when there's no intro).
-  const ready = useIntroDone();
   const fadeUp = (delay: number) => ({
     initial: HIDDEN,
-    animate: ready ? SHOWN : HIDDEN,
+    animate: SHOWN,
     transition: { duration: 0.6, delay, ease: EASE },
   });
-
-  // The hero recedes gently as it scrolls away.
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.92]);
-  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
-  const blurPx = useTransform(scrollYProgress, [0, 1], [0, 6]);
-  const filter = useMotionTemplate`blur(${blurPx}px)`;
 
   const handleResumeClick = () => {
     openResume();
@@ -40,14 +26,10 @@ export default function AboutSection({ years }: { years: number }) {
   return (
     <section
       id="about"
-      ref={heroRef}
       aria-labelledby="hero-name"
       className="w-full min-h-[calc(100svh-8rem)] flex flex-col justify-center items-center px-6 pb-16 relative"
     >
-      <motion.div
-        style={shouldReduceMotion ? undefined : { scale, opacity, filter }}
-        className="text-center w-full max-w-3xl"
-      >
+      <div className="text-center w-full max-w-3xl">
         <motion.div {...fadeUp(0)} className="relative inline-block mb-8">
           <div className="relative w-28 h-28 sm:w-36 sm:h-36 rounded-[1.75rem] p-1.5 bg-white/5 border border-white/10 shadow-2xl">
             <Image
@@ -70,36 +52,32 @@ export default function AboutSection({ years }: { years: number }) {
           aria-label={PORTFOLIO_DATA.name}
           className="font-display text-5xl sm:text-7xl md:text-8xl font-extrabold tracking-tight leading-[0.95] mb-6"
         >
-          <BouncyWord word="Ahmad" ready={ready} delay={0.05} />{' '}
-          <BouncyWord word="Ramzy" ready={ready} delay={0.2} gradient />
+          <BouncyWord word="Ahmad" delay={0.05} />{' '}
+          <BouncyWord word="Ramzy" delay={0.2} gradient />
         </h1>
 
-        <div className="max-w-2xl mx-auto mb-4">
-          <RevealWords
-            mode="enter"
-            play={ready}
-            enterDelay={0.3}
-            className="text-lg sm:text-xl text-gray-300 leading-relaxed text-center"
-            segments={[
-              { text: 'I build products end to end with' },
-              { text: 'TypeScript, React and Node.js', tone: 'accent' },
-              { text: '— from' },
-              { text: "payment systems that can't fail", tone: 'bright' },
-              { text: 'to' },
-              { text: 'real-time apps people use every day.', tone: 'bright' },
-            ]}
-          />
-        </div>
+        <motion.p
+          {...fadeUp(0.3)}
+          className="max-w-2xl mx-auto mb-4 text-lg sm:text-xl text-gray-300 leading-relaxed"
+        >
+          I build products end to end with{' '}
+          <span className="text-white font-medium">TypeScript, React and Node.js</span> — from{' '}
+          <span className="text-white font-medium">payment systems that can&apos;t fail</span> to{' '}
+          <span className="text-white font-medium">real-time apps people use every day.</span>
+        </motion.p>
 
         <motion.p
           {...fadeUp(0.35)}
-          className="flex items-center justify-center gap-2 text-sm text-gray-400 mb-10"
+          className="flex items-center justify-center gap-2 text-sm text-gray-400"
         >
-          <FaLocationDot aria-hidden="true" className="text-accent/80" />
+          <FaLocationDot aria-hidden="true" className="text-gray-500" />
           {PORTFOLIO_DATA.location} · working remotely with teams in Dubai and London
         </motion.p>
+        <motion.p {...fadeUp(0.4)} className="max-w-xl mx-auto mt-2 mb-10 text-sm text-gray-400">
+          {PORTFOLIO_DATA.offTheClock}
+        </motion.p>
 
-        <motion.div {...fadeUp(0.45)} className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-6">
+        <motion.div {...fadeUp(0.45)} className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-10">
           <button
             type="button"
             onClick={handleResumeClick}
@@ -114,15 +92,6 @@ export default function AboutSection({ years }: { years: number }) {
             Get in touch
           </a>
         </motion.div>
-
-        <motion.a
-          {...fadeUp(0.5)}
-          href="#fit"
-          className="group mb-8 inline-flex items-center gap-2 text-sm text-gray-300 hover:text-accent transition-colors"
-        >
-          Hiring? Paste your job description and see how I fit
-          <span aria-hidden="true" className="transition-transform group-hover:translate-x-1">→</span>
-        </motion.a>
 
         <motion.ul {...fadeUp(0.55)} className="flex justify-center gap-2">
           {PORTFOLIO_DATA.socialLinks.map(({ Icon, link, platform }) => (
@@ -140,7 +109,7 @@ export default function AboutSection({ years }: { years: number }) {
             </li>
           ))}
         </motion.ul>
-      </motion.div>
+      </div>
 
       <a
         href="#experience"
@@ -156,20 +125,17 @@ export default function AboutSection({ years }: { years: number }) {
 /** Each letter springs up when hovered or tapped — a small reward for poking at the name. */
 function BouncyWord({
   word,
-  ready,
   delay,
   gradient = false,
 }: {
   word: string;
-  ready: boolean;
   delay: number;
   gradient?: boolean;
 }) {
   const letters = word.split('');
   const spring = { type: 'spring', stiffness: 500, damping: 12 } as const;
   return (
-    // data-word lets the intro find this word and assemble its particles right here.
-    <span aria-hidden="true" data-word={word} data-gradient={gradient} className="inline-block whitespace-nowrap">
+    <span aria-hidden="true" className="inline-block whitespace-nowrap">
       {letters.map((letter, i) => (
         <motion.span
           key={i}
@@ -188,7 +154,7 @@ function BouncyWord({
               : undefined
           }
           initial={{ opacity: 0, y: '0.35em' }}
-          animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: '0.35em' }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: delay + i * 0.04, ease: EASE }}
           whileHover={{ y: -14, rotate: i % 2 === 0 ? -6 : 6, transition: spring }}
           whileTap={{ y: -14, scale: 1.1, transition: spring }}

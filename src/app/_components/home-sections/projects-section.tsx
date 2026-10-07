@@ -9,8 +9,7 @@ import type { Project } from '@/types/portfolio';
 import { track } from '@/app/_lib/analytics';
 import { useMediaQuery } from '@/app/_hooks/use-media-query';
 import Tilt from '../tilt';
-import { RevealHeading, RevealWords } from '../scroll/reveal-text';
-import { ScrambleText } from '../scroll/scramble-text';
+import SectionHeader from '../section-header';
 
 export default function ProjectsSection() {
   const stackRef = useRef<HTMLDivElement>(null);
@@ -24,19 +23,13 @@ export default function ProjectsSection() {
 
   return (
     <section id="projects" aria-labelledby="projects-heading" className="w-full py-24 px-6 relative z-10">
-      <div className="mx-auto max-w-6xl mb-14 lg:mb-4 text-center">
-        <ScrambleText className="section-eyebrow mb-4" text="Projects" />
-        <RevealHeading
-          id="projects-heading"
-          lead="Selected"
-          accent="work"
-          className="font-display text-4xl sm:text-6xl font-extrabold text-white mb-4 tracking-tight"
-        />
-        <RevealWords
-          className="text-gray-300 text-lg max-w-2xl mx-auto"
-          segments={[{ text: 'Production systems I helped build, and the tools I make on the side.' }]}
-        />
-      </div>
+      <SectionHeader
+        id="projects-heading"
+        eyebrow="Projects"
+        title="Selected work"
+        description="Some I built for work, some because I wanted them to exist."
+        className="mx-auto max-w-6xl mb-14 lg:mb-4"
+      />
 
       <div ref={stackRef} className={stacked ? 'relative' : 'mx-auto max-w-6xl flex flex-col gap-6'}>
         {projects.map((project, index) =>
@@ -117,7 +110,7 @@ function ProjectCard({ project, index, fixedHeight = false }: { project: Project
 
       <div className="flex flex-col flex-1 p-6 sm:p-10 border-t lg:border-t-0 lg:border-l border-white/10">
         <div className="flex items-baseline justify-between gap-4 mb-4">
-          <p className="font-mono text-xs uppercase tracking-widest text-accent">{project.kicker}</p>
+          <p className="font-mono text-xs uppercase tracking-widest text-gray-400">{project.kicker}</p>
           <span aria-hidden="true" className="font-mono text-2xl font-bold text-white/15">
             {displayIndex}
           </span>
@@ -130,7 +123,7 @@ function ProjectCard({ project, index, fixedHeight = false }: { project: Project
           {project.technologies.map((tech) => (
             <li
               key={tech}
-              className="px-3 py-1.5 rounded-full bg-accent/5 border border-accent/15 text-xs font-mono text-cyan-200"
+              className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-gray-300"
             >
               {tech}
             </li>
@@ -186,14 +179,14 @@ function MetricsShowcase({ project }: { project: Project }) {
     <div className="relative w-full h-full flex items-center">
       <div
         aria-hidden="true"
-        className="absolute inset-0 m-auto w-3/4 h-3/4 rounded-full bg-accent/10 blur-3xl"
+        className="absolute inset-0 m-auto w-3/4 h-3/4 rounded-full bg-white/5 blur-3xl"
       />
       <dl className="relative grid grid-cols-2 gap-3 sm:gap-4 w-full">
         {project.metrics?.map(({ value, label }) => (
           <div key={label} className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-6">
             <dt className="sr-only">{label}</dt>
             <dd>
-              <span className="block font-sans text-3xl sm:text-4xl font-bold tracking-tight tabular-nums text-gradient-cyan">{value}</span>
+              <span className="block font-sans text-3xl sm:text-4xl font-bold tracking-tight tabular-nums text-white">{value}</span>
               <span className="mt-2 block text-xs sm:text-sm text-gray-400 leading-snug">{label}</span>
             </dd>
           </div>

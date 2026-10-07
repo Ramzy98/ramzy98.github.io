@@ -11,8 +11,7 @@ type AnalyticsEvent =
   | 'project_link_click'
   | 'contact_submit'
   | 'contact_error'
-  | 'command_palette_open'
-  | 'fit_check';
+  | 'command_palette_open';
 
 const isEnabled = process.env.NODE_ENV === 'production' && Boolean(process.env.NEXT_PUBLIC_GA_ID);
 

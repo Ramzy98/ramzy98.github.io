@@ -4,8 +4,7 @@ import { useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { PORTFOLIO_DATA } from '@/constants/portfolio';
 import type { Skill } from '@/types/portfolio';
-import { RevealHeading, RevealWords } from '../scroll/reveal-text';
-import { ScrambleText } from '../scroll/scramble-text';
+import SectionHeader from '../section-header';
 
 /** Ring diameter (% of the orbit's width), spin period and direction, inner to outer. */
 const RINGS = [
@@ -32,16 +31,13 @@ export default function SkillsSection() {
     <section id="skills" aria-labelledby="skills-heading" className="w-full py-24 px-6 overflow-hidden">
       <div className="mx-auto max-w-6xl grid items-center gap-14 lg:grid-cols-[1fr_1.1fr]">
         <div>
-          <ScrambleText className="section-eyebrow mb-4" text="Skills" />
-          <RevealHeading
+          <SectionHeader
             id="skills-heading"
-            lead="The stack behind"
-            accent="the work"
-            className="font-display text-4xl sm:text-6xl font-extrabold text-white mb-4 tracking-tight"
-          />
-          <RevealWords
-            className="text-gray-300 text-lg mb-10"
-            segments={[{ text: 'Three rings, three layers of the product. Hover a name to find it in orbit.' }]}
+            eyebrow="Skills"
+            title="The stack behind the work"
+            description="Three rings, three layers of the product. Hover a name to find it in orbit."
+            align="left"
+            className="mb-10"
           />
 
           <div className="space-y-6">
@@ -97,9 +93,9 @@ export default function SkillsSection() {
           ))}
 
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-[20%] aspect-square rounded-full bg-accent/10 border border-accent/30 shadow-[0_0_60px_rgba(34,211,238,0.25)] flex flex-col items-center justify-center">
+            <div className="w-[20%] aspect-square rounded-full bg-white/5 border border-white/15 flex flex-col items-center justify-center">
               <span className="font-display text-2xl sm:text-4xl font-extrabold text-white leading-none">{total}</span>
-              <span className="mt-1 font-mono text-[10px] sm:text-xs uppercase tracking-widest text-accent">tools</span>
+              <span className="mt-1 font-mono text-[10px] sm:text-xs uppercase tracking-widest text-gray-400">tools</span>
             </div>
           </div>
 

@@ -10,7 +10,7 @@ export default function NotFound() {
     <section className="min-h-[70vh] flex items-center justify-center px-6">
       <div className="glass-panel max-w-md w-full text-center p-10">
         <p className="section-eyebrow">Error 404</p>
-        <h1 className="mt-4 font-display text-6xl sm:text-7xl font-extrabold tracking-tight text-gradient-cyan">Lost?</h1>
+        <h1 className="mt-4 font-display text-6xl sm:text-7xl font-extrabold tracking-tight text-white">Lost?</h1>
         <p className="mt-4 text-gray-300">This page doesn&apos;t exist — it may have moved, or the link is wrong.</p>
         <Link
           href="/"

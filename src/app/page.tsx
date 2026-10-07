@@ -1,4 +1,5 @@
 import AboutSection from '@/app/_components/home-sections/about-section';
+import StatementSection from '@/app/_components/home-sections/statement-section';
 import ExperienceSection from '@/app/_components/home-sections/experience-section';
 import SkillsSection from '@/app/_components/home-sections/skills-section';
 import ProjectsSection from '@/app/_components/home-sections/projects-section';
@@ -14,10 +15,11 @@ export default function Page() {
   return (
     <div className="flex flex-col items-center w-full">
       <AboutSection years={years} />
+      <StatementSection years={years} />
       <ExperienceSection />
+      <SkillsSection />
       <ProjectsSection />
       <LabSection />
-      <SkillsSection />
       <FitSection />
       <ContactSection />
     </div>

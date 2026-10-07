@@ -6,6 +6,7 @@ import { PORTFOLIO_DATA } from '@/constants/portfolio';
 import type { Experience } from '@/types/portfolio';
 import { Highlight } from '@/app/_lib/highlight';
 import { RevealHeading, RevealWords } from '../scroll/reveal-text';
+import { ScrambleText } from '../scroll/scramble-text';
 
 export default function ExperienceSection() {
   const timelineRef = useRef<HTMLDivElement>(null);
@@ -16,7 +17,7 @@ export default function ExperienceSection() {
     <section id="experience" aria-labelledby="experience-heading" className="w-full py-24 px-6 relative">
       <div className="mx-auto max-w-5xl">
         <div className="mb-16 text-center">
-          <p className="section-eyebrow mb-4">Experience</p>
+          <ScrambleText className="section-eyebrow mb-4" text="Experience" />
           <RevealHeading
             id="experience-heading"
             lead="Where I've"

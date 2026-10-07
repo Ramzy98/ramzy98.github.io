@@ -111,3 +111,49 @@ dialog::backdrop {
   background: rgba(2, 4, 10, 0.8);
   backdrop-filter: blur(12px);
 }
+
+/* Intro overlay: hidden unless the inline decider script chose to play it. */
+#intro {
+  display: none;
+}
+
+html[data-intro='play'] #intro,
+html[data-intro='lifting'] #intro {
+  display: block;
+}
+
+html[data-intro='play'],
+html[data-intro='play'] body {
+  overflow: hidden;
+}
+
+/* Once the curtain starts lifting, clicks go through to the page. */
+html[data-intro='lifting'] #intro {
+  pointer-events: none;
+}
+
+
+/* Skills orbit: rings spin, icons counter-spin to stay upright. */
+@keyframes orbit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.orbit-spin {
+  animation: orbit-spin 60s linear infinite;
+}
+
+.orbit-reverse {
+  animation-direction: reverse;
+}
+
+.orbit-paused .orbit-spin {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-spin {
+    animation: none;
+  }
+}

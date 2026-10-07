@@ -7,6 +7,7 @@ import { PORTFOLIO_DATA } from '@/constants/portfolio';
 import { track } from '@/app/_lib/analytics';
 import { party } from '@/app/_lib/party';
 import { RevealHeading, RevealWords } from '../scroll/reveal-text';
+import { ScrambleText } from '../scroll/scramble-text';
 
 const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xanynodr';
 
@@ -51,7 +52,7 @@ export default function ContactSection() {
     <section id="contact" aria-labelledby="contact-heading" className="w-full py-24 px-6">
       <div className="mx-auto max-w-3xl">
         <div className="mb-12 text-center">
-          <p className="section-eyebrow mb-4">Contact</p>
+          <ScrambleText className="section-eyebrow mb-4" text="Contact" />
           <RevealHeading
             id="contact-heading"
             lead="Let's"

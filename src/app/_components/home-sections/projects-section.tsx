@@ -8,7 +8,9 @@ import { PORTFOLIO_DATA } from '@/constants/portfolio';
 import type { Project } from '@/types/portfolio';
 import { track } from '@/app/_lib/analytics';
 import { useMediaQuery } from '@/app/_hooks/use-media-query';
+import Tilt from '../tilt';
 import { RevealHeading, RevealWords } from '../scroll/reveal-text';
+import { ScrambleText } from '../scroll/scramble-text';
 
 export default function ProjectsSection() {
   const stackRef = useRef<HTMLDivElement>(null);
@@ -23,7 +25,7 @@ export default function ProjectsSection() {
   return (
     <section id="projects" aria-labelledby="projects-heading" className="w-full py-24 px-6 relative z-10">
       <div className="mx-auto max-w-6xl mb-14 lg:mb-4 text-center">
-        <p className="section-eyebrow mb-4">Projects</p>
+        <ScrambleText className="section-eyebrow mb-4" text="Projects" />
         <RevealHeading
           id="projects-heading"
           lead="Selected"
@@ -95,17 +97,21 @@ function ProjectCard({ project, index, fixedHeight = false }: { project: Project
     >
       <div className="relative lg:w-[58%] bg-[#0b1120] flex items-center justify-center p-5 sm:p-8 lg:p-10 min-h-[220px]">
         {project.image ? (
-          <div className="relative w-full aspect-[16/10] lg:aspect-auto lg:h-full rounded-xl overflow-hidden border border-white/10 shadow-2xl">
-            <Image
-              src={project.image}
-              alt={`Screenshot of ${project.title}`}
-              fill
-              sizes="(min-width: 1024px) 640px, 100vw"
-              className="object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
-            />
-          </div>
+          <Tilt className="w-full aspect-[16/10] lg:aspect-auto lg:h-full rounded-xl">
+            <div className="relative w-full h-full rounded-xl overflow-hidden border border-white/10 shadow-2xl">
+              <Image
+                src={project.image}
+                alt={`Screenshot of ${project.title}`}
+                fill
+                sizes="(min-width: 1024px) 640px, 100vw"
+                className="object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
+              />
+            </div>
+          </Tilt>
         ) : (
-          <MetricsShowcase project={project} />
+          <Tilt className="w-full h-full flex items-center rounded-2xl" max={5}>
+            <MetricsShowcase project={project} />
+          </Tilt>
         )}
       </div>
 

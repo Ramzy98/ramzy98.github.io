@@ -7,6 +7,7 @@ import { PORTFOLIO_DATA } from '@/constants/portfolio';
 import { analyzeJobDescription, SAMPLE_JOB_DESCRIPTION, type FitResult } from '@/app/_lib/job-match';
 import { track } from '@/app/_lib/analytics';
 import { RevealHeading, RevealWords } from '../scroll/reveal-text';
+import { ScrambleText } from '../scroll/scramble-text';
 
 export default function FitSection() {
   const [text, setText] = useState('');
@@ -32,7 +33,7 @@ export default function FitSection() {
     <section id="fit" aria-labelledby="fit-heading" className="w-full py-24 px-6">
       <div className="mx-auto max-w-6xl">
         <div className="mb-12 text-center">
-          <p className="section-eyebrow mb-4">For hiring teams</p>
+          <ScrambleText className="section-eyebrow mb-4" text="For hiring teams" />
           <RevealHeading
             id="fit-heading"
             lead="Do I fit"

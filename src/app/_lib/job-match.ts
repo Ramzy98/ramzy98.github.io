@@ -221,22 +221,22 @@ function mergeHighlights(ranges: Highlight[]): Highlight[] {
   return out;
 }
 
-export const SAMPLE_JOB_DESCRIPTION = `Senior Full Stack Engineer, Payments (Remote)
+export const SAMPLE_JOB_DESCRIPTION = `Full Stack Engineer (Remote)
 
-We're scaling a payments platform used by thousands of merchants, and we're looking for an engineer who can own features end to end.
+We're a product company building collaboration software used by thousands of teams, and we're hiring an engineer to own features end to end.
 
 What you'll do
 - Build product features with React, TypeScript and Next.js on the frontend and Node.js services on the backend
-- Integrate new payment providers and keep our webhooks reliable under load
-- Improve performance and help keep uptime high through a shared on-call rotation
+- Design REST APIs and data models in PostgreSQL, with Redis for caching
+- Ship real-time features over WebSockets
+- Contribute to our design system and keep the app fast
 
 What we're looking for
 - 4+ years of full-stack experience
 - Strong TypeScript, React and Node.js
-- PostgreSQL and Redis in production
 - Testing with Jest or Cypress
-- Docker and CI/CD
+- Docker, CI/CD and AWS
 
 Nice to have
-- Kubernetes or GraphQL experience
+- GraphQL or Kubernetes experience
 - You enjoy mentoring other engineers`;

@@ -6,6 +6,7 @@ import { PORTFOLIO_DATA } from '@/constants/portfolio';
 import { OPEN_RESUME_EVENT } from '@/app/_lib/events';
 import { Highlight } from '@/app/_lib/highlight';
 import { track } from '@/app/_lib/analytics';
+import { pauseScroll, resumeScroll } from '@/app/_lib/smooth-scroll';
 
 const { name, role, email, siteUrl, resumePath, summary, experiences, skillGroups, education, socialLinks } =
   PORTFOLIO_DATA;
@@ -27,9 +28,11 @@ export default function ResumeModal() {
       if (dialog.open) return;
       dialog.showModal();
       document.documentElement.style.overflow = 'hidden';
+      pauseScroll();
     };
     const onClose = () => {
       document.documentElement.style.overflow = '';
+      resumeScroll();
     };
 
     window.addEventListener(OPEN_RESUME_EVENT, open);

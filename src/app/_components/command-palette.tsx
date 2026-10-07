@@ -7,6 +7,7 @@ import { PORTFOLIO_DATA } from '@/constants/portfolio';
 import { SECTIONS } from '@/app/_lib/sections';
 import { OPEN_PALETTE_EVENT, openResume } from '@/app/_lib/events';
 import { track } from '@/app/_lib/analytics';
+import { scrollToSection } from '@/app/_lib/smooth-scroll';
 
 interface Command {
   id: string;
@@ -61,14 +62,14 @@ export default function CommandPalette() {
         label: `Go to ${label}`,
         group: 'Navigate' as const,
         icon: <FaArrowRight />,
-        run: () => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }),
+        run: () => scrollToSection(id),
       })),
       {
         id: 'fit',
         label: 'Check fit with a job description',
         group: 'Actions',
         icon: <FaMagnifyingGlass />,
-        run: () => document.getElementById('fit')?.scrollIntoView({ behavior: 'smooth' }),
+        run: () => scrollToSection('fit'),
       },
       {
         id: 'resume',

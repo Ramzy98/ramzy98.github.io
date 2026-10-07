@@ -40,9 +40,9 @@ export const PORTFOLIO_DATA: PortfolioData = {
   resumePath: '/Ahmad_Ramzy_Software_Engineer_Resume.pdf',
   careerStart: '2021-09-01',
   headline:
-    'I build payment and CRM platforms with TypeScript, Node.js and React — from the first commit to production scale.',
+    "I build products end to end with TypeScript, React and Node.js — from payment systems that can't fail to real-time apps people use every day.",
   summary:
-    'Full stack engineer driven by clean architecture and measurable impact. I bridge high-performance frontends and scalable backend systems, and I have led technical foundations from zero to production — most recently the payments infrastructure of a CRM platform serving a team of 20+.',
+    "Full-stack engineer who owns features from the database to the UI. I laid the technical foundation of a CRM platform and its payments infrastructure, migrated a large HR product's frontend to React, and ship my own real-time products on the side. I care about clean architecture, reliability, and software that's genuinely pleasant to use.",
   socialLinks: [
     { Icon: FaGithub, link: 'https://github.com/Ramzy98', platform: 'GitHub' },
     { Icon: FaLinkedin, link: 'https://www.linkedin.com/in/ahmadramzyag/', platform: 'LinkedIn' },

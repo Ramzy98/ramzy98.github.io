@@ -8,16 +8,22 @@ import { PORTFOLIO_DATA } from '@/constants/portfolio';
 import { openResume } from '@/app/_lib/events';
 import { track } from '@/app/_lib/analytics';
 import { RevealWords } from '../scroll/reveal-text';
+import { useIntroDone } from '@/app/_hooks/use-intro-done';
 
-const fadeUp = (delay: number) => ({
-  initial: { opacity: 0, y: 16 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6, delay, ease: [0.16, 1, 0.3, 1] as const },
-});
+const EASE = [0.16, 1, 0.3, 1] as const;
+const HIDDEN = { opacity: 0, y: 16 };
+const SHOWN = { opacity: 1, y: 0 };
 
 export default function AboutSection({ years }: { years: number }) {
   const heroRef = useRef<HTMLElement>(null);
   const shouldReduceMotion = useReducedMotion();
+  // Hold the entrance until the intro curtain starts lifting (instant when there's no intro).
+  const ready = useIntroDone();
+  const fadeUp = (delay: number) => ({
+    initial: HIDDEN,
+    animate: ready ? SHOWN : HIDDEN,
+    transition: { duration: 0.6, delay, ease: EASE },
+  });
 
   // The hero recedes gently as it scrolls away.
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
@@ -59,27 +65,28 @@ export default function AboutSection({ years }: { years: number }) {
           {PORTFOLIO_DATA.role} · {years}+ years
         </motion.p>
 
-        <motion.h1
+        <h1
           id="hero-name"
           aria-label={PORTFOLIO_DATA.name}
-          {...fadeUp(0.1)}
           className="font-display text-5xl sm:text-7xl md:text-8xl font-extrabold tracking-tight leading-[0.95] mb-6"
         >
-          <BouncyWord word="Ahmad" />{' '}
-          <BouncyWord word="Ramzy" gradient />
-        </motion.h1>
+          <BouncyWord word="Ahmad" ready={ready} delay={0.05} />{' '}
+          <BouncyWord word="Ramzy" ready={ready} delay={0.2} gradient />
+        </h1>
 
         <div className="max-w-2xl mx-auto mb-4">
           <RevealWords
             mode="enter"
-            enterDelay={0.25}
+            play={ready}
+            enterDelay={0.3}
             className="text-lg sm:text-xl text-gray-300 leading-relaxed text-center"
             segments={[
-              { text: 'I build' },
-              { text: 'payment and CRM platforms', tone: 'bright' },
-              { text: 'with' },
-              { text: 'TypeScript, Node.js and React', tone: 'accent' },
-              { text: '— from the first commit to production scale.' },
+              { text: 'I build products end to end with' },
+              { text: 'TypeScript, React and Node.js', tone: 'accent' },
+              { text: '— from' },
+              { text: "payment systems that can't fail", tone: 'bright' },
+              { text: 'to' },
+              { text: 'real-time apps people use every day.', tone: 'bright' },
             ]}
           />
         </div>
@@ -147,10 +154,22 @@ export default function AboutSection({ years }: { years: number }) {
 }
 
 /** Each letter springs up when hovered or tapped — a small reward for poking at the name. */
-function BouncyWord({ word, gradient = false }: { word: string; gradient?: boolean }) {
+function BouncyWord({
+  word,
+  ready,
+  delay,
+  gradient = false,
+}: {
+  word: string;
+  ready: boolean;
+  delay: number;
+  gradient?: boolean;
+}) {
   const letters = word.split('');
+  const spring = { type: 'spring', stiffness: 500, damping: 12 } as const;
   return (
-    <span aria-hidden="true" className="inline-block whitespace-nowrap">
+    // data-word lets the intro find this word and assemble its particles right here.
+    <span aria-hidden="true" data-word={word} data-gradient={gradient} className="inline-block whitespace-nowrap">
       {letters.map((letter, i) => (
         <motion.span
           key={i}
@@ -168,9 +187,11 @@ function BouncyWord({ word, gradient = false }: { word: string; gradient?: boole
                 }
               : undefined
           }
-          whileHover={{ y: -14, rotate: i % 2 === 0 ? -6 : 6 }}
-          whileTap={{ y: -14, scale: 1.1 }}
-          transition={{ type: 'spring', stiffness: 500, damping: 12 }}
+          initial={{ opacity: 0, y: '0.35em' }}
+          animate={ready ? { opacity: 1, y: 0 } : { opacity: 0, y: '0.35em' }}
+          transition={{ duration: 0.7, delay: delay + i * 0.04, ease: EASE }}
+          whileHover={{ y: -14, rotate: i % 2 === 0 ? -6 : 6, transition: spring }}
+          whileTap={{ y: -14, scale: 1.1, transition: spring }}
         >
           {letter}
         </motion.span>

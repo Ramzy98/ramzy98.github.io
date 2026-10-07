@@ -4,8 +4,22 @@
     {
       "name": "portfolio-dev",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["dev"],
+      "runtimeArgs": [
+        "dev"
+      ],
       "port": 3000
+    },
+    {
+      "name": "portfolio-prod",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "-y",
+        "serve",
+        "out",
+        "-l",
+        "4173"
+      ],
+      "port": 4173
     }
   ]
 }

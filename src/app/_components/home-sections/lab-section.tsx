@@ -14,6 +14,7 @@ import {
 import { SiFastify, SiPostgresql, SiRedis } from 'react-icons/si';
 import { party } from '@/app/_lib/party';
 import { RevealHeading, RevealWords } from '../scroll/reveal-text';
+import { ScrambleText } from '../scroll/scramble-text';
 
 type NodeId = 'checkout' | 'api' | 'router' | 'psp' | 'webhook' | 'redis' | 'ledger';
 
@@ -207,7 +208,7 @@ export default function LabSection() {
     <section id="lab" aria-labelledby="lab-heading" className="w-full py-24 px-6">
       <div className="mx-auto max-w-6xl">
         <div className="mb-12 text-center">
-          <p className="section-eyebrow mb-4">Lab · Interactive</p>
+          <ScrambleText className="section-eyebrow mb-4" text="Lab · Interactive" />
           <RevealHeading
             id="lab-heading"
             lead="Break my"

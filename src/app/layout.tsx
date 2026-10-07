@@ -4,11 +4,14 @@ import { GoogleAnalytics } from '@next/third-parties/google';
 import './globals.css';
 import Footer from '@/app/_components/footer/footer';
 import NavBar from '@/app/_components/nav-bar/nav-bar';
-import StarryBackground from '@/app/_components/starry-background';
+import AuroraBackground from '@/app/_components/aurora-background';
 import ScrollProgress from '@/app/_components/scroll-progress';
 import CommandPalette from '@/app/_components/command-palette';
 import ResumeModal from '@/app/_components/resume-modal';
 import EasterEggs from '@/app/_components/easter-eggs';
+import SmoothScroll from '@/app/_components/smooth-scroll';
+import Intro from '@/app/_components/intro';
+import { INTRO_DECIDER_SCRIPT } from '@/app/_lib/intro';
 import { PORTFOLIO_DATA, yearsOfExperience } from '@/constants/portfolio';
 
 const syne = Syne({ subsets: ['latin'], variable: '--font-syne', weight: ['700', '800'] });
@@ -81,9 +84,11 @@ const personJsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${syne.variable} ${geist.variable} ${geistMono.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${syne.variable} ${geist.variable} ${geistMono.variable}`}>
       <head>
         <meta httpEquiv="Content-Security-Policy" content={csp} />
+        {/* Decides before first paint whether the intro plays, so the overlay never flashes. */}
+        <script dangerouslySetInnerHTML={{ __html: INTRO_DECIDER_SCRIPT }} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
@@ -96,7 +101,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Skip to content
         </a>
-        <StarryBackground />
+        <Intro />
+        <SmoothScroll />
+        <AuroraBackground />
         <ScrollProgress />
         <NavBar />
         <CommandPalette />

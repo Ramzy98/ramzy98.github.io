@@ -29,11 +29,14 @@ export function RevealWords({
   className = '',
   mode = 'scroll',
   enterDelay = 0.6,
+  play = true,
 }: {
   segments: RevealSegment[];
   className?: string;
   mode?: 'scroll' | 'enter';
   enterDelay?: number;
+  /** Enter mode only: hold the reveal until this turns true. */
+  play?: boolean;
 }) {
   const ref = useRef<HTMLParagraphElement>(null);
   const shouldReduceMotion = useReducedMotion();
@@ -70,7 +73,7 @@ export function RevealWords({
             <motion.span
               className={`inline-block ${TONE_CLASS[tone]}`}
               initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
+              animate={play ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
               transition={{ duration: 0.5, delay: enterDelay + i * 0.03, ease: 'easeOut' }}
             >
               {word}

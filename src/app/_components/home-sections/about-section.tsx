@@ -61,10 +61,12 @@ export default function AboutSection({ years }: { years: number }) {
 
         <motion.h1
           id="hero-name"
+          aria-label={PORTFOLIO_DATA.name}
           {...fadeUp(0.1)}
           className="font-display text-5xl sm:text-7xl md:text-8xl font-extrabold tracking-tight leading-[0.95] mb-6"
         >
-          <span className="text-white">Ahmad</span> <span className="text-gradient-cyan">Ramzy</span>
+          <BouncyWord word="Ahmad" />{' '}
+          <BouncyWord word="Ramzy" gradient />
         </motion.h1>
 
         <div className="max-w-2xl mx-auto mb-4">
@@ -90,7 +92,7 @@ export default function AboutSection({ years }: { years: number }) {
           {PORTFOLIO_DATA.location} · working remotely with teams in Dubai and London
         </motion.p>
 
-        <motion.div {...fadeUp(0.45)} className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-10">
+        <motion.div {...fadeUp(0.45)} className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-6">
           <button
             type="button"
             onClick={handleResumeClick}
@@ -105,6 +107,15 @@ export default function AboutSection({ years }: { years: number }) {
             Get in touch
           </a>
         </motion.div>
+
+        <motion.a
+          {...fadeUp(0.5)}
+          href="#fit"
+          className="group mb-8 inline-flex items-center gap-2 text-sm text-gray-300 hover:text-accent transition-colors"
+        >
+          Hiring? Paste your job description and see how I fit
+          <span aria-hidden="true" className="transition-transform group-hover:translate-x-1">→</span>
+        </motion.a>
 
         <motion.ul {...fadeUp(0.55)} className="flex justify-center gap-2">
           {PORTFOLIO_DATA.socialLinks.map(({ Icon, link, platform }) => (
@@ -132,5 +143,38 @@ export default function AboutSection({ years }: { years: number }) {
         <FaArrowDown />
       </a>
     </section>
+  );
+}
+
+/** Each letter springs up when hovered or tapped — a small reward for poking at the name. */
+function BouncyWord({ word, gradient = false }: { word: string; gradient?: boolean }) {
+  const letters = word.split('');
+  return (
+    <span aria-hidden="true" className="inline-block whitespace-nowrap">
+      {letters.map((letter, i) => (
+        <motion.span
+          key={i}
+          className={`inline-block cursor-default select-none ${gradient ? '' : 'text-white'}`}
+          // Slice one continuous gradient across the letters so the word still reads as one sweep.
+          style={
+            gradient
+              ? {
+                  backgroundImage: 'linear-gradient(to right, var(--color-accent), #ffffff)',
+                  backgroundSize: `${letters.length * 100}% 100%`,
+                  backgroundPosition: `${(i / Math.max(letters.length - 1, 1)) * 100}% 0`,
+                  WebkitBackgroundClip: 'text',
+                  backgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                }
+              : undefined
+          }
+          whileHover={{ y: -14, rotate: i % 2 === 0 ? -6 : 6 }}
+          whileTap={{ y: -14, scale: 1.1 }}
+          transition={{ type: 'spring', stiffness: 500, damping: 12 }}
+        >
+          {letter}
+        </motion.span>
+      ))}
+    </span>
   );
 }

@@ -3,7 +3,7 @@
 import { useRef } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from 'motion/react';
 import Image from 'next/image';
-import { FaArrowUpRightFromSquare, FaGithub } from 'react-icons/fa6';
+import { FaArrowUpRightFromSquare, FaFlask, FaGithub } from 'react-icons/fa6';
 import { PORTFOLIO_DATA } from '@/constants/portfolio';
 import type { Project } from '@/types/portfolio';
 import { track } from '@/app/_lib/analytics';
@@ -71,8 +71,13 @@ function StackedCard({
   const scale = useTransform(progress, [index / total, 1], [1, targetScale]);
 
   return (
-    <div className="h-[100svh] sticky top-0 flex items-center justify-center">
-      <motion.div style={{ scale, top: `calc(-6vh + ${index * 24}px)` }} className="relative w-full max-w-6xl origin-top">
+    // The wrapper fills the viewport but is see-through to clicks; otherwise it
+    // sits over the card above it mid-scroll and swallows that card's links.
+    <div className="h-[100svh] sticky top-0 flex items-center justify-center pointer-events-none">
+      <motion.div
+        style={{ scale, top: `calc(-6vh + ${index * 24}px)` }}
+        className="relative w-full max-w-6xl origin-top pointer-events-auto"
+      >
         <ProjectCard project={project} index={index} fixedHeight />
       </motion.div>
     </div>
@@ -126,7 +131,7 @@ function ProjectCard({ project, index, fixedHeight = false }: { project: Project
           ))}
         </ul>
 
-        {(project.githubLink || project.liveLink) && (
+        {(project.githubLink || project.liveLink || project.internalLink) && (
           <div className="flex items-center gap-6 border-t border-white/10 pt-6">
             {project.githubLink && (
               <a
@@ -138,6 +143,16 @@ function ProjectCard({ project, index, fixedHeight = false }: { project: Project
               >
                 <FaGithub aria-hidden="true" size={18} />
                 Source
+              </a>
+            )}
+            {project.internalLink && (
+              <a
+                href={project.internalLink.href}
+                className="flex items-center gap-2 text-sm font-semibold text-accent hover:text-white transition-colors"
+              >
+                <FaFlask aria-hidden="true" size={14} />
+                {project.internalLink.label}
+                <span aria-hidden="true">→</span>
               </a>
             )}
             {project.liveLink && (

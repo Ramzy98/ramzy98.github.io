@@ -64,6 +64,13 @@ export default function CommandPalette() {
         run: () => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }),
       })),
       {
+        id: 'fit',
+        label: 'Check fit with a job description',
+        group: 'Actions',
+        icon: <FaMagnifyingGlass />,
+        run: () => document.getElementById('fit')?.scrollIntoView({ behavior: 'smooth' }),
+      },
+      {
         id: 'resume',
         label: 'View resume',
         group: 'Actions',

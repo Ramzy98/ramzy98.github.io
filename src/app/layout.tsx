@@ -8,6 +8,7 @@ import StarryBackground from '@/app/_components/starry-background';
 import ScrollProgress from '@/app/_components/scroll-progress';
 import CommandPalette from '@/app/_components/command-palette';
 import ResumeModal from '@/app/_components/resume-modal';
+import EasterEggs from '@/app/_components/easter-eggs';
 import { PORTFOLIO_DATA, yearsOfExperience } from '@/constants/portfolio';
 
 const syne = Syne({ subsets: ['latin'], variable: '--font-syne', weight: ['700', '800'] });
@@ -100,6 +101,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <NavBar />
         <CommandPalette />
         <ResumeModal />
+        <EasterEggs />
         <main id="main" className="grow pt-28 sm:pt-32">
           {children}
         </main>

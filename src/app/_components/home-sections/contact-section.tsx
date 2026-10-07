@@ -5,6 +5,7 @@ import { motion } from 'motion/react';
 import { FaEnvelope, FaPaperPlane } from 'react-icons/fa6';
 import { PORTFOLIO_DATA } from '@/constants/portfolio';
 import { track } from '@/app/_lib/analytics';
+import { party } from '@/app/_lib/party';
 import { RevealHeading, RevealWords } from '../scroll/reveal-text';
 
 const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xanynodr';
@@ -34,6 +35,7 @@ export default function ContactSection() {
       if (response.ok) {
         form.reset();
         setStatus({ kind: 'success' });
+        party();
         track('contact_submit');
       } else {
         setStatus({ kind: 'error', message: 'Something went wrong sending your message. Please try again.' });

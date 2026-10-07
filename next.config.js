@@ -6,7 +6,8 @@ const nextConfig = {
   },
   reactStrictMode: true,
   compiler: {
-    removeConsole: process.env.NODE_ENV !== 'development',
+    // Keep console.info for the easter-egg greeting and console.error for real problems.
+    removeConsole: process.env.NODE_ENV === 'development' ? false : { exclude: ['info', 'error'] },
   },
 };
 

@@ -9,6 +9,32 @@
   --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
   --font-display: var(--font-syne), var(--font-geist), sans-serif;
+
+  /* A packet travelling along a pipeline connector in the payments lab. */
+  --animate-flow-x: flow-x 0.4s ease-in-out forwards;
+  --animate-flow-y: flow-y 0.4s ease-in-out forwards;
+
+  @keyframes flow-x {
+    from {
+      left: 0%;
+      opacity: 1;
+    }
+    to {
+      left: 100%;
+      opacity: 0.4;
+    }
+  }
+
+  @keyframes flow-y {
+    from {
+      top: 0%;
+      opacity: 1;
+    }
+    to {
+      top: 100%;
+      opacity: 0.4;
+    }
+  }
 }
 
 :root {

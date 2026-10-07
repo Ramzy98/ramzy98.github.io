@@ -155,6 +155,16 @@ export const PORTFOLIO_DATA: PortfolioData = {
         { value: '99.9%', label: 'Platform reliability' },
         { value: '20+', label: 'Team members building on the foundation' },
       ],
+      internalLink: { href: '#lab', label: 'Break it yourself in the Lab' },
+    },
+    {
+      title: 'Globe Party',
+      kicker: 'Product · Two Grains · Live',
+      description:
+        'A daily country-guessing game that runs as a Discord Activity and as an installable website. Three rounds a day, the same countries for everyone, and friends can watch each other play live. One Cloudflare Worker serves it all: a Durable Object per room keeps live state over WebSockets, a cron posts each new day to Discord, and anonymous usage stats land in Analytics Engine.',
+      image: '/projects/globe-party.webp',
+      technologies: ['React 19', 'TypeScript', 'three.js', 'Cloudflare Workers', 'Durable Objects', 'WebSockets', 'Discord SDK'],
+      liveLink: 'https://globeparty.twograins.app/',
     },
     {
       title: 'Frame Forge',

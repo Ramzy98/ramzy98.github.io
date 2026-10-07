@@ -32,6 +32,8 @@ export interface Project {
   metrics?: Metric[];
   githubLink?: string;
   liveLink?: string;
+  /** In-page link, e.g. to the interactive lab. */
+  internalLink?: { href: string; label: string };
 }
 
 export interface Skill {

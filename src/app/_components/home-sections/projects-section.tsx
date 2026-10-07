@@ -1,182 +1,183 @@
 'use client';
 
-import React from 'react';
-import { motion, useMotionValue, useSpring, useMotionTemplate } from 'framer-motion';
-import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
+import { useRef } from 'react';
+import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from 'motion/react';
 import Image from 'next/image';
-import { useAnalyticsContext } from '../../_components/analytics-provider';
-
-interface Project {
-  title: string;
-  description: string;
-  image: string;
-  technologies: string[];
-  githubLink: string;
-  liveLink?: string;
-}
-
+import { FaArrowUpRightFromSquare, FaGithub } from 'react-icons/fa6';
 import { PORTFOLIO_DATA } from '@/constants/portfolio';
+import type { Project } from '@/types/portfolio';
+import { track } from '@/app/_lib/analytics';
+import { useMediaQuery } from '@/app/_hooks/use-media-query';
+import { RevealHeading, RevealWords } from '../scroll/reveal-text';
 
 export default function ProjectsSection() {
-  const { trackInteraction, trackUserJourney, trackConversion } = useAnalyticsContext();
+  const stackRef = useRef<HTMLDivElement>(null);
+  // The pinned card stack needs room to breathe; phones get a plain list.
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
+  const shouldReduceMotion = useReducedMotion();
+  const stacked = isDesktop && !shouldReduceMotion;
+  const { projects } = PORTFOLIO_DATA;
 
-  const handleProjectLinkClick = (project: string, type: 'github' | 'live_demo') => {
-    trackInteraction('project_link_click', {
-      project,
-      type,
-      section: 'projects',
-      link_type: type === 'github' ? 'source_code' : 'live_demo',
-    });
-
-    trackUserJourney('project_engagement', 'projects');
-
-    if (type === 'live_demo') trackConversion('project_demo_view', 1);
-  };
+  const { scrollYProgress } = useScroll({ target: stackRef, offset: ['start start', 'end end'] });
 
   return (
-    <section id="projects" className="py-32 px-6 sm:px-8 relative z-10">
-      <div className="container mx-auto max-w-7xl">
-        <motion.div
-           initial={{ opacity: 0, y: 20 }}
-           whileInView={{ opacity: 1, y: 0 }}
-           transition={{ duration: 0.8 }}
-           viewport={{ once: true }}
-           className="mb-20"
-        >
-          <div className="flex flex-col items-center text-center">
-            <span className="text-cyan-400 font-mono tracking-widest text-sm mb-4 uppercase">System Portfolio</span>
-            <h2 className="text-5xl sm:text-7xl font-black text-white mb-6 tracking-tighter">
-              Selected <span className="text-gradient-cyan border-b-4 border-cyan-400/30">Works</span>
-            </h2>
-            <p className="text-gray-400 text-lg sm:text-xl max-w-2xl font-light leading-relaxed">
-              A curated collection of scalable, high-performance applications engineered with modern web technologies.
-            </p>
-          </div>
-        </motion.div>
+    <section id="projects" aria-labelledby="projects-heading" className="w-full py-24 px-6 relative z-10">
+      <div className="mx-auto max-w-6xl mb-14 lg:mb-4 text-center">
+        <p className="section-eyebrow mb-4">Projects</p>
+        <RevealHeading
+          id="projects-heading"
+          lead="Selected"
+          accent="work"
+          className="font-display text-4xl sm:text-6xl font-extrabold text-white mb-4 tracking-tight"
+        />
+        <RevealWords
+          className="text-gray-300 text-lg max-w-2xl mx-auto"
+          segments={[{ text: 'Production systems I helped build, and the tools I make on the side.' }]}
+        />
+      </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-          {PORTFOLIO_DATA.projects.map((project, index) => (
-            <ProjectCard
+      <div ref={stackRef} className={stacked ? 'relative' : 'mx-auto max-w-6xl flex flex-col gap-6'}>
+        {projects.map((project, index) =>
+          stacked ? (
+            <StackedCard
               key={project.title}
               project={project}
               index={index}
-              onClickLink={handleProjectLinkClick}
+              total={projects.length}
+              progress={scrollYProgress}
             />
-          ))}
-        </div>
+          ) : (
+            <ProjectCard key={project.title} project={project} index={index} />
+          )
+        )}
       </div>
     </section>
   );
 }
 
-function ProjectCard({ project, index, onClickLink }: { project: Project; index: number; onClickLink: any }) {
-  const displayIndex = String(index + 1).padStart(2, '0');
-  
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  const springConfig = { damping: 25, stiffness: 150 };
-  const mouseXSpring = useSpring(mouseX, springConfig);
-  const mouseYSpring = useSpring(mouseY, springConfig);
-
-  function onMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
-    const { left, top } = currentTarget.getBoundingClientRect();
-    mouseX.set(clientX - left);
-    mouseY.set(clientY - top);
-  }
-
-  const background = useMotionTemplate`
-    radial-gradient(
-      600px circle at ${mouseXSpring}px ${mouseYSpring}px,
-      rgba(0, 240, 255, 0.12),
-      transparent 80%
-    )
-  `;
+/** Each card pins to the viewport while the next one slides over it. */
+function StackedCard({
+  project,
+  index,
+  total,
+  progress,
+}: {
+  project: Project;
+  index: number;
+  total: number;
+  progress: MotionValue<number>;
+}) {
+  const targetScale = 1 - (total - 1 - index) * 0.04;
+  const scale = useTransform(progress, [index / total, 1], [1, targetScale]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7, delay: index * 0.15, ease: 'easeOut' }}
-      viewport={{ once: true, margin: '-100px' }}
-      whileHover={{ y: -10 }}
-      onMouseMove={onMouseMove}
-      className="group relative flex flex-col w-full bg-[#080808] border border-white/10 rounded-[2rem] overflow-hidden hover:border-cyan-400/30 transition-all duration-500 shadow-2xl"
+    <div className="h-[100svh] sticky top-0 flex items-center justify-center">
+      <motion.div style={{ scale, top: `calc(-6vh + ${index * 24}px)` }} className="relative w-full max-w-6xl origin-top">
+        <ProjectCard project={project} index={index} fixedHeight />
+      </motion.div>
+    </div>
+  );
+}
+
+function ProjectCard({ project, index, fixedHeight = false }: { project: Project; index: number; fixedHeight?: boolean }) {
+  const displayIndex = String(index + 1).padStart(2, '0');
+
+  return (
+    <article
+      className={`group flex flex-col lg:flex-row overflow-hidden rounded-[2rem] border border-white/10 bg-[#070b14] shadow-[0_40px_80px_-30px_rgba(0,0,0,0.9)] ${
+        fixedHeight ? 'lg:h-[min(640px,76svh)]' : ''
+      }`}
     >
-      {/* Glint Overlay */}
-      <motion.div
-        className="pointer-events-none absolute -inset-px rounded-[2rem] opacity-0 transition duration-300 group-hover:opacity-100 z-10"
-        style={{ background }}
-      />
-
-      {/* Index Number */}
-      <div className="absolute top-6 left-6 z-20 text-white/20 font-black text-3xl font-mono tracking-tighter group-hover:text-cyan-400/80 transition-colors duration-500">
-        {displayIndex}
+      <div className="relative lg:w-[58%] bg-[#0b1120] flex items-center justify-center p-5 sm:p-8 lg:p-10 min-h-[220px]">
+        {project.image ? (
+          <div className="relative w-full aspect-[16/10] lg:aspect-auto lg:h-full rounded-xl overflow-hidden border border-white/10 shadow-2xl">
+            <Image
+              src={project.image}
+              alt={`Screenshot of ${project.title}`}
+              fill
+              sizes="(min-width: 1024px) 640px, 100vw"
+              className="object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
+            />
+          </div>
+        ) : (
+          <MetricsShowcase project={project} />
+        )}
       </div>
 
-      {/* Top Zone: The Showcase */}
-      <div className="relative w-full h-72 sm:h-80 bg-[#0c101c] overflow-hidden p-8 sm:p-12 flex items-center justify-center">
-        {/* Glow underneath image */}
-        <div className="absolute inset-0 bg-cyan-400/0 group-hover:bg-cyan-400/10 blur-3xl transition-all duration-700 w-3/4 h-3/4 m-auto rounded-full mix-blend-screen" />
-        
-        <div className="relative w-full h-full rounded-xl overflow-hidden shadow-2xl border border-white/5 transform group-hover:-translate-y-2 group-hover:scale-[1.02] transition-all duration-500 ease-out z-10">
-          <Image
-            src={project.image}
-            alt={project.title}
-            layout="fill"
-            objectFit="cover"
-            className="grayscale contrast-125 opacity-70 group-hover:grayscale-0 group-hover:opacity-100 group-hover:contrast-100 transition-all duration-700 ease-out"
-          />
-          <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500" />
+      <div className="flex flex-col flex-1 p-6 sm:p-10 border-t lg:border-t-0 lg:border-l border-white/10">
+        <div className="flex items-baseline justify-between gap-4 mb-4">
+          <p className="font-mono text-xs uppercase tracking-widest text-accent">{project.kicker}</p>
+          <span aria-hidden="true" className="font-mono text-2xl font-bold text-white/15">
+            {displayIndex}
+          </span>
         </div>
-      </div>
 
-      {/* Bottom Zone: Data Console */}
-      <div className="flex flex-col flex-1 p-8 sm:p-10 border-t border-white/5 bg-[#030303] z-10">
-         <div className="flex flex-col sm:flex-row sm:items-baseline justify-between mb-4 gap-2">
-            <h3 className="text-3xl font-bold text-white tracking-tight">{project.title}</h3>
-         </div>
-         
-         <p className="text-gray-400 text-sm sm:text-base mb-8 leading-relaxed font-light flex-1">
-           {project.description}
-         </p>
-         
-         <div className="flex flex-wrap gap-2 mb-8 mt-auto">
-            {project.technologies.map(tech => (
-              <span key={tech} className="px-3 py-1.5 bg-cyan-400/5 hover:bg-cyan-400/10 border border-cyan-400/10 rounded-full text-xs text-cyan-200 font-mono tracking-tight transition-colors cursor-default">
-                {tech}
-              </span>
-            ))}
-         </div>
+        <h3 className="text-2xl sm:text-4xl font-semibold text-white tracking-tight mb-4">{project.title}</h3>
+        <p className="text-gray-300 leading-relaxed mb-8">{project.description}</p>
 
-         <div className="flex items-center gap-8 border-t border-white/5 pt-6 mt-auto">
-            <a
-              href={project.githubLink}
-              target="_blank"
-              rel="noreferrer"
-              onClick={() => onClickLink(project.title, 'github')}
-              className="group/link flex items-center gap-2 text-white/60 hover:text-white transition-colors"
+        <ul aria-label="Technologies" className="flex flex-wrap gap-2 mb-8 mt-auto">
+          {project.technologies.map((tech) => (
+            <li
+              key={tech}
+              className="px-3 py-1.5 rounded-full bg-accent/5 border border-accent/15 text-xs font-mono text-cyan-200"
             >
-              <FaGithub size={20} />
-              <span className="text-sm font-semibold tracking-wide">Repo</span>
-            </a>
+              {tech}
+            </li>
+          ))}
+        </ul>
+
+        {(project.githubLink || project.liveLink) && (
+          <div className="flex items-center gap-6 border-t border-white/10 pt-6">
+            {project.githubLink && (
+              <a
+                href={project.githubLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => track('project_link_click', { project: project.title, type: 'github' })}
+                className="flex items-center gap-2 text-sm font-semibold text-gray-300 hover:text-white transition-colors"
+              >
+                <FaGithub aria-hidden="true" size={18} />
+                Source
+              </a>
+            )}
             {project.liveLink && (
               <a
                 href={project.liveLink}
                 target="_blank"
-                rel="noreferrer"
-                onClick={() => onClickLink(project.title, 'live_demo')}
-                className="group/link flex items-center gap-2 text-white/60 hover:text-cyan-400 transition-colors"
+                rel="noopener noreferrer"
+                onClick={() => track('project_link_click', { project: project.title, type: 'live' })}
+                className="flex items-center gap-2 text-sm font-semibold text-gray-300 hover:text-accent transition-colors"
               >
-                <FaExternalLinkAlt size={16} />
-                <span className="text-sm font-semibold tracking-wide">Live Demo</span>
-                <span className="opacity-0 group-hover/link:opacity-100 group-hover/link:translate-x-1 transition-all duration-300">
-                  &rarr;
-                </span>
+                <FaArrowUpRightFromSquare aria-hidden="true" size={14} />
+                Live demo
               </a>
             )}
-         </div>
+          </div>
+        )}
       </div>
-    </motion.div>
+    </article>
+  );
+}
+
+/** Stand-in for a screenshot on client work that can't be shown publicly. */
+function MetricsShowcase({ project }: { project: Project }) {
+  return (
+    <div className="relative w-full h-full flex items-center">
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 m-auto w-3/4 h-3/4 rounded-full bg-accent/10 blur-3xl"
+      />
+      <dl className="relative grid grid-cols-2 gap-3 sm:gap-4 w-full">
+        {project.metrics?.map(({ value, label }) => (
+          <div key={label} className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-6">
+            <dt className="sr-only">{label}</dt>
+            <dd>
+              <span className="block font-sans text-3xl sm:text-4xl font-bold tracking-tight tabular-nums text-gradient-cyan">{value}</span>
+              <span className="mt-2 block text-xs sm:text-sm text-gray-400 leading-snug">{label}</span>
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </div>
   );
 }

@@ -1,173 +1,119 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { usePathname } from 'next/navigation';
-import AnimatedLogo from '../animated-logo';
-import MobileNavBar from './mobile-nav-bar';
-import { useScrollEffect } from '../../_hooks/useScrollEffect';
-import { sendGTMEvent } from '@next/third-parties/google';
-import { useMagnetic } from '../../_hooks/use-magnetic';
+import { useEffect, useState, useSyncExternalStore } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
+import { FaBars, FaXmark } from 'react-icons/fa6';
+import { SECTIONS } from '@/app/_lib/sections';
+import { openCommandPalette } from '@/app/_lib/events';
+import { useActiveSection } from '@/app/_hooks/use-active-section';
+
+const SECTION_IDS = SECTIONS.map((s) => s.id);
+const noopSubscribe = () => () => {};
 
 export default function NavBar() {
-  const pathname = usePathname();
-  const [activeTab, setActiveTab] = useState('About');
-  const tabs = useMemo(() => ['About', 'Experience', 'Projects', 'Contact'], []);
+  const active = useActiveSection(SECTION_IDS);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const isMac = useSyncExternalStore(
+    noopSubscribe,
+    () => /Mac|iPhone|iPad/.test(navigator.platform),
+    () => true
+  );
 
-  const activeSection = useScrollEffect([
-    'about',
-    ...tabs.slice(1).map((tab) => tab.toLowerCase()),
-  ]);
-
+  // Close the mobile menu on Escape.
   useEffect(() => {
-    setActiveTab(activeSection.charAt(0).toUpperCase() + activeSection.slice(1));
-    sendGTMEvent({ event: 'section_view', section: activeSection });
-  }, [activeSection]);
-
-  useEffect(() => {
-    const currentPath = pathname?.slice(1) || 'about';
-    const currentTab = tabs.find((tab) => tab.toLowerCase() === currentPath);
-    if (currentTab) {
-      setActiveTab(currentTab);
-    }
-  }, [pathname, tabs]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-      if (window.innerWidth >= 768) {
-        setIsMenuOpen(false);
-      }
-    };
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash.replace('#', '');
-      if (hash) {
-        const element = document.getElementById(hash);
-        if (element) {
-          const headerHeight = 80;
-          const elementPosition = element.getBoundingClientRect().top;
-          const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
-          window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-        }
-      }
-    };
-    handleHashChange();
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
-  }, []);
-
-  const handleTabClick = (item: string) => {
-    setActiveTab(item);
-    setIsMenuOpen(false);
-    const sectionId = item.toLowerCase();
-    const element = document.getElementById(sectionId);
-    if (element) {
-      const headerHeight = 80;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
-      window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-    } else {
-      window.location.href = `/`;
-    }
-  };
-
-
-  const navVariants = {
-    visible: { opacity: 1, transition: { duration: 0.5, when: 'beforeChildren', staggerChildren: 0.1 } },
-  };
-
-  const tabVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { type: 'spring', stiffness: 300, damping: 20 } },
-  };
+    if (!isMenuOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setIsMenuOpen(false);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isMenuOpen]);
 
   return (
-    <motion.header
-      initial="visible"
-      animate="visible"
-      variants={navVariants}
-      className="fixed top-6 left-0 right-0 z-[100] flex justify-center px-6"
-    >
-      <motion.nav
-        className="py-2.5 px-6 rounded-full flex items-center gap-6 sm:gap-8 max-w-fit bg-black/60 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.8)] border border-white/10"
+    <header className="fixed top-4 sm:top-6 inset-x-0 z-[100] flex justify-center px-4">
+      <nav
+        aria-label="Primary"
+        className="relative w-full md:w-auto flex items-center justify-between gap-4 md:gap-6 py-2 pl-5 pr-2 rounded-full bg-black/60 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.6)]"
       >
-        <div className="mr-2">
-          <AnimatedLogo />
+        <a href="#about" className="font-mono text-base text-white shrink-0" aria-label="Ahmad Ramzy — back to top">
+          <span className="text-accent">&lt;</span>AR<span className="text-accent"> /&gt;</span>
+        </a>
+
+        <ul className="hidden md:flex items-center gap-1">
+          {SECTIONS.map(({ id, label }) => {
+            const isActive = active === id;
+            return (
+              <li key={id} className="relative">
+                {isActive && (
+                  <motion.span
+                    layoutId="nav-indicator"
+                    className="absolute inset-0 rounded-full bg-white/[0.07] border border-white/10"
+                    transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+                  />
+                )}
+                <a
+                  href={`#${id}`}
+                  aria-current={isActive ? 'true' : undefined}
+                  className={`relative block px-4 py-2 text-sm font-medium transition-colors ${
+                    isActive ? 'text-white' : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  {label}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={openCommandPalette}
+            className="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-mono text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+            aria-label="Open command menu"
+          >
+            <kbd className="px-1.5 py-0.5 rounded border border-white/15 bg-white/5">{isMac ? '⌘' : 'Ctrl'}</kbd>
+            <kbd className="px-1.5 py-0.5 rounded border border-white/15 bg-white/5">K</kbd>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setIsMenuOpen((open) => !open)}
+            className="md:hidden p-2.5 rounded-full text-white hover:bg-white/10 transition-colors"
+            aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-menu"
+          >
+            {isMenuOpen ? <FaXmark size={20} /> : <FaBars size={20} />}
+          </button>
         </div>
 
-        {!isMobile && (
-          <motion.ul className="flex items-center gap-1 list-none m-0 p-0">
-            <AnimatePresence>
-              {tabs.map((item) => (
-                <NavTab
-                  key={item}
-                  item={item}
-                  activeTab={activeTab}
-                  onClick={() => handleTabClick(item)}
-                  tabVariants={tabVariants}
-                />
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.ul
+              id="mobile-menu"
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2 }}
+              className="md:hidden absolute top-full inset-x-0 mt-2 p-2 rounded-3xl bg-[#0a0f1c]/95 backdrop-blur-xl border border-white/10 shadow-2xl"
+            >
+              {SECTIONS.map(({ id, label }) => (
+                <li key={id}>
+                  <a
+                    href={`#${id}`}
+                    onClick={() => setIsMenuOpen(false)}
+                    aria-current={active === id ? 'true' : undefined}
+                    className={`block px-4 py-3 rounded-2xl text-base font-medium transition-colors ${
+                      active === id ? 'text-white bg-white/5' : 'text-gray-300 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    {label}
+                  </a>
+                </li>
               ))}
-            </AnimatePresence>
-          </motion.ul>
-        )}
-
-
-        {isMobile && (
-           <MobileNavBar
-            isMenuOpen={isMenuOpen}
-            isMobile={isMobile}
-            tabs={tabs}
-            activeTab={activeTab}
-            setIsMenuOpen={setIsMenuOpen}
-            handleTabClick={handleTabClick}
-          />
-        )}
-      </motion.nav>
-    </motion.header>
-  );
-}
-
-function NavTab({ item, activeTab, onClick, tabVariants }: any) {
-  const { ref, position, handleMouseMove, handleMouseLeave } = useMagnetic(0.2);
-  const isActive = activeTab === item;
-
-  return (
-    <motion.li
-      ref={ref}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className="relative px-4 py-2"
-      variants={tabVariants}
-    >
-      {isActive && (
-        <motion.div
-           layoutId="navIndicator"
-           className="absolute inset-0 bg-white/5 rounded-full border border-white/10"
-           transition={{ type: 'spring', stiffness: 350, damping: 30 }}
-        />
-      )}
-      <button
-        onClick={onClick}
-        className={`relative z-10 text-sm font-bold transition-colors duration-300 ${
-          isActive ? 'text-white' : 'text-gray-400 hover:text-white'
-        }`}
-      >
-        <motion.span
-          animate={{ x: position.x, y: position.y }}
-          transition={{ type: 'spring', stiffness: 150, damping: 15, mass: 0.1 }}
-          className="block"
-        >
-          {item}
-        </motion.span>
-      </button>
-    </motion.li>
+            </motion.ul>
+          )}
+        </AnimatePresence>
+      </nav>
+    </header>
   );
 }

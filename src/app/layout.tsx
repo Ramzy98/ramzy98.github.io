@@ -1,72 +1,110 @@
-import { Syne } from 'next/font/google';
+import type { Metadata, Viewport } from 'next';
+import { Geist, Geist_Mono, Syne } from 'next/font/google';
+import { GoogleAnalytics } from '@next/third-parties/google';
 import './globals.css';
 import Footer from '@/app/_components/footer/footer';
-import { GoogleAnalytics } from '@next/third-parties/google';
-import DynamicComponents from '@/app/_components/DynamicComponents';
-import AnalyticsProvider from '@/app/_components/analytics-provider';
-import { Suspense } from 'react';
+import NavBar from '@/app/_components/nav-bar/nav-bar';
+import StarryBackground from '@/app/_components/starry-background';
+import ScrollProgress from '@/app/_components/scroll-progress';
+import CommandPalette from '@/app/_components/command-palette';
+import ResumeModal from '@/app/_components/resume-modal';
+import { PORTFOLIO_DATA, yearsOfExperience } from '@/constants/portfolio';
 
-const syne = Syne({
-  subsets: ['latin'],
-  variable: '--font-syne',
-});
+const syne = Syne({ subsets: ['latin'], variable: '--font-syne', weight: ['700', '800'] });
+const geist = Geist({ subsets: ['latin'], variable: '--font-geist' });
+const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono' });
 
-import { Metadata } from 'next';
+const { name, role, siteUrl, headline } = PORTFOLIO_DATA;
+const description = `${role} with ${yearsOfExperience()}+ years of experience. ${headline}`;
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
-    default: 'Ahmad Ramzy | Software Engineer',
-    template: '%s | Ahmad Ramzy',
+    default: `${name} | ${role}`,
+    template: `%s | ${name}`,
   },
-  description: 'Full Stack Software Engineer specializing in high-performance web applications, modern frontend architecture, and clean UI/UX design.',
-  keywords: ['Software Engineer', 'Full Stack Developer', 'Frontend Engineer', 'React', 'Next.js', 'TypeScript', 'Node.js', 'Portfolio'],
-  authors: [{ name: 'Ahmad Ramzy' }],
-  creator: 'Ahmad Ramzy',
-  icons: {
-    icon: '/favicon.png',
-  },
+  description,
+  keywords: ['Software Engineer', 'Full Stack Developer', 'React', 'Next.js', 'TypeScript', 'Node.js', 'Fastify', 'Payments'],
+  authors: [{ name, url: siteUrl }],
+  creator: name,
+  alternates: { canonical: '/' },
   openGraph: {
-    type: 'website',
+    type: 'profile',
     locale: 'en_US',
-    url: 'https://ramzy98.github.io/',
-    title: 'Ahmad Ramzy | Premium Engineering Portfolio',
-    description: 'Explore the portfolio of Ahmad Ramzy. High-performance engineering meets premium design.',
-    siteName: 'Ahmad Ramzy',
+    url: '/',
+    title: `${name} | ${role}`,
+    description,
+    siteName: name,
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Ahmad Ramzy | Software Engineer',
-    description: 'Full Stack Software Engineer specializing in high-performance web applications.',
+    title: `${name} | ${role}`,
+    description,
     creator: '@amazingramzy',
   },
 };
+
+export const viewport: Viewport = {
+  themeColor: '#050a15',
+  colorScheme: 'dark',
+};
+
+// GitHub Pages can't set response headers, so the CSP ships as a meta tag.
+// Dev mode needs 'unsafe-eval' for React Refresh; production doesn't.
+const csp = [
+  "default-src 'self'",
+  `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === 'development' ? " 'unsafe-eval'" : ''} https://www.googletagmanager.com`,
+  "style-src 'self' 'unsafe-inline'",
+  "font-src 'self'",
+  "img-src 'self' data: https://www.googletagmanager.com",
+  "connect-src 'self' https://formspree.io https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com",
+  "frame-src 'none'",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self' https://formspree.io",
+].join('; ');
+
+const personJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name,
+  jobTitle: role,
+  url: siteUrl,
+  email: `mailto:${PORTFOLIO_DATA.email}`,
+  image: `${siteUrl}/me.webp`,
+  address: { '@type': 'PostalAddress', addressLocality: 'Alexandria', addressCountry: 'EG' },
+  alumniOf: { '@type': 'CollegeOrUniversity', name: PORTFOLIO_DATA.education.school },
+  sameAs: PORTFOLIO_DATA.socialLinks.filter((s) => s.link.startsWith('http')).map((s) => s.link),
+  knowsAbout: PORTFOLIO_DATA.skillGroups.flatMap((g) => g.skills.map((s) => s.name)),
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className={`${syne.variable} ${geist.variable} ${geistMono.variable}`}>
       <head>
-        <meta httpEquiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.digitaloceanspaces.com https://raw.githubusercontent.com https://raw.githack.com; connect-src 'self' https://www.google-analytics.com https://formspree.io https://*.digitaloceanspaces.com https://raw.githubusercontent.com https://raw.githack.com;" />
+        <meta httpEquiv="Content-Security-Policy" content={csp} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        />
       </head>
-      <body className={`${syne.className} flex flex-col min-h-screen relative overflow-x-hidden`}>
-
+      <body className="font-sans antialiased flex flex-col min-h-screen relative overflow-x-hidden">
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[200] focus:px-4 focus:py-2 focus:rounded-full focus:bg-white focus:text-black focus:font-semibold"
+        >
+          Skip to content
+        </a>
+        <StarryBackground />
+        <ScrollProgress />
+        <NavBar />
+        <CommandPalette />
+        <ResumeModal />
+        <main id="main" className="grow pt-28 sm:pt-32">
+          {children}
+        </main>
+        <Footer />
         {process.env.NEXT_PUBLIC_GA_ID && <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />}
-        <AnalyticsProvider>
-          {/* Global Terminal Overlay */}
-          <div className="fixed inset-0 pointer-events-none z-[9999] opacity-[0.03] mix-blend-overlay">
-            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-              <filter id="globalNoise">
-                <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="3" stitchTiles="stitch" />
-              </filter>
-              <rect width="100%" height="100%" filter="url(#globalNoise)" />
-            </svg>
-          </div>
-          <div className="fixed inset-0 pointer-events-none z-[9999] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.1)_50%),linear-gradient(90deg,rgba(255,0,0,0.03),rgba(0,255,0,0.01),rgba(0,0,255,0.03))] bg-[length:100%_4px,3px_100%] opacity-[0.05]" />
-
-          <Suspense fallback={null}>
-            <DynamicComponents />
-          </Suspense>
-          <main className="flex-grow py-32 sm:p-8 lg:py-40 md:py-40">{children}</main>
-          <Footer />
-        </AnalyticsProvider>
       </body>
     </html>
   );

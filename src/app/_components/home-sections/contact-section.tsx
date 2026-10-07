@@ -1,178 +1,140 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaPaperPlane, FaRocket } from 'react-icons/fa';
-import { useAnalyticsContext } from '../../_components/analytics-provider';
+import { motion } from 'motion/react';
+import { FaEnvelope, FaPaperPlane } from 'react-icons/fa6';
+import { PORTFOLIO_DATA } from '@/constants/portfolio';
+import { track } from '@/app/_lib/analytics';
+import { RevealHeading, RevealWords } from '../scroll/reveal-text';
+
+const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xanynodr';
+
+type Status = { kind: 'idle' } | { kind: 'sending' } | { kind: 'success' } | { kind: 'error'; message: string };
+
+const inputClass =
+  'w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3.5 text-white placeholder:text-gray-500 focus:outline-none focus:border-accent/60 focus:bg-white/[0.07] transition-colors';
 
 export default function ContactSection() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState('');
-  const { trackInteraction, trackUserJourney, trackConversion, trackError } = useAnalyticsContext();
+  const [status, setStatus] = useState<Status>({ kind: 'idle' });
 
-  const handleFieldChange = (fieldName: string, value: string) => {
-    trackInteraction('form_field_change', { field: fieldName, section: 'contact', action: 'input', value_length: value.length });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // Frontend Rate Limiting
-    const LAST_SUBMIT_KEY = 'contact_last_submit';
-    const lastSubmitTime = localStorage.getItem(LAST_SUBMIT_KEY);
-    const now = Date.now();
-    const COOLDOWN_MS = 5 * 60 * 1000; // 5 minutes
-
-    if (lastSubmitTime && now - parseInt(lastSubmitTime) < COOLDOWN_MS) {
-      setSubmitMessage("You've already sent a message recently. Please wait a few minutes.");
-      return;
-    }
-
-    setIsSubmitting(true);
-    trackUserJourney('contact_form_submit', 'contact');
+    const form = e.currentTarget;
+    setStatus({ kind: 'sending' });
 
     try {
-      const response = await fetch('https://formspree.io/f/xanynodr', {
+      // FormData includes the hidden `_gotcha` honeypot; Formspree silently
+      // drops submissions where a bot filled it in.
+      const response = await fetch(FORMSPREE_ENDPOINT, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, message }),
+        headers: { Accept: 'application/json' },
+        body: new FormData(form),
       });
 
       if (response.ok) {
-        localStorage.setItem(LAST_SUBMIT_KEY, now.toString());
-        setSubmitMessage("Message received! I'll get back to you faster than light.");
-        trackConversion('contact_form_submit', 1);
-        setName(''); setEmail(''); setMessage('');
+        form.reset();
+        setStatus({ kind: 'success' });
+        track('contact_submit');
       } else {
-        setSubmitMessage("Error in transmission. Please try again.");
-        trackError(new Error(`Form submission failed with status: ${response.status}`), 'contact_form');
+        setStatus({ kind: 'error', message: 'Something went wrong sending your message. Please try again.' });
+        track('contact_error', { status: response.status });
       }
-    } catch (error) {
-      setSubmitMessage("Connection lost. Please check your signal.");
-      trackError(error as Error, 'contact_form_network');
-    } finally {
-      setIsSubmitting(false);
+    } catch {
+      setStatus({ kind: 'error', message: "Couldn't reach the server. Check your connection and try again." });
+      track('contact_error', { status: 'network' });
     }
   };
 
   return (
-    <section id="contact" className="py-24 px-8 relative">
-      <div className="container mx-auto max-w-4xl">
+    <section id="contact" aria-labelledby="contact-heading" className="w-full py-24 px-6">
+      <div className="mx-auto max-w-3xl">
+        <div className="mb-12 text-center">
+          <p className="section-eyebrow mb-4">Contact</p>
+          <RevealHeading
+            id="contact-heading"
+            lead="Let's"
+            accent="talk"
+            className="font-display text-4xl sm:text-6xl font-extrabold text-white mb-4 tracking-tight"
+          />
+          <RevealWords
+            className="text-gray-300 text-lg"
+            segments={[{ text: 'Hiring, collaborating, or just want to say hi? Send a message or email me directly.' }]}
+          />
+          <a
+            href={`mailto:${PORTFOLIO_DATA.email}`}
+            className="mt-5 inline-flex items-center gap-2 text-accent hover:text-white transition-colors"
+          >
+            <FaEnvelope aria-hidden="true" />
+            {PORTFOLIO_DATA.email}
+          </a>
+        </div>
+
         <motion.div
-           initial={{ opacity: 0, y: 20 }}
-           whileInView={{ opacity: 1, y: 0 }}
-           transition={{ duration: 0.8 }}
-           viewport={{ once: true }}
-           className="mb-16 text-center"
-        >
-          <h2 className="text-4xl sm:text-6xl font-black text-white mb-4 tracking-tighter">
-            GET IN <span className="text-gradient-cyan">TOUCH</span>
-          </h2>
-          <p className="text-gray-400 text-lg sm:text-xl">
-             Ready to start a new project or just want to say hi?
-          </p>
-        </motion.div>
-
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           viewport={{ once: true }}
-          className="glass-panel p-8 sm:p-12 rounded-3xl shadow-2xl overflow-hidden relative"
+          className="glass-panel p-6 sm:p-10"
         >
-          {/* Decorative radial gradient */}
-          <div className="absolute -top-24 -right-24 w-64 h-64 bg-cyan-500/10 blur-[100px] rounded-full pointer-events-none" />
-          <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-cyan-600/10 blur-[100px] rounded-full pointer-events-none" />
-
-          <form onSubmit={handleSubmit} className="space-y-8 relative z-10">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label htmlFor="name" className="text-sm font-bold text-gray-400 uppercase tracking-widest px-1">
+                <label htmlFor="name" className="block text-sm font-medium text-gray-300">
                   Name
                 </label>
-                <input
-                  type="text"
-                  id="name"
-                  value={name}
-                  onChange={(e) => {
-                    setName(e.target.value);
-                    handleFieldChange('name', e.target.value);
-                  }}
-                  required
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-cyan-400/50 transition-colors placeholder:text-gray-600"
-                  placeholder="Ahmad Ramzy"
-                />
+                <input id="name" name="name" type="text" autoComplete="name" required className={inputClass} placeholder="Jane Doe" />
               </div>
               <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-bold text-gray-400 uppercase tracking-widest px-1">
+                <label htmlFor="email" className="block text-sm font-medium text-gray-300">
                   Email
                 </label>
                 <input
-                  type="email"
                   id="email"
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    handleFieldChange('email', e.target.value);
-                  }}
+                  name="email"
+                  type="email"
+                  autoComplete="email"
                   required
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-cyan-400/50 transition-colors placeholder:text-gray-600"
-                  placeholder="ramzy@example.com"
+                  className={inputClass}
+                  placeholder="jane@company.com"
                 />
               </div>
             </div>
+
             <div className="space-y-2">
-              <label htmlFor="message" className="text-sm font-bold text-gray-400 uppercase tracking-widest px-1">
+              <label htmlFor="message" className="block text-sm font-medium text-gray-300">
                 Message
               </label>
               <textarea
                 id="message"
-                value={message}
-                onChange={(e) => {
-                  setMessage(e.target.value);
-                  handleFieldChange('message', e.target.value);
-                }}
+                name="message"
                 required
                 rows={5}
-                className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-cyan-400/50 transition-colors placeholder:text-gray-600 resize-none"
-                placeholder="How can I help you?"
-              ></textarea>
+                className={`${inputClass} resize-y min-h-32`}
+                placeholder="What are you working on?"
+              />
             </div>
-            <motion.button
+
+            {/* Honeypot: invisible to people, tempting to bots. */}
+            <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
+
+            <button
               type="submit"
-              whileTap={{ scale: 0.98 }}
-              className="w-full bg-white text-black py-5 rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-cyan-400 hover:text-black transition-all duration-300 shadow-xl disabled:opacity-50"
-              disabled={isSubmitting}
+              disabled={status.kind === 'sending'}
+              className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl bg-white text-black font-semibold hover:bg-accent transition-colors disabled:opacity-60 disabled:cursor-wait"
             >
-              {isSubmitting ? (
-                <>
-                  <FaRocket className="animate-bounce" />
-                  <span>TRANSMITTING...</span>
-                </>
-              ) : (
-                <>
-                  <FaPaperPlane />
-                  <span>SEND MESSAGE</span>
-                </>
-              )}
-            </motion.button>
+              <FaPaperPlane aria-hidden="true" />
+              {status.kind === 'sending' ? 'Sending…' : 'Send message'}
+            </button>
+
+            <p
+              role="status"
+              aria-live="polite"
+              className={`min-h-6 text-center text-sm ${status.kind === 'error' ? 'text-red-300' : 'text-accent'}`}
+            >
+              {status.kind === 'success' && "Thanks — your message is on its way. I'll get back to you soon."}
+              {status.kind === 'error' && status.message}
+            </p>
           </form>
-          
-          <AnimatePresence>
-            {submitMessage && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                className="mt-8 p-4 bg-white/5 border border-white/10 rounded-xl text-center text-sm font-medium text-cyan-400"
-              >
-                {submitMessage}
-              </motion.div>
-            )}
-          </AnimatePresence>
         </motion.div>
       </div>
     </section>

@@ -1,70 +1,42 @@
-'use client';
-
-import React from 'react';
-import { motion } from 'framer-motion';
-import { FaGithub, FaLinkedin, FaMedium, FaXTwitter } from 'react-icons/fa6';
-import { SiGmail } from 'react-icons/si';
+import { PORTFOLIO_DATA } from '@/constants/portfolio';
 
 export default function Footer() {
-  const currentYear = new Date().getFullYear();
-
-  const socialLinks = [
-    { Icon: FaGithub, color: 'white', link: 'https://github.com/Ramzy98' },
-    {
-      Icon: FaLinkedin,
-      color: '#0077B5',
-      link: 'https://www.linkedin.com/in/ahmadramzyag/',
-    },
-    { Icon: FaMedium, color: '#00AB6C', link: 'https://medium.com/@ahmadramzy' },
-    { Icon: FaXTwitter, color: '#1DA1F2', link: 'https://x.com/amazingramzy' },
-    { Icon: SiGmail, color: '#EA4335', link: 'mailto:ahmadramzy988@gmail.com' },
-  ];
-
   return (
-    <motion.footer
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="bg-gray-900 text-white py-8"
-    >
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="mb-4 md:mb-0">
-            <p className="text-sm">© {currentYear} Ahmad Ramzy. All rights reserved.</p>
-          </div>
-          <div className="flex space-x-4">
-            {socialLinks.map(({ Icon, color, link }, index) => (
-              <motion.a
-                key={index}
-                href={link}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.2, color: color }}
-                whileTap={{ scale: 0.9 }}
-                className="text-2xl transition-colors duration-300"
-              >
-                <Icon />
-              </motion.a>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-4 text-center text-xs text-gray-400">
-          <p>Built with Next.js, TypeScript, Tailwind CSS, and Framer Motion.</p>
-          <p>
-            Deployed on GitHub Pages. View the{' '}
+    <footer className="border-t border-white/10 bg-black/30 backdrop-blur-sm">
+      <div className="mx-auto max-w-6xl px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="text-center md:text-left">
+          <p className="text-sm text-gray-300">
+            © {new Date().getFullYear()} {PORTFOLIO_DATA.name}
+          </p>
+          <p className="mt-1 text-xs text-gray-400">
+            Built with Next.js, TypeScript, Tailwind CSS and Motion ·{' '}
             <a
               href="https://github.com/Ramzy98/ramzy98.github.io"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline hover:text-white"
+              className="underline underline-offset-2 hover:text-white"
             >
-              source code
+              View source
             </a>
-            .
           </p>
         </div>
+
+        <ul className="flex items-center gap-2">
+          {PORTFOLIO_DATA.socialLinks.map(({ Icon, link, platform }) => (
+            <li key={platform}>
+              <a
+                href={link}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={platform}
+                className="flex items-center justify-center w-10 h-10 rounded-full text-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+              >
+                <Icon />
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
-    </motion.footer>
+    </footer>
   );
 }

@@ -1,163 +1,136 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useRef } from 'react';
+import { motion, useMotionTemplate, useReducedMotion, useScroll, useTransform } from 'motion/react';
 import Image from 'next/image';
-import { useAnalyticsContext } from '../../_components/analytics-provider';
-import ResumeModal from '../../_components/resume-modal';
-import { useMagnetic } from '../../_hooks/use-magnetic';
-
+import { FaArrowDown, FaLocationDot } from 'react-icons/fa6';
 import { PORTFOLIO_DATA } from '@/constants/portfolio';
+import { openResume } from '@/app/_lib/events';
+import { track } from '@/app/_lib/analytics';
+import { RevealWords } from '../scroll/reveal-text';
 
-export default function AboutSection() {
-  const [titleIndex, setTitleIndex] = useState(0);
-  const titles = PORTFOLIO_DATA.titles;
-  const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
-  const { trackInteraction, trackUserJourney, trackConversion } = useAnalyticsContext();
+const fadeUp = (delay: number) => ({
+  initial: { opacity: 0, y: 16 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.6, delay, ease: [0.16, 1, 0.3, 1] as const },
+});
 
-  useEffect(() => {
-    const titleInterval = setInterval(() => {
-      setTitleIndex((prevIndex) => (prevIndex + 1) % titles.length);
-    }, 3000);
-    return () => clearInterval(titleInterval);
-  }, [titles.length]);
+export default function AboutSection({ years }: { years: number }) {
+  const heroRef = useRef<HTMLElement>(null);
+  const shouldReduceMotion = useReducedMotion();
 
-  const handleSocialLinkClick = (platform: string) => {
-    trackInteraction('social_link_click', { platform, section: 'about', link_type: 'social_media' });
-    trackUserJourney('social_media_engagement', 'about');
-    if (platform === 'LinkedIn') trackConversion('linkedin_click', 1);
-  };
+  // The hero recedes gently as it scrolls away.
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.92]);
+  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const blurPx = useTransform(scrollYProgress, [0, 1], [0, 6]);
+  const filter = useMotionTemplate`blur(${blurPx}px)`;
 
   const handleResumeClick = () => {
-    setIsResumeModalOpen(true);
-    trackInteraction('resume_view', { section: 'about', action: 'open_resume_modal' });
-    trackUserJourney('resume_view', 'about');
-    trackConversion('resume_view', 1);
+    openResume();
+    track('resume_open', { source: 'hero' });
   };
 
   return (
-    <section id="about" className="min-h-[80vh] flex flex-col justify-center items-center px-6 relative overflow-hidden">
+    <section
+      id="about"
+      ref={heroRef}
+      aria-labelledby="hero-name"
+      className="w-full min-h-[calc(100svh-8rem)] flex flex-col justify-center items-center px-6 pb-16 relative"
+    >
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.8 }}
-        className="text-center w-full max-w-5xl"
+        style={shouldReduceMotion ? undefined : { scale, opacity, filter }}
+        className="text-center w-full max-w-3xl"
       >
-        {/* Stable Profile Image */}
-        <div className="relative inline-block mb-16">
-          <div className="group relative w-56 h-56 sm:w-72 sm:h-72 rounded-[2rem] bg-gray-900 border-2 border-white/5 hover:border-cyan-400/50 transition-colors duration-500 shadow-2xl p-2">
-            <div className="relative w-full h-full overflow-hidden rounded-[1.5rem] bg-black">
-              <Image
-                src="/me.jpeg"
-                alt="Profile Picture"
-                layout="fill"
-                objectFit="cover"
-                className="grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700 ease-out"
-                priority
-              />
-              <div className="absolute inset-0 bg-cyan-400/20 blur-[50px] -z-10 rounded-[2rem] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-            </div>
+        <motion.div {...fadeUp(0)} className="relative inline-block mb-8">
+          <div className="relative w-28 h-28 sm:w-36 sm:h-36 rounded-[1.75rem] p-1.5 bg-white/5 border border-white/10 shadow-2xl">
+            <Image
+              src="/me.webp"
+              alt="Portrait of Ahmad Ramzy"
+              width={640}
+              height={788}
+              priority
+              className="w-full h-full object-cover rounded-[1.4rem]"
+            />
           </div>
-        </div>
+        </motion.div>
+
+        <motion.p {...fadeUp(0.05)} className="section-eyebrow mb-5">
+          {PORTFOLIO_DATA.role} · {years}+ years
+        </motion.p>
 
         <motion.h1
-          className="text-5xl sm:text-8xl font-black mb-6 tracking-tighter"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.8 }}
+          id="hero-name"
+          {...fadeUp(0.1)}
+          className="font-display text-5xl sm:text-7xl md:text-8xl font-extrabold tracking-tight leading-[0.95] mb-6"
         >
-          <span className="text-white">AHMAD</span>{' '}
-          <span className="text-gradient-cyan">RAMZY</span>
+          <span className="text-white">Ahmad</span> <span className="text-gradient-cyan">Ramzy</span>
         </motion.h1>
 
-        <motion.div
-          className="text-2xl sm:text-4xl font-bold mb-8 h-12 overflow-hidden"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.8 }}
-        >
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`title-${titleIndex}`}
-              initial={{ y: 30, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -30, opacity: 0 }}
-              transition={{ duration: 0.5, ease: 'backOut' }}
-              className="text-white/80"
-            >
-              {titles[titleIndex]}
-            </motion.div>
-          </AnimatePresence>
-        </motion.div>
+        <div className="max-w-2xl mx-auto mb-4">
+          <RevealWords
+            mode="enter"
+            enterDelay={0.25}
+            className="text-lg sm:text-xl text-gray-300 leading-relaxed text-center"
+            segments={[
+              { text: 'I build' },
+              { text: 'payment and CRM platforms', tone: 'bright' },
+              { text: 'with' },
+              { text: 'TypeScript, Node.js and React', tone: 'accent' },
+              { text: '— from the first commit to production scale.' },
+            ]}
+          />
+        </div>
 
-        <motion.div
-          className="max-w-2xl mx-auto mb-10"
-          variants={{
-            hidden: { opacity: 0 },
-            visible: {
-              opacity: 1,
-              transition: { staggerChildren: 0.1, delayChildren: 0.6 },
-            },
-          }}
-          initial="hidden"
-          animate="visible"
+        <motion.p
+          {...fadeUp(0.35)}
+          className="flex items-center justify-center gap-2 text-sm text-gray-400 mb-10"
         >
-          <p className="text-lg sm:text-xl text-gray-400 leading-relaxed font-light flex flex-wrap justify-center gap-x-1">
-             {PORTFOLIO_DATA.about.description.map((text, i) => (
-               <motion.span 
-                 key={i} 
-                 variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}
-                 className={i === 1 ? "text-white font-medium" : i === 3 ? "text-white font-medium" : i === 5 ? "text-cyan-400 font-medium" : ""}
-               >
-                 {text}
-               </motion.span>
-             ))}
-          </p>
-        </motion.div>
+          <FaLocationDot aria-hidden="true" className="text-accent/80" />
+          {PORTFOLIO_DATA.location} · working remotely with teams in Dubai and London
+        </motion.p>
 
-        <motion.div
-          className="flex flex-col sm:flex-row justify-center items-center gap-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8, duration: 0.8 }}
-        >
-          <div className="flex space-x-6">
-            {PORTFOLIO_DATA.about.socialLinks.map(({ Icon, link, platform }) => (
-              <MagneticItem key={platform} onClick={() => handleSocialLinkClick(platform)} href={link}>
-                <Icon className="text-2xl sm:text-3xl" />
-              </MagneticItem>
-            ))}
-          </div>
-
-          <motion.button
-            className="px-8 py-4 bg-white text-black rounded-full font-bold hover:bg-cyan-400 hover:text-black transition-all duration-300 shadow-[0_0_30px_rgba(255,255,255,0.1)] active:scale-95"
+        <motion.div {...fadeUp(0.45)} className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-10">
+          <button
+            type="button"
             onClick={handleResumeClick}
+            className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-white text-black font-semibold hover:bg-accent transition-colors active:scale-[0.98]"
           >
-            VIEW RESUME
-          </motion.button>
+            View resume
+          </button>
+          <a
+            href="#contact"
+            className="w-full sm:w-auto px-8 py-3.5 rounded-full border border-white/15 text-white font-semibold hover:border-accent/60 hover:text-accent transition-colors"
+          >
+            Get in touch
+          </a>
         </motion.div>
-      </motion.div>
-      <ResumeModal isOpen={isResumeModalOpen} onClose={() => setIsResumeModalOpen(false)} />
-    </section>
-  );
-}
 
-function MagneticItem({ children, onClick, href }: { children: React.ReactNode; onClick: () => void; href: string }) {
-  const { ref, position, handleMouseMove, handleMouseLeave } = useMagnetic(0.4);
-  return (
-    <motion.a
-      ref={ref}
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      animate={{ x: position.x, y: position.y }}
-      transition={{ type: 'spring', stiffness: 150, damping: 15, mass: 0.1 }}
-      className="text-gray-500 hover:text-white transition-colors duration-300"
-      onClick={onClick}
-    >
-      {children}
-    </motion.a>
+        <motion.ul {...fadeUp(0.55)} className="flex justify-center gap-2">
+          {PORTFOLIO_DATA.socialLinks.map(({ Icon, link, platform }) => (
+            <li key={platform}>
+              <a
+                href={link}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={platform}
+                onClick={() => track('social_click', { platform, source: 'hero' })}
+                className="flex items-center justify-center w-11 h-11 rounded-full text-xl text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+              >
+                <Icon />
+              </a>
+            </li>
+          ))}
+        </motion.ul>
+      </motion.div>
+
+      <a
+        href="#experience"
+        aria-label="Scroll to experience"
+        className="absolute bottom-2 left-1/2 -translate-x-1/2 p-3 text-gray-500 hover:text-accent transition-colors motion-safe:animate-bounce"
+      >
+        <FaArrowDown />
+      </a>
+    </section>
   );
 }

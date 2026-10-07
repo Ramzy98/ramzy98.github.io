@@ -1,41 +1,71 @@
-import { IconType } from 'react-icons';
+import type { IconType } from 'react-icons';
 
-export interface Project {
-  title: string;
-  description: string;
-  image: string;
-  technologies: string[];
-  githubLink: string;
-  liveLink?: string;
+export interface SocialLink {
+  platform: string;
+  Icon: IconType;
+  link: string;
 }
 
 export interface Experience {
   title: string;
   company: string;
   date: string;
-  description: string[];
+  location: string;
+  /** Bullet points. Wrap a phrase in **double asterisks** to highlight it. */
+  highlights: string[];
   skills: string[];
-  icon: string | 'FaLaptopCode' | 'FaRocket' | 'FaSatellite' | 'FaSpaceShuttle'; // Key for mapping icons
+}
+
+export interface Metric {
+  value: string;
+  label: string;
+}
+
+export interface Project {
+  title: string;
+  /** Short label shown above the title, e.g. "Case study · Centroid Solutions". */
+  kicker: string;
+  description: string;
+  technologies: string[];
+  /** Screenshot path under /public. Projects without one render their metrics instead. */
+  image?: string;
+  metrics?: Metric[];
+  githubLink?: string;
+  liveLink?: string;
 }
 
 export interface Skill {
   name: string;
-  icon: IconType;
-  color: string;
+  icon?: IconType;
+  color?: string;
+}
+
+export interface SkillGroup {
+  title: string;
+  skills: Skill[];
+}
+
+export interface Education {
+  school: string;
+  degree: string;
+  date: string;
+  location: string;
 }
 
 export interface PortfolioData {
   name: string;
-  titles: string[];
-  about: {
-    description: string[];
-    socialLinks: {
-      platform: string;
-      Icon: any;
-      link: string;
-    }[];
-  };
-  skills: Skill[];
+  role: string;
+  location: string;
+  email: string;
+  siteUrl: string;
+  resumePath: string;
+  /** First month of professional experience, used to compute "N+ years". */
+  careerStart: string;
+  headline: string;
+  summary: string;
+  socialLinks: SocialLink[];
+  skillGroups: SkillGroup[];
   experiences: Experience[];
   projects: Project[];
+  education: Education;
 }

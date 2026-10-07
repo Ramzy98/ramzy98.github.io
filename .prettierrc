@@ -9,8 +9,5 @@
   "endOfLine": "lf",
   "jsxSingleQuote": false,
   "quoteProps": "as-needed",
-  "useTabs": false,
-  "editor.codeActionsOnSave": {
-    "source.removeUnusedImports": true
-  }
+  "useTabs": false
 }

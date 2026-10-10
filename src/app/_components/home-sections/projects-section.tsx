@@ -84,11 +84,11 @@ function ProjectCard({ project, index, fixedHeight = false }: { project: Project
 
   return (
     <article
-      className={`group flex flex-col lg:flex-row overflow-hidden rounded-[2rem] border border-white/10 bg-[#070b14] shadow-[0_40px_80px_-30px_rgba(0,0,0,0.9)] ${
+      className={`group flex flex-col lg:flex-row overflow-hidden rounded-[2rem] border border-white/10 bg-surface-deep shadow-card ${
         fixedHeight ? 'lg:h-[min(640px,76svh)]' : ''
       }`}
     >
-      <div className="relative lg:w-[58%] bg-[#0b1120] flex items-center justify-center p-5 sm:p-8 lg:p-10 min-h-[220px]">
+      <div className="relative lg:w-[58%] bg-surface-raised flex items-center justify-center p-5 sm:p-8 lg:p-10 min-h-[220px]">
         {project.image ? (
           <Tilt className="w-full aspect-[16/10] lg:aspect-auto lg:h-full rounded-xl">
             <div className="relative w-full h-full rounded-xl overflow-hidden border border-white/10 shadow-2xl">
@@ -110,21 +110,18 @@ function ProjectCard({ project, index, fixedHeight = false }: { project: Project
 
       <div className="flex flex-col flex-1 p-6 sm:p-10 border-t lg:border-t-0 lg:border-l border-white/10">
         <div className="flex items-baseline justify-between gap-4 mb-4">
-          <p className="font-mono text-xs uppercase tracking-widest text-gray-400">{project.kicker}</p>
+          <p className="font-mono text-[13px] text-gray-400">{project.kicker}</p>
           <span aria-hidden="true" className="font-mono text-2xl font-bold text-white/15">
             {displayIndex}
           </span>
         </div>
 
-        <h3 className="text-2xl sm:text-4xl font-semibold text-white tracking-tight mb-4">{project.title}</h3>
-        <p className="text-gray-300 leading-relaxed mb-8">{project.description}</p>
+        <h3 className="text-2xl sm:text-4xl font-semibold text-white tracking-[-0.02em] leading-tight mb-4">{project.title}</h3>
+        <p className="text-gray-300 leading-relaxed max-w-[60ch] mb-8">{project.description}</p>
 
         <ul aria-label="Technologies" className="flex flex-wrap gap-2 mb-8 mt-auto">
           {project.technologies.map((tech) => (
-            <li
-              key={tech}
-              className="px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-gray-300"
-            >
+            <li key={tech} className="tag font-mono">
               {tech}
             </li>
           ))}

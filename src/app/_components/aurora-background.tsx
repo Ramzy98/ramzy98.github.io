@@ -7,7 +7,7 @@ attribute vec2 a_pos;
 void main() { gl_Position = vec4(a_pos, 0.0, 1.0); }
 `;
 
-// Domain-warped fractal noise: a slow liquid aurora that bends toward the
+// Domain-warped fractal noise in one cyan-to-navy family: a slow aurora that bends toward the
 // cursor, with a faint star field on top. Kept dark so text stays readable.
 const FRAGMENT = `
 precision mediump float;
@@ -48,11 +48,11 @@ void main() {
   float f = fbm(p * 1.4 + 2.5 * r);
 
   vec3 base   = vec3(0.020, 0.039, 0.082);
-  vec3 indigo = vec3(0.26, 0.22, 0.78);
-  vec3 cyan   = vec3(0.13, 0.83, 0.93);
+  vec3 deep   = vec3(0.12, 0.30, 0.50);
+  vec3 cyan   = vec3(0.36, 0.81, 0.89);
 
   vec3 col = base;
-  col = mix(col, indigo * 0.32, smoothstep(0.4, 0.95, f));
+  col = mix(col, deep * 0.34, smoothstep(0.4, 0.95, f));
   col = mix(col, cyan * 0.36, smoothstep(0.62, 1.05, f * (0.6 + r.x)));
   col += cyan * 0.07 * exp(-length(m - (gl_FragCoord.xy - 0.5 * u_res) / u_res.y) * 3.0);
 
@@ -61,8 +61,8 @@ void main() {
   float star = step(0.9982, hash(cell)) * (0.5 + 0.5 * sin(u_time * 2.0 + hash(cell + 7.0) * 40.0));
   col += vec3(0.55, 0.85, 1.0) * star * 0.32;
 
-  // Drift the palette slightly as the page scrolls, and darken the edges.
-  col = mix(col, col.brg * 1.05, u_scroll * 0.35);
+  // Dim slightly as the page scrolls (dense sections read better), and darken the edges.
+  col *= 1.0 - u_scroll * 0.25;
   col *= 1.0 - 0.5 * length(uv - 0.5);
 
   gl_FragColor = vec4(col, 1.0);
@@ -176,7 +176,7 @@ export default function AuroraBackground() {
     >
       {/* CSS fallback if WebGL is unavailable */}
       <div className="absolute -top-[15%] -left-[10%] w-[60vw] h-[60vw] rounded-full bg-cyan-500/10 blur-[140px]" />
-      <div className="absolute -bottom-[20%] -right-[10%] w-[60vw] h-[60vw] rounded-full bg-indigo-600/10 blur-[160px]" />
+      <div className="absolute -bottom-[20%] -right-[10%] w-[60vw] h-[60vw] rounded-full bg-sky-800/10 blur-[160px]" />
     </div>
   );
 }

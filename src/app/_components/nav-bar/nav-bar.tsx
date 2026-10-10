@@ -28,10 +28,10 @@ export default function NavBar() {
   }, [isMenuOpen]);
 
   return (
-    <header className="fixed top-4 sm:top-6 inset-x-0 z-[100] flex justify-center px-4">
+    <header className="fixed top-4 sm:top-6 inset-x-0 z-100 flex justify-center px-4">
       <nav
         aria-label="Primary"
-        className="relative w-full md:w-auto flex items-center justify-between gap-4 md:gap-6 py-2 pl-5 pr-2 rounded-full bg-black/60 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.6)]"
+        className="relative w-full md:w-auto flex items-center justify-between gap-4 md:gap-6 py-2 pl-5 pr-2 rounded-full bg-black/60 backdrop-blur-xl border border-white/10 shadow-float"
       >
         <a href="#about" className="font-mono text-base text-white shrink-0" aria-label="Ahmad Ramzy — back to top">
           <span className="text-accent">&lt;</span>AR<span className="text-accent"> /&gt;</span>
@@ -94,7 +94,7 @@ export default function NavBar() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2 }}
-              className="md:hidden absolute top-full inset-x-0 mt-2 p-2 rounded-3xl bg-[#0a0f1c]/95 backdrop-blur-xl border border-white/10 shadow-2xl"
+              className="md:hidden absolute top-full inset-x-0 mt-2 p-2 rounded-3xl bg-surface/95 backdrop-blur-xl border border-white/10 shadow-float"
             >
               {SECTIONS.map(({ id, label }) => (
                 <li key={id}>

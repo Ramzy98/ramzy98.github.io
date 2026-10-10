@@ -13,7 +13,8 @@ const RINGS = [
   { size: 93, seconds: 110, reverse: false },
 ];
 
-const GROUP_ACCENTS = ['#22d3ee', '#818cf8', '#f472b6'];
+// Tints of the one accent, strongest on the inner ring.
+const GROUP_ACCENTS = ['#5ccfe2', '#94dfeb', '#c9eff5'];
 const RING_NAMES = ['inner', 'middle', 'outer'];
 
 /**
@@ -43,14 +44,14 @@ export default function SkillsSection() {
           <div className="space-y-6">
             {groups.map((group, g) => (
               <div key={group.title}>
-                <h3 className="flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-gray-400 mb-3">
+                <h3 className="flex items-center gap-2 font-mono text-[13px] text-gray-300 mb-3">
                   <span
                     aria-hidden="true"
                     className="w-2.5 h-2.5 rounded-full border-2"
                     style={{ borderColor: GROUP_ACCENTS[g] }}
                   />
                   {group.title}
-                  <span className="normal-case tracking-normal text-gray-500">· {RING_NAMES[g]} ring</span>
+                  <span className="text-gray-500">· {RING_NAMES[g]} ring</span>
                 </h3>
                 <ul className="flex flex-wrap gap-2">
                   {group.skills.map((skill) => (
@@ -94,8 +95,8 @@ export default function SkillsSection() {
 
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="w-[20%] aspect-square rounded-full bg-white/5 border border-white/15 flex flex-col items-center justify-center">
-              <span className="font-display text-2xl sm:text-4xl font-extrabold text-white leading-none">{total}</span>
-              <span className="mt-1 font-mono text-[10px] sm:text-xs uppercase tracking-widest text-gray-400">tools</span>
+              <span className="font-display text-2xl sm:text-4xl font-extrabold text-white leading-none tabular-nums">{total}</span>
+              <span className="mt-1 font-mono text-[11px] sm:text-xs text-gray-400">tools</span>
             </div>
           </div>
 
@@ -157,7 +158,7 @@ function OrbitIcon({
       className="relative flex flex-col items-center"
     >
       <div
-        className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-[#0a0f1c] border transition-all duration-300"
+        className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-surface border transition-all duration-300"
         style={{
           borderColor: isActive ? accent : 'rgba(255,255,255,0.12)',
           boxShadow: isActive ? `0 0 24px ${accent}80` : undefined,

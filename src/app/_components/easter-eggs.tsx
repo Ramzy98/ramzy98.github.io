@@ -17,7 +17,7 @@ export default function EasterEggs() {
       '%c👋 Hey, fellow engineer.%c\n\nIf you are reading the console, we should talk.\n' +
         `→ ${PORTFOLIO_DATA.email}\n\n` +
         'Psst: try the Konami code, or press Ctrl/⌘ + K.',
-      'font-size:16px;font-weight:700;color:#22d3ee',
+      'font-size:16px;font-weight:700;color:#5ccfe2',
       'font-size:12px;color:#9aa4b2'
     );
   }, []);
@@ -54,7 +54,7 @@ export default function EasterEggs() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
-          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[310] max-w-[calc(100%-2rem)] px-5 py-3 rounded-full bg-white text-black text-sm font-semibold shadow-2xl"
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-310 max-w-[calc(100%-2rem)] px-5 py-3 rounded-full bg-white text-black text-sm font-semibold shadow-2xl"
         >
           🎮 {toast}
         </motion.div>

@@ -16,8 +16,8 @@ export default function ExperienceSection() {
         />
 
         <ol className="relative ml-1.5 border-l border-white/10 space-y-12">
-          {PORTFOLIO_DATA.experiences.map((exp) => (
-            <TimelineItem key={`${exp.company}-${exp.title}`} experience={exp} />
+          {PORTFOLIO_DATA.experiences.map((exp, i) => (
+            <TimelineItem key={`${exp.company}-${exp.title}`} experience={exp} isLatest={i === 0} />
           ))}
         </ol>
       </div>
@@ -25,17 +25,19 @@ export default function ExperienceSection() {
   );
 }
 
-function TimelineItem({ experience }: { experience: Experience }) {
+function TimelineItem({ experience, isLatest }: { experience: Experience; isLatest: boolean }) {
   return (
     <li className="relative pl-8 sm:pl-10">
       <span
         aria-hidden="true"
-        className="absolute -left-[7px] top-1.5 w-3.5 h-3.5 rounded-full bg-background border-2 border-white/30"
+        className={`absolute -left-[7px] top-1.5 w-3.5 h-3.5 rounded-full border-2 ${
+          isLatest ? 'bg-accent border-accent shadow-glow' : 'bg-background border-white/30'
+        }`}
       />
 
       <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-x-6 gap-y-1">
         <h3 className="text-xl sm:text-2xl font-semibold text-white">{experience.title}</h3>
-        <p className="font-mono text-xs uppercase tracking-widest text-gray-500 shrink-0">{experience.date}</p>
+        <p className="font-mono text-xs text-gray-500 tabular-nums shrink-0">{experience.date}</p>
       </div>
       <p className="text-gray-300 font-medium mt-1">
         {experience.company}
@@ -56,10 +58,7 @@ function TimelineItem({ experience }: { experience: Experience }) {
       {experience.skills.length > 0 && (
         <ul aria-label="Technologies" className="mt-5 flex flex-wrap gap-2">
           {experience.skills.map((skill) => (
-            <li
-              key={skill}
-              className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-medium text-gray-300"
-            >
+            <li key={skill} className="tag">
               {skill}
             </li>
           ))}

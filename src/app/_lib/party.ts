@@ -1,4 +1,4 @@
-const COLORS = ['#22d3ee', '#ffffff', '#818cf8', '#f472b6', '#facc15'];
+const COLORS = ['#5ccfe2', '#94dfeb', '#ffffff', '#fcd34d'];
 
 /** Fires a confetti burst. The library is loaded on first use, so it costs nothing until someone parties. */
 export async function party() {

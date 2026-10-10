@@ -92,11 +92,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="font-sans antialiased flex flex-col min-h-screen relative overflow-x-hidden">
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[200] focus:px-4 focus:py-2 focus:rounded-full focus:bg-white focus:text-black focus:font-semibold"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-200 focus:px-4 focus:py-2 focus:rounded-full focus:bg-white focus:text-black focus:font-semibold"
         >
           Skip to content
         </a>
         <AuroraBackground />
+        <div aria-hidden="true" className="grain fixed inset-0 -z-5 pointer-events-none" />
         <BackToTop />
         <NavBar />
         <CommandPalette />

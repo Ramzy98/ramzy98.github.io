@@ -50,7 +50,7 @@ export default function AboutSection({ years }: { years: number }) {
         <h1
           id="hero-name"
           aria-label={PORTFOLIO_DATA.name}
-          className="font-display text-5xl sm:text-7xl md:text-8xl font-extrabold tracking-tight leading-[0.95] mb-6"
+          className="font-display text-5xl sm:text-7xl md:text-8xl font-extrabold tracking-[-0.035em] leading-[0.92] mb-6"
         >
           <BouncyWord word="Ahmad" delay={0.05} />{' '}
           <BouncyWord word="Ramzy" delay={0.2} gradient />
@@ -81,13 +81,13 @@ export default function AboutSection({ years }: { years: number }) {
           <button
             type="button"
             onClick={handleResumeClick}
-            className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-white text-black font-semibold hover:bg-accent transition-colors active:scale-[0.98]"
+            className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-white text-black font-semibold hover:bg-accent transition-[background-color,transform] active:scale-[0.98]"
           >
             View resume
           </button>
           <a
             href="#contact"
-            className="w-full sm:w-auto px-8 py-3.5 rounded-full border border-white/15 text-white font-semibold hover:border-accent/60 hover:text-accent transition-colors"
+            className="w-full sm:w-auto px-8 py-3.5 rounded-full border border-white/15 text-white font-semibold hover:border-accent/60 hover:text-accent transition-[color,border-color,transform] active:scale-[0.98]"
           >
             Get in touch
           </a>

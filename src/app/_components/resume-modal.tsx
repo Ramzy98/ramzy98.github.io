@@ -48,7 +48,7 @@ export default function ResumeModal() {
       aria-labelledby="resume-title"
       // Clicks on the backdrop land on the <dialog> element itself.
       onClick={(e) => e.target === e.currentTarget && close()}
-      className="m-auto w-[min(72rem,calc(100%-2rem))] max-h-[90svh] rounded-[2rem] border border-white/10 bg-[#070b14] text-white shadow-2xl p-0 backdrop:bg-transparent open:flex flex-col overflow-hidden"
+      className="m-auto w-[min(72rem,calc(100%-2rem))] max-h-[90svh] rounded-[2rem] border border-white/10 bg-surface-deep text-white shadow-card p-0 backdrop:bg-transparent open:flex flex-col overflow-hidden"
     >
       <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-5 px-6 sm:px-10 pt-8 pb-6 border-b border-white/10">
         <div>
@@ -62,7 +62,7 @@ export default function ResumeModal() {
             href={resumePath}
             download
             onClick={() => track('resume_download')}
-            className="flex items-center gap-2 px-5 py-3 rounded-full bg-white text-black text-sm font-semibold hover:bg-accent transition-colors"
+            className="flex items-center gap-2 px-5 py-3 rounded-full bg-white text-black text-sm font-semibold hover:bg-accent transition-[color,background-color,transform] active:scale-[0.98]"
           >
             <FaDownload aria-hidden="true" />
             Download PDF
@@ -71,7 +71,7 @@ export default function ResumeModal() {
             type="button"
             onClick={close}
             aria-label="Close resume"
-            className="flex items-center justify-center w-11 h-11 rounded-full border border-white/10 text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
+            className="flex items-center justify-center w-11 h-11 rounded-full border border-white/10 text-gray-300 hover:text-white hover:bg-white/10 transition-[color,background-color,transform] active:scale-[0.98]"
           >
             <FaXmark size={18} />
           </button>
@@ -184,7 +184,7 @@ function ContactItem({ icon, label, href }: { icon: React.ReactNode; label: stri
       <a
         href={href}
         {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-        className="flex items-center gap-3 text-gray-300 hover:text-white transition-colors"
+        className="flex items-center gap-3 text-gray-300 hover:text-white transition-[color,background-color,transform] active:scale-[0.98]"
       >
         <span aria-hidden="true" className="text-accent">
           {icon}

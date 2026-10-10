@@ -3,8 +3,20 @@
 @theme {
   --color-background: #050a15;
   --color-foreground: #f5f7fa;
-  --color-accent: #22d3ee;
+  /* Desaturated cyan: the only accent on the page. */
+  --color-accent: #5ccfe2;
   --color-muted: #9aa4b2;
+
+  /* Navy surfaces, darkest to lightest. */
+  --color-surface-deep: #070b14;
+  --color-surface: #0a0f1c;
+  --color-surface-raised: #0b1120;
+
+  /* Shadows carry the navy of the background instead of pure black. */
+  --shadow-float: 0 8px 32px rgba(1, 4, 14, 0.6);
+  --shadow-card: 0 40px 80px -30px rgba(1, 4, 14, 0.9);
+  --shadow-glow: 0 0 28px color-mix(in oklab, var(--color-accent) 25%, transparent);
+  --shadow-glow-sm: 0 0 8px color-mix(in oklab, var(--color-accent) 90%, transparent);
 
   --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
@@ -16,22 +28,22 @@
 
   @keyframes flow-x {
     from {
-      left: 0%;
+      transform: translateX(0);
       opacity: 1;
     }
     to {
-      left: 100%;
+      transform: translateX(100%);
       opacity: 0.4;
     }
   }
 
   @keyframes flow-y {
     from {
-      top: 0%;
+      transform: translateY(0);
       opacity: 1;
     }
     to {
-      top: 100%;
+      transform: translateY(100%);
       opacity: 0.4;
     }
   }
@@ -69,8 +81,19 @@
     scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
   }
 
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
+  }
+
   ::selection {
-    background: rgba(34, 211, 238, 0.3);
+    background: color-mix(in oklab, var(--color-accent) 30%, transparent);
     color: #fff;
   }
 
@@ -95,7 +118,19 @@
   }
 
   .section-eyebrow {
-    @apply font-mono text-xs uppercase tracking-[0.25em] text-gray-400;
+    @apply font-mono text-[13px] text-gray-400;
+  }
+
+  /* Small labels for tech lists: squared off, not pills. */
+  .tag {
+    @apply px-2.5 py-1 rounded-md bg-white/[0.04] border border-white/10 text-xs text-gray-300;
+  }
+
+  /* Film grain over the aurora so the gradients don't read as flat digital fills. */
+  .grain {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.06;
+    mix-blend-mode: overlay;
   }
 }
 

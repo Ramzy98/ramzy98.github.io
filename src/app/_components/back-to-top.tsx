@@ -23,7 +23,7 @@ export default function BackToTop() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 12 }}
-          className="fixed bottom-6 right-6 z-[100] flex items-center justify-center w-11 h-11 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-gray-300 hover:text-accent hover:border-accent/40 transition-colors"
+          className="fixed bottom-6 right-6 z-100 flex items-center justify-center w-11 h-11 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-gray-300 hover:text-accent hover:border-accent/40 transition-[color,border-color,transform] active:scale-95"
         >
           <FaArrowUp />
         </motion.a>

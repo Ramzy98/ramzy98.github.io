@@ -214,7 +214,7 @@ export default function LabSection() {
             <>
               A playable model of the webhook pipeline from my payments work. Flip the chaos switches and try to{' '}
               <span className="text-white font-medium">lose a transaction</span> or{' '}
-              <span className="text-cyan-400 font-medium">charge someone twice.</span>
+              <span className="text-accent font-medium">charge someone twice.</span>
             </>
           }
           className="mb-12"
@@ -228,7 +228,7 @@ export default function LabSection() {
                 type="button"
                 onClick={sendOne}
                 disabled={running}
-                className={`flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black text-sm font-semibold hover:bg-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black text-sm font-semibold hover:bg-accent transition-[color,background-color,border-color,transform] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 ${
                   stats.sent === 0 && !running ? 'ring-4 ring-accent/30 motion-safe:animate-pulse' : ''
                 }`}
               >
@@ -239,7 +239,7 @@ export default function LabSection() {
                 type="button"
                 onClick={sendBurst}
                 disabled={running}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/15 text-white text-sm font-semibold hover:border-accent/60 hover:text-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/15 text-white text-sm font-semibold hover:border-accent/60 hover:text-accent transition-[color,background-color,border-color,transform] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100"
               >
                 <FaForwardFast aria-hidden="true" size={13} />
                 Burst ×{BURST_SIZE}
@@ -362,7 +362,7 @@ function PipelineNode({
       aria-current={isActive ? 'step' : undefined}
       className={`flex lg:flex-col items-center gap-3 lg:gap-2 lg:flex-1 min-w-0 rounded-2xl border px-4 py-2.5 lg:px-2 lg:py-4 lg:text-center transition-all duration-300 ${
         isActive
-          ? 'border-accent/70 bg-accent/10 shadow-[0_0_28px_rgba(34,211,238,0.25)] lg:-translate-y-1'
+          ? 'border-accent/70 bg-accent/10 shadow-glow lg:-translate-y-1'
           : 'border-white/10 bg-white/[0.03]'
       }`}
     >
@@ -377,7 +377,7 @@ function PipelineNode({
             <span
               key={p}
               className={`w-1.5 h-1.5 rounded-full transition-colors duration-300 ${
-                provider === i ? 'bg-accent shadow-[0_0_6px_rgba(34,211,238,0.9)]' : 'bg-white/15'
+                provider === i ? 'bg-accent shadow-glow-sm' : 'bg-white/15'
               }`}
             />
           ))}
@@ -391,10 +391,10 @@ function Connector({ flowKey }: { flowKey: number | null }) {
   return (
     <div aria-hidden="true" className="relative flex-none self-center h-4 w-px lg:h-px lg:w-5 xl:w-7 bg-white/15">
       {flowKey !== null && (
-        <span
-          key={flowKey}
-          className="absolute left-1/2 top-0 lg:top-1/2 lg:left-0 w-2 h-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent shadow-[0_0_10px_rgba(34,211,238,0.9)] motion-safe:animate-flow-y lg:motion-safe:animate-flow-x"
-        />
+        // The track spans the connector so translating it 100% carries the dot end to end.
+        <span key={flowKey} className="absolute inset-0 motion-safe:animate-flow-y lg:motion-safe:animate-flow-x">
+          <span className="absolute left-1/2 top-0 lg:top-1/2 lg:left-0 w-2 h-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent shadow-glow-sm" />
+        </span>
       )}
     </div>
   );

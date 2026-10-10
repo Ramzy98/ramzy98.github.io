@@ -122,7 +122,7 @@ export default function CommandPalette() {
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[150] flex items-start justify-center p-4 pt-[12vh]">
+        <div className="fixed inset-0 z-150 flex items-start justify-center p-4 pt-[12vh]">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -139,7 +139,7 @@ export default function CommandPalette() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.98, y: -8 }}
             transition={{ type: 'spring', stiffness: 500, damping: 40 }}
-            className="relative w-full max-w-xl overflow-hidden rounded-2xl border border-white/10 bg-[#0a0f1c]/95 shadow-2xl backdrop-blur-xl"
+            className="relative w-full max-w-xl overflow-hidden rounded-2xl border border-white/10 bg-surface/95 shadow-float backdrop-blur-xl"
           >
             <div className="flex items-center gap-3 px-5 border-b border-white/10">
               <FaMagnifyingGlass className="text-gray-500 shrink-0" aria-hidden="true" />
